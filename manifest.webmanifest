@@ -1,0 +1,9 @@
+{
+  "name": "GeoQuest",
+  "short_name": "GeoQuest",
+  "description": "A location-based cryptic town trail game.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#0d1020",
+  "theme_color": "#171c2d"
+}

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#171c2d" />
+  <meta name="description" content="A location-based cryptic town trail game." />
+  <title>GeoQuest</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main id="app" class="app-shell">
+    <header class="topbar">
+      <button id="backButton" class="icon-button hidden" aria-label="Go back">←</button>
+      <div class="brand"><span class="brand-mark">⌖</span><span>GeoQuest</span></div>
+      <button id="notesButton" class="icon-button" aria-label="Open playtest notes">✎</button>
+    </header>
+
+    <section id="homeScreen" class="screen active">
+      <div class="hero-card">
+        <div class="eyebrow">WALK · SOLVE · DISCOVER</div>
+        <h1>Your town is the game board.</h1>
+        <p>Follow cryptic clues, hunt down hidden landmarks and unlock the story behind each stop.</p>
+      </div>
+      <div class="section-heading">
+        <div><span class="eyebrow">SELECT A TRAIL</span><h2>Choose your town</h2></div>
+        <span id="townCount" class="pill"></span>
+      </div>
+      <div id="townGrid" class="town-grid"></div>
+      <button id="resumeButton" class="primary-button hidden">Resume current trail</button>
+    </section>
+
+    <section id="gameScreen" class="screen">
+      <div class="progress-wrap">
+        <div class="progress-copy"><span id="townName"></span><span id="progressText"></span></div>
+        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+
+      <article class="clue-card">
+        <div class="clue-number">STOP <span id="stopNumber"></span></div>
+        <div class="clue-icon">?</div>
+        <h2 id="crypticClue"></h2>
+        <p class="muted">Find the place described by the clue. Check your location when you think you are there.</p>
+      </article>
+
+      <div class="hint-stack">
+        <button id="hint1Button" class="hint-button"><span>💡 Reveal hint 1</span><span>−1 star</span></button>
+        <div id="hint1Panel" class="hint-panel hidden"></div>
+        <button id="hint2Button" class="hint-button locked"><span>🔒 Reveal hint 2</span><span>−1 star</span></button>
+        <div id="hint2Panel" class="hint-panel hidden"></div>
+      </div>
+
+      <section class="location-card">
+        <div class="location-head">
+          <div><span class="eyebrow">LOCATION CHECK</span><h3 id="locationStatus">Ready when you are</h3></div>
+          <div id="accuracyBadge" class="signal-badge">GPS</div>
+        </div>
+        <div id="distanceDisplay" class="distance-display">—</div>
+        <div id="distanceCaption" class="muted">Your distance will appear here.</div>
+        <button id="checkLocationButton" class="primary-button">⌖ Check my location</button>
+        <button id="stuckButton" class="secondary-button stuck-button">I’m stuck</button>
+        <button id="toggleDemoButton" class="text-button">Use desktop test mode</button>
+
+        <div id="guidePanel" class="guide-panel hidden" aria-live="polite">
+          <div class="guide-top">
+            <div><span class="eyebrow">GUIDE MODE</span><h3>Head <span id="guideDirection">—</span></h3></div>
+            <div id="guideArrow" class="guide-arrow">↑</div>
+          </div>
+          <strong id="guideDistance">Finding you…</strong>
+          <p id="guideAccuracy" class="muted">Keep this page open while walking.</p>
+          <button id="stopGuideButton" class="text-button">Stop guiding me</button>
+        </div>
+
+        <div id="demoPanel" class="demo-panel hidden">
+          <div class="demo-heading"><strong>Playtest mode</strong><span id="demoDistanceLabel">500 m away</span></div>
+          <input id="demoDistance" type="range" min="0" max="1500" step="5" value="500" />
+          <p class="muted">Move the slider toward zero, then press “Check simulated location”.</p>
+          <button id="demoCheckButton" class="secondary-button">Check simulated location</button>
+        </div>
+      </section>
+    </section>
+
+    <section id="successScreen" class="screen">
+      <div id="successBurst" class="success-burst">✓</div>
+      <div id="successEyebrow" class="eyebrow">LOCATION CONFIRMED</div>
+      <h1 id="foundName"></h1>
+      <div id="starsEarned" class="stars"></div>
+      <article class="fact-card">
+        <span class="eyebrow">UNLOCKED STORY</span>
+        <p id="unlockFact"></p>
+      </article>
+      <button id="nextStopButton" class="primary-button">Continue to next stop</button>
+    </section>
+
+    <section id="completeScreen" class="screen">
+      <div class="success-burst trophy">★</div>
+      <div class="eyebrow">TRAIL COMPLETE</div>
+      <h1 id="completeTitle"></h1>
+      <p class="muted">You reached the end of this route.</p>
+      <div class="summary-grid">
+        <div><strong id="summaryStops"></strong><span>Stops found</span></div>
+        <div><strong id="summaryStars"></strong><span>Stars earned</span></div>
+        <div><strong id="summarySkipped"></strong><span>Skipped</span></div>
+      </div>
+      <button id="restartButton" class="primary-button">Play this trail again</button>
+      <button id="chooseTownButton" class="secondary-button">Choose another town</button>
+    </section>
+  </main>
+
+  <dialog id="stuckDialog" class="notes-dialog">
+    <div class="notes-sheet">
+      <div class="notes-head"><div><span class="eyebrow">NEED A HAND?</span><h2>Choose some help</h2></div><button id="closeStuckButton" class="icon-button" aria-label="Close">×</button></div>
+      <p class="muted">Guidance points you toward the target. Skipping gives no stars for this stop.</p>
+      <div class="stuck-options">
+        <button id="stuckHintButton" class="secondary-button">Reveal the next hint</button>
+        <button id="guideButton" class="primary-button">Guide me toward it</button>
+        <button id="skipButton" class="danger-button">Skip this stop</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog id="notesDialog" class="notes-dialog">
+    <form method="dialog" class="notes-sheet">
+      <div class="notes-head"><div><span class="eyebrow">PLAYTEST</span><h2>Your notes</h2></div><button class="icon-button">×</button></div>
+      <p class="muted">Notes save automatically in this browser.</p>
+      <textarea id="notesArea" placeholder="What feels good? What is confusing? What should change?"></textarea>
+      <div class="notes-actions"><button id="copyNotesButton" type="button" class="secondary-button">Copy notes</button><button class="primary-button">Done</button></div>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast"></div>
+  <script src="app.js"></script>
+</body>
+</html>
