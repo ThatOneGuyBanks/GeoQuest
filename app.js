@@ -1,6 +1,6 @@
 const $ = (id) => document.getElementById(id);
 const state = {
-  data: null, town: null, stops: [], index: 0,
+  packs: [], pack: null, town: null, stops: [], index: 0,
   hintsThisStop: 0, hintsTotal: 0, starsTotal: 0,
   skippedTotal: 0, demoMode: false, guideWatchId: null
 };
@@ -19,7 +19,7 @@ function toast(message) {
 function cleanText(value) { return String(value ?? "").trim(); }
 function saveProgress() {
   localStorage.setItem("geoquest-progress", JSON.stringify({
-    town: state.town?.Town, index: state.index, hintsTotal: state.hintsTotal,
+    packId: state.pack?.pack_id, index: state.index, hintsTotal: state.hintsTotal,
     starsTotal: state.starsTotal, skippedTotal: state.skippedTotal
   }));
   refreshResume();
@@ -28,36 +28,65 @@ function clearProgress() { localStorage.removeItem("geoquest-progress"); refresh
 function refreshResume() {
   const progress = JSON.parse(localStorage.getItem("geoquest-progress") || "null");
   $("resumeButton").classList.toggle("hidden", !progress);
-  if (progress) $("resumeButton").textContent = `Resume ${progress.town} · Stop ${progress.index + 1}`;
+  if (progress) { const pack = state.packs.find(p => p.pack_id === progress.packId); $("resumeButton").textContent = `Resume ${pack?.display_name || "route"} · Stop ${progress.index + 1}`; }
 }
 
 async function init() {
-  const response = await fetch("data.json");
-  if (!response.ok) throw new Error(`Could not load data.json (${response.status})`);
-  state.data = await response.json();
+  const indexResponse = await fetch("packs/index.json", { cache: "no-cache" });
+  if (!indexResponse.ok) throw new Error(`Could not load packs/index.json (${indexResponse.status})`);
+  const packIndex = await indexResponse.json();
+  const enabledEntries = (packIndex.packs || []).filter(entry => entry.enabled !== false);
+  const results = await Promise.allSettled(enabledEntries.map(async entry => {
+    const response = await fetch(`packs/${entry.file}`, { cache: "no-cache" });
+    if (!response.ok) throw new Error(`${entry.file}: HTTP ${response.status}`);
+    const pack = await response.json();
+    validatePack(pack, entry.file);
+    return pack;
+  }));
+  state.packs = results.filter(result => result.status === "fulfilled").map(result => result.value);
+  const failed = results.filter(result => result.status === "rejected");
+  if (!state.packs.length) throw new Error("No valid route packs could be loaded.");
+  if (failed.length) console.warn("Some packs could not be loaded:", failed.map(r => r.reason));
   renderTowns(); refreshResume();
-  $("townCount").textContent = `${state.data.towns.length} available`;
+  $("townCount").textContent = `${state.packs.length} route${state.packs.length === 1 ? "" : "s"} available`;
   $("notesArea").value = localStorage.getItem("geoquest-notes") || "";
   if ("serviceWorker" in navigator && location.protocol === "https:") {
     navigator.serviceWorker.register("service-worker.js").catch(() => {});
   }
 }
+
+function validatePack(pack, filename) {
+  const required = ["pack_id", "town", "display_name", "route_name", "stops"];
+  required.forEach(key => { if (pack[key] === undefined || pack[key] === null) throw new Error(`${filename}: missing ${key}`); });
+  if (!Array.isArray(pack.stops) || !pack.stops.length) throw new Error(`${filename}: stops must be a non-empty array`);
+  const ids = new Set();
+  pack.stops.forEach((stop, i) => {
+    ["Stop_ID", "Stop_Order", "Stop_Name", "Target_Lat", "Target_Long", "Cryptic_Clue", "Unlock_Fact"].forEach(key => {
+      if (stop[key] === undefined || stop[key] === null || stop[key] === "") throw new Error(`${filename}: stop ${i + 1} missing ${key}`);
+    });
+    if (ids.has(stop.Stop_ID)) throw new Error(`${filename}: duplicate Stop_ID ${stop.Stop_ID}`);
+    ids.add(stop.Stop_ID);
+  });
+}
+
 function renderTowns() {
-  $("townGrid").innerHTML = state.data.towns.map(t => `
-    <button class="town-card" data-town="${t.Town}">
-      <div><strong>${t.Display_Name}</strong><span>${t.Number_of_Stops} stops · Main Route</span></div>
+  $("townGrid").innerHTML = state.packs.map(pack => `
+    <button class="town-card" data-pack-id="${pack.pack_id}">
+      <div><strong>${pack.display_name}</strong><span>${pack.stops.length} stops · ${pack.route_name}</span></div>
       <div class="town-arrow">→</div>
     </button>`).join("");
-  document.querySelectorAll(".town-card").forEach(card => card.addEventListener("click", () => startTown(card.dataset.town)));
+  document.querySelectorAll(".town-card").forEach(card => card.addEventListener("click", () => startPack(card.dataset.packId)));
 }
-function startTown(townName, resume = false) {
+function startPack(packId, resume = false) {
   stopGuide();
-  state.town = state.data.towns.find(t => t.Town === townName);
-  state.stops = state.data.stops.filter(s => s.Town === townName).sort((a,b) => a.Stop_Order - b.Stop_Order);
+  state.pack = state.packs.find(pack => pack.pack_id === packId);
+  if (!state.pack) { toast("That route pack is unavailable"); return; }
+  state.town = { Town: state.pack.town, Display_Name: state.pack.display_name };
+  state.stops = [...state.pack.stops].sort((a,b) => a.Stop_Order - b.Stop_Order);
   state.index = 0; state.hintsTotal = 0; state.starsTotal = 0; state.skippedTotal = 0;
   if (resume) {
     const p = JSON.parse(localStorage.getItem("geoquest-progress") || "null");
-    if (p) {
+    if (p && p.packId === packId) {
       state.index = Math.min(p.index, state.stops.length - 1);
       state.hintsTotal = p.hintsTotal || 0;
       state.starsTotal = p.starsTotal || 0;
@@ -218,13 +247,13 @@ $("toggleDemoButton").addEventListener("click", () => {
 });
 $("demoDistance").addEventListener("input", e => $("demoDistanceLabel").textContent = `${e.target.value} m away`);
 $("demoCheckButton").addEventListener("click", () => evaluateDistance(Number($("demoDistance").value)));
-$("restartButton").addEventListener("click", () => startTown(state.town.Town));
+$("restartButton").addEventListener("click", () => startPack(state.pack.pack_id));
 $("chooseTownButton").addEventListener("click", () => { stopGuide(); showScreen("homeScreen"); });
 $("backButton").addEventListener("click", () => { stopGuide(); showScreen("homeScreen"); });
-$("resumeButton").addEventListener("click", () => { const p = JSON.parse(localStorage.getItem("geoquest-progress") || "null"); if (p) startTown(p.town, true); });
+$("resumeButton").addEventListener("click", () => { const p = JSON.parse(localStorage.getItem("geoquest-progress") || "null"); if (p) startPack(p.packId, true); });
 $("notesButton").addEventListener("click", () => $("notesDialog").showModal());
 $("notesArea").addEventListener("input", e => localStorage.setItem("geoquest-notes", e.target.value));
 $("copyNotesButton").addEventListener("click", async () => { await navigator.clipboard.writeText($("notesArea").value); toast("Notes copied"); });
 window.addEventListener("beforeunload", stopGuide);
 
-init().catch(err => { document.body.innerHTML = `<main style="padding:30px;color:white;font-family:sans-serif"><h1>Could not load game data</h1><p>${err.message}</p><p>Use the included local server, or host these files with GitHub Pages.</p></main>`; });
+init().catch(err => { document.body.innerHTML = `<main style="padding:30px;color:white;font-family:sans-serif"><h1>Could not load game data</h1><p>${err.message}</p><p>Check packs/index.json and the pack files, then use the included local server or GitHub Pages.</p></main>`; });

@@ -1,0 +1,33 @@
+{
+  "pack_format": 1,
+  "pack_id": "example-town-main-route",
+  "version": 1,
+  "town": "Example Town",
+  "display_name": "Example Town",
+  "route_name": "Main Route",
+  "description": "A short walking trail through Example Town.",
+  "centre": {
+    "lat": 52.0,
+    "long": -0.1
+  },
+  "author": "Your name",
+  "stops": [
+    {
+      "Town": "Example Town",
+      "Route": "Main Route",
+      "Stop_ID": "EXA001",
+      "Stop_Order": 1,
+      "Stop_Name": "Hidden place name",
+      "Target_Lat": 52.0,
+      "Target_Long": -0.1,
+      "Win_Radius_m": 35,
+      "Cryptic_Clue": "Your cryptic clue goes here.",
+      "Hint_1": "Your first hint.",
+      "Hint_2": "Your second hint.",
+      "Unlock_Fact": "The fact revealed after finding the stop.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

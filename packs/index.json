@@ -1,0 +1,25 @@
+{
+  "pack_index_format": 1,
+  "packs": [
+    {
+      "file": "peterborough-main-route.json",
+      "enabled": true
+    },
+    {
+      "file": "ely-main-route.json",
+      "enabled": true
+    },
+    {
+      "file": "huntingdon-main-route.json",
+      "enabled": true
+    },
+    {
+      "file": "st-ives-main-route.json",
+      "enabled": true
+    },
+    {
+      "file": "st-neots-main-route.json",
+      "enabled": true
+    }
+  ]
+}
