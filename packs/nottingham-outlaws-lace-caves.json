@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "nottingham-outlaws-lace-caves",
+  "version": 1,
+  "town": "Nottingham",
+  "display_name": "Nottingham",
+  "route_name": "Outlaws, Lace & Caves",
+  "description": "Cross the old divide between two towns, follow the lace trade and meet England's favourite outlaw.",
+  "short_description": "Meet at the lions, hunt Robin Hood and finish inside caves beneath Castle Rock.",
+  "centre": {
+    "lat": 52.95173,
+    "long": -1.14989
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 2.0,
+  "estimated_minutes": 75,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "legends",
+    "industry",
+    "caves",
+    "pub-finish"
+  ],
+  "collections": [
+    "Legends & Literature"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A city-centre walk with a final descent towards Castle Rock. All clues can be completed outside.",
+  "cover_theme": "meadow",
+  "stops": [
+    {
+      "Town": "Nottingham",
+      "Route": "Outlaws, Lace & Caves",
+      "Stop_ID": "NOT001",
+      "Stop_Order": 1,
+      "Stop_Name": "Old Market Square and the Lions",
+      "Target_Lat": 52.9533566,
+      "Target_Long": -1.1499443,
+      "Win_Radius_m": 65,
+      "Cryptic_Clue": "Meet where Nottingham always meets: between two stone lions on an ancient town boundary.",
+      "Hint_1": "Begin outside the Council House in Old Market Square.",
+      "Hint_2": "Find the pair of reclining lions guarding the building's grand entrance.",
+      "Unlock_Fact": "Old Market Square grew near the divide between Nottingham's older Anglo-Saxon settlement and the Norman borough around the castle. The Council House lions are now beloved meeting points: locals commonly arrange to meet at the Left Lion.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Outlaws, Lace & Caves",
+      "Stop_ID": "NOT002",
+      "Stop_Order": 2,
+      "Stop_Name": "St Mary's Church and the Lace Market",
+      "Target_Lat": 52.9511869,
+      "Target_Long": -1.1430479,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find a medieval church wrapped in warehouses from an industry built on threads and machines.",
+      "Hint_1": "Walk east through Hockley towards High Pavement.",
+      "Hint_2": "Look for Nottingham's largest medieval church in the heart of the Lace Market.",
+      "Unlock_Fact": "St Mary's is the largest medieval building in Nottingham after the castle. The surrounding Lace Market became the commercial centre of a world-leading lace industry: grand warehouses displayed, finished and sold machine-made lace produced across the city.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Outlaws, Lace & Caves",
+      "Stop_ID": "NOT003",
+      "Stop_Order": 3,
+      "Stop_Name": "Robin Hood Statue",
+      "Target_Lat": 52.95044,
+      "Target_Long": -1.153415,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find the outlaw forever drawing an arrow beneath the Sheriff's castle.",
+      "Hint_1": "Head west across the centre towards Castle Road.",
+      "Hint_2": "Look below Nottingham Castle's gatehouse for the bronze archer and his Merry Men.",
+      "Unlock_Fact": "James Woodford sculpted Nottingham's bronze Robin Hood, unveiled in 1952. The seven-foot figure stands outside the castle walls with bow drawn, turning a medieval legend with many disputed origins into the city's most recognisable modern symbol.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Outlaws, Lace & Caves",
+      "Stop_ID": "NOT004",
+      "Stop_Order": 4,
+      "Stop_Name": "Ye Olde Trip to Jerusalem",
+      "Target_Lat": 52.9493332,
+      "Target_Long": -1.1526487,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Take a short trip beneath Castle Rock, where ale cellars disappear into sandstone.",
+      "Hint_1": "Follow Castle Road downhill around the base of the rock.",
+      "Hint_2": "Find the white pub built directly against the cliff at Brewhouse Yard.",
+      "Unlock_Fact": "Route complete! Ye Olde Trip to Jerusalem claims an origin in 1189, although that date is not documented and the visible building is much later. Its rock-cut caves and cellars are genuinely historic and were used for storing ale beneath Castle Rock. Finish the outlaw trail with food or a drink inside the sandstone.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

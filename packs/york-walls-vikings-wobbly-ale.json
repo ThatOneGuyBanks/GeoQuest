@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "york-walls-vikings-wobbly-ale",
+  "version": 1,
+  "town": "York",
+  "display_name": "York",
+  "route_name": "Walls, Windows & Wobbly Ale",
+  "description": "Pass through York's defences, read stories in medieval glass and explore a street shaped by butchers.",
+  "short_description": "Decode bars that are gates, a street of flesh and a wonderfully mad medieval alehouse.",
+  "centre": {
+    "lat": 53.96125,
+    "long": -1.08204
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "medieval",
+    "city-walls",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact central walk. The checkpoint at Bootham Bar is at street level, so climbing the walls is optional.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "York",
+      "Route": "Walls, Windows & Wobbly Ale",
+      "Stop_ID": "YRK001",
+      "Stop_Order": 1,
+      "Stop_Name": "Bootham Bar",
+      "Target_Lat": 53.9627185,
+      "Target_Long": -1.0850495,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a bar that serves no drinks, guarding a road first watched by Romans.",
+      "Hint_1": "Begin where Bootham meets High Petergate and the city walls.",
+      "Hint_2": "Look for the stone gatehouse with an arch across the road.",
+      "Unlock_Fact": "In York, the medieval gateways are called bars while streets often end in gate, from an Old Norse word meaning street. Bootham Bar stands close to the Roman north-west entrance to the fortress; its oldest surviving stonework dates from the 11th century.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Walls, Windows & Wobbly Ale",
+      "Stop_ID": "YRK002",
+      "Stop_Order": 2,
+      "Stop_Name": "York Minster",
+      "Target_Lat": 53.9623561,
+      "Target_Long": -1.0820834,
+      "Win_Radius_m": 65,
+      "Cryptic_Clue": "Find a stone giant whose eastern eye is a tennis court made from medieval glass.",
+      "Hint_1": "Walk east through the bar and along High Petergate.",
+      "Hint_2": "Your target is the enormous Gothic cathedral dominating Minster Yard.",
+      "Unlock_Fact": "York Minster's Great East Window was designed by John Thornton and completed between 1405 and 1408. Roughly the size of a tennis court, it is the largest single expanse of medieval stained glass in Britain and tells stories from the beginning to the end of the world.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Walls, Windows & Wobbly Ale",
+      "Stop_ID": "YRK003",
+      "Stop_Order": 3,
+      "Stop_Name": "The Shambles",
+      "Target_Lat": 53.9592985,
+      "Target_Long": -1.0800328,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Find a street so narrow its timber houses nearly shake hands above old butchers' hooks.",
+      "Hint_1": "Head south from the Minster towards the market.",
+      "Hint_2": "Look for York's famous overhanging medieval shopping street.",
+      "Unlock_Fact": "The Shambles was associated with butchers from the Middle Ages; hooks and wide shelves for displaying meat still survive on some buildings. Its name is linked to 'shammel', a bench or stall. Despite its magical appearance, it was not a filming location for the Harry Potter films.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Walls, Windows & Wobbly Ale",
+      "Stop_ID": "YRK004",
+      "Stop_Order": 4,
+      "Stop_Name": "House of the Trembling Madness",
+      "Target_Lat": 53.9612031,
+      "Target_Long": -1.0829479,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Return to Stonegate and climb above a bottle shop, where ale trembles beneath antlers and old beams.",
+      "Hint_1": "Walk north-west from the Shambles towards Stonegate.",
+      "Hint_2": "Find number 48; the original Trembling Madness pub is upstairs.",
+      "Unlock_Fact": "Route complete! The original House of the Trembling Madness occupies an upstairs medieval drinking hall at 48 Stonegate. Its tiny kitchen, huge beer selection and collection of eccentric taxidermy make it an appropriately strange place to finish with food or a drink.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

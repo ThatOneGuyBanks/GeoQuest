@@ -1,10 +1,10 @@
 {
-  "pack_format": 1,
+  "pack_format": 2,
   "pack_id": "st-neots-main-route",
   "version": 1,
   "town": "St Neots",
   "display_name": "St Neots",
-  "route_name": "Main Route",
+  "route_name": "Monks, Markets & Coaches",
   "description": "St Neots walking trail",
   "centre": {
     "lat": 52.2274,
@@ -14,7 +14,7 @@
   "stops": [
     {
       "Town": "St Neots",
-      "Route": "Main Route",
+      "Route": "Monks, Markets & Coaches",
       "Stop_ID": "STN001",
       "Stop_Order": 1,
       "Stop_Name": "Market Square",
@@ -31,7 +31,7 @@
     },
     {
       "Town": "St Neots",
-      "Route": "Main Route",
+      "Route": "Monks, Markets & Coaches",
       "Stop_ID": "STN002",
       "Stop_Order": 2,
       "Stop_Name": "St Neots Bridge",
@@ -48,7 +48,7 @@
     },
     {
       "Town": "St Neots",
-      "Route": "Main Route",
+      "Route": "Monks, Markets & Coaches",
       "Stop_ID": "STN003",
       "Stop_Order": 3,
       "Stop_Name": "The Priory Centre",
@@ -65,7 +65,7 @@
     },
     {
       "Town": "St Neots",
-      "Route": "Main Route",
+      "Route": "Monks, Markets & Coaches",
       "Stop_ID": "STN004",
       "Stop_Order": 4,
       "Stop_Name": "The Coach House",
@@ -80,5 +80,22 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "short_description": "A gentle riverside mystery through the heart of St Neots.",
+  "cover_theme": "meadow",
+  "route_distance_km": 3.0,
+  "estimated_minutes": 70,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "riverside",
+    "history",
+    "family"
+  ],
+  "collections": [
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "Designed as a walking route."
 }

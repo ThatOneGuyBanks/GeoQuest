@@ -1,10 +1,10 @@
 {
-  "pack_format": 1,
+  "pack_format": 2,
   "pack_id": "ely-main-route",
   "version": 1,
   "town": "Ely",
   "display_name": "Ely",
-  "route_name": "Main Route",
+  "route_name": "Cromwell, Monks & Maltings",
   "description": "Ely walking trail",
   "centre": {
     "lat": 52.39785000000001,
@@ -14,7 +14,7 @@
   "stops": [
     {
       "Town": "Ely",
-      "Route": "Main Route",
+      "Route": "Cromwell, Monks & Maltings",
       "Stop_ID": "ELY001",
       "Stop_Order": 1,
       "Stop_Name": "Oliver Cromwell's House",
@@ -31,7 +31,7 @@
     },
     {
       "Town": "Ely",
-      "Route": "Main Route",
+      "Route": "Cromwell, Monks & Maltings",
       "Stop_ID": "ELY002",
       "Stop_Order": 2,
       "Stop_Name": "The Porta",
@@ -48,7 +48,7 @@
     },
     {
       "Town": "Ely",
-      "Route": "Main Route",
+      "Route": "Cromwell, Monks & Maltings",
       "Stop_ID": "ELY003",
       "Stop_Order": 3,
       "Stop_Name": "Waterside (The Maltings)",
@@ -65,7 +65,7 @@
     },
     {
       "Town": "Ely",
-      "Route": "Main Route",
+      "Route": "Cromwell, Monks & Maltings",
       "Stop_ID": "ELY004",
       "Stop_Order": 4,
       "Stop_Name": "The Minster Tavern",
@@ -80,5 +80,22 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "short_description": "A compact trail through soaring architecture and Fenland stories.",
+  "cover_theme": "fenland",
+  "route_distance_km": 3.0,
+  "estimated_minutes": 70,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "history",
+    "cathedral",
+    "waterside"
+  ],
+  "collections": [
+    "Rivers & Harbours"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "Designed as a walking route."
 }

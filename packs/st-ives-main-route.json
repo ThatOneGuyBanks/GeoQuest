@@ -1,10 +1,10 @@
 {
-  "pack_format": 1,
+  "pack_format": 2,
   "pack_id": "st-ives-main-route",
   "version": 1,
   "town": "St Ives",
   "display_name": "St Ives",
-  "route_name": "Main Route",
+  "route_name": "Chapels, Markets & Cromwell",
   "description": "St Ives walking trail",
   "centre": {
     "lat": 52.33215,
@@ -14,7 +14,7 @@
   "stops": [
     {
       "Town": "St Ives",
-      "Route": "Main Route",
+      "Route": "Chapels, Markets & Cromwell",
       "Stop_ID": "STI001",
       "Stop_Order": 1,
       "Stop_Name": "The Bridge Chapel",
@@ -31,7 +31,7 @@
     },
     {
       "Town": "St Ives",
-      "Route": "Main Route",
+      "Route": "Chapels, Markets & Cromwell",
       "Stop_ID": "STI002",
       "Stop_Order": 2,
       "Stop_Name": "The Corn Exchange",
@@ -48,7 +48,7 @@
     },
     {
       "Town": "St Ives",
-      "Route": "Main Route",
+      "Route": "Chapels, Markets & Cromwell",
       "Stop_ID": "STI003",
       "Stop_Order": 3,
       "Stop_Name": "Cromwell Statue",
@@ -65,7 +65,7 @@
     },
     {
       "Town": "St Ives",
-      "Route": "Main Route",
+      "Route": "Chapels, Markets & Cromwell",
       "Stop_ID": "STI004",
       "Stop_Order": 4,
       "Stop_Name": "The Oliver Cromwell",
@@ -80,5 +80,22 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "short_description": "Explore a beautiful market town shaped by its medieval bridge and river.",
+  "cover_theme": "bridge",
+  "route_distance_km": 3.0,
+  "estimated_minutes": 70,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "riverside",
+    "market-town",
+    "family"
+  ],
+  "collections": [
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "Designed as a walking route."
 }

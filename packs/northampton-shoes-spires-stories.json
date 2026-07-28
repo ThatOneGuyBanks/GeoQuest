@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "northampton-shoes-spires-stories",
+  "version": 1,
+  "town": "Northampton",
+  "display_name": "Northampton",
+  "route_name": "Shoes, Spires & Fire",
+  "description": "Walk through the town whose shoemakers equipped armies and whose centre rose again after a devastating fire.",
+  "short_description": "Find famous footwear, Gothic faces and a phoenix church before a legal-themed pub finish.",
+  "centre": {
+    "lat": 52.23685,
+    "long": -0.89455
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 55,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "industry",
+    "architecture",
+    "great-fire",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A short town-centre route using level public streets and squares.",
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Northampton",
+      "Route": "Shoes, Spires & Fire",
+      "Stop_ID": "NTH001",
+      "Stop_Order": 1,
+      "Stop_Name": "Northampton Museum and Art Gallery",
+      "Target_Lat": 52.236612,
+      "Target_Long": -0.894476,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a museum where thousands of soles tell how one town marched around the world.",
+      "Hint_1": "Begin on Guildhall Road in Northampton's Cultural Quarter.",
+      "Hint_2": "Look for the museum opposite the Royal Theatre; its most famous collection is footwear.",
+      "Unlock_Fact": "Northampton's museum holds one of the world's largest footwear collections, with more than 15,000 shoes. The town became a major shoemaking centre and supplied boots for generations of soldiers, including huge military orders during the Napoleonic Wars and both World Wars.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Northampton",
+      "Route": "Shoes, Spires & Fire",
+      "Stop_ID": "NTH002",
+      "Stop_Order": 2,
+      "Stop_Name": "Northampton Guildhall",
+      "Target_Lat": 52.2374295,
+      "Target_Long": -0.8946381,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a civic palace where carved rulers, saints and local heroes stare down from Gothic stone.",
+      "Hint_1": "The next stop is only a short walk north on St Giles' Square.",
+      "Hint_2": "Look for the highly decorated building with pointed arches and a clock tower.",
+      "Unlock_Fact": "Architect Edward William Godwin designed Northampton Guildhall in the Gothic Revival style, and it opened in 1864. Its elaborate facade turns civic history into stone, while murals and stained glass inside celebrate people who shaped Northampton.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Northampton",
+      "Route": "Shoes, Spires & Fire",
+      "Stop_ID": "NTH003",
+      "Stop_Order": 3,
+      "Stop_Name": "All Saints' Church",
+      "Target_Lat": 52.237034,
+      "Target_Long": -0.8964675,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a king above a portico, thanked in stone for helping a burned town rise again.",
+      "Hint_1": "Walk west towards the Market Square and George Row.",
+      "Hint_2": "Look for the classical church with columns and a statue of Charles II above them.",
+      "Unlock_Fact": "The Great Fire of Northampton destroyed the earlier church and much of the town in 1675. Charles II gave timber and reduced taxes to help rebuilding, so his statue stands above the portico of the replacement All Saints' Church.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Northampton",
+      "Route": "Shoes, Spires & Fire",
+      "Stop_ID": "NTH004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Wig and Pen",
+      "Target_Lat": 52.2373736,
+      "Target_Long": -0.8935388,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Deliver your final verdict where a barrister's headwear and writing tool share the sign.",
+      "Hint_1": "Return east along St Giles Street.",
+      "Hint_2": "Find the traditional pub at number 19 named for two tools of the legal profession.",
+      "Unlock_Fact": "Route complete! The Wig and Pen is a traditional central Northampton pub serving food and drinks. Its legal name suits a town trail filled with civic chambers, royal decisions and historical evidence. Court is adjourned; your reward is whatever you choose from the bar or menu.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

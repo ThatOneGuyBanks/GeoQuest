@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "stratford-shakespeare-swans-spirits",
+  "version": 1,
+  "town": "Stratford-upon-Avon",
+  "display_name": "Stratford-upon-Avon",
+  "route_name": "Shakespeare, Swans & Spirits",
+  "description": "Walk the complete arc of Shakespeare's Stratford story, from childhood home to riverside grave.",
+  "short_description": "Meet four famous characters, follow the Avon and raise a final glass in a Tudor inn.",
+  "centre": {
+    "lat": 52.1911,
+    "long": -1.70625
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 2.1,
+  "estimated_minutes": 75,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "literature",
+    "tudor",
+    "riverside",
+    "pub-finish"
+  ],
+  "collections": [
+    "Legends & Literature"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central walking route with a riverside section. Every checkpoint can be solved from public paths without admission.",
+  "cover_theme": "meadow",
+  "stops": [
+    {
+      "Town": "Stratford-upon-Avon",
+      "Route": "Shakespeare, Swans & Spirits",
+      "Stop_ID": "SUA001",
+      "Stop_Order": 1,
+      "Stop_Name": "Shakespeare's Birthplace",
+      "Target_Lat": 52.1938833,
+      "Target_Long": -1.7080084,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin where the world's most famous playwright first made his entrance, long before a stage was built.",
+      "Hint_1": "Start on pedestrianised Henley Street.",
+      "Hint_2": "Find the restored timber-framed childhood home of William Shakespeare.",
+      "Unlock_Fact": "William Shakespeare is believed to have been born in this 16th-century house in 1564 and grew up here in the home of his father, glove-maker John Shakespeare. The Shakespeare Birthplace Trust bought the threatened building in 1847 to preserve it as a national memorial.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Stratford-upon-Avon",
+      "Route": "Shakespeare, Swans & Spirits",
+      "Stop_ID": "SUA002",
+      "Stop_Order": 2,
+      "Stop_Name": "Gower Memorial",
+      "Target_Lat": 52.192156,
+      "Target_Long": -1.7023603,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find Shakespeare surrounded by four characters carrying tragedy, comedy, history and thought.",
+      "Hint_1": "Walk east towards Bancroft Gardens and the River Avon.",
+      "Hint_2": "Look for the bronze seated playwright with four separate statues around him.",
+      "Unlock_Fact": "Lord Ronald Gower created the memorial, unveiled in 1888. Shakespeare sits above Hamlet, Lady Macbeth, Falstaff and Prince Hal. The four characters represent philosophy, tragedy, comedy and history - four great territories of Shakespeare's writing.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Stratford-upon-Avon",
+      "Route": "Shakespeare, Swans & Spirits",
+      "Stop_ID": "SUA003",
+      "Stop_Order": 3,
+      "Stop_Name": "Holy Trinity Church",
+      "Target_Lat": 52.18658,
+      "Target_Long": -1.7074519,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Follow the river to the church where Shakespeare's first and final records lie fifty-two years apart.",
+      "Hint_1": "Walk south through the riverside gardens and Old Town.",
+      "Hint_2": "Find the large church beside the Avon where Shakespeare was baptised and buried.",
+      "Unlock_Fact": "Parish records show Shakespeare's baptism here on 26 April 1564. He was buried in the chancel after his death in 1616, close to a monument probably installed during his family's lifetime. His grave inscription famously warns against moving his bones.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Stratford-upon-Avon",
+      "Route": "Shakespeare, Swans & Spirits",
+      "Stop_ID": "SUA004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Garrick Inn",
+      "Target_Lat": 52.1917699,
+      "Target_Long": -1.707192,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Exit pursued by thirst: find the black-and-white inn named for the actor who turned Shakespeare into a national celebration.",
+      "Hint_1": "Return north along Church Street towards the High Street.",
+      "Hint_2": "Find the historic pub at number 25 beside Harvard House.",
+      "Unlock_Fact": "Route complete! The Garrick Inn's timber-framed building dates from 1596 and it is reputed to be Stratford's oldest pub. It was later named for actor David Garrick, whose spectacular 1769 Shakespeare Jubilee helped transform the playwright and his hometown into international cultural icons. Take your final bow with food or a drink.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

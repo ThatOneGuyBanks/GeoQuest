@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "bedford-pilgrims-castles-riverside",
+  "version": 1,
+  "town": "Bedford",
+  "display_name": "Bedford",
+  "route_name": "Pilgrims, Castles & Riverside",
+  "description": "Trace Bedford's preachers, prisoners and a brutal medieval siege before following the Great Ouse to the pub.",
+  "short_description": "Decode a rebel preacher, a vanished fortress and stories beside the Great Ouse.",
+  "centre": {
+    "lat": 52.13634,
+    "long": -0.46499
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.8,
+  "estimated_minutes": 65,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "history",
+    "literature",
+    "riverside",
+    "pub-finish"
+  ],
+  "collections": [
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A town-centre walking route using public squares, paths and the riverside Embankment.",
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Bedford",
+      "Route": "Pilgrims, Castles & Riverside",
+      "Stop_ID": "BED001",
+      "Stop_Order": 1,
+      "Stop_Name": "St Paul's Church",
+      "Target_Lat": 52.1354637,
+      "Target_Long": -0.4674565,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the church in a square where a prisoner-preacher once raised his voice.",
+      "Hint_1": "Start in the large square near Bedford's market and river bridge.",
+      "Hint_2": "Look for the medieval church with the tall spire in St Paul's Square.",
+      "Unlock_Fact": "St Paul's has stood at the heart of Bedford for centuries. John Bunyan preached here, and during the Second World War the BBC used its Trinity Chapel to broadcast the Daily Service when broadcasting departments moved out of London.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bedford",
+      "Route": "Pilgrims, Castles & Riverside",
+      "Stop_ID": "BED002",
+      "Stop_Order": 2,
+      "Stop_Name": "John Bunyan Statue",
+      "Target_Lat": 52.1387985,
+      "Target_Long": -0.4666951,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "A bronze traveller carries a book, though his longest pilgrimage happened inside a prison.",
+      "Hint_1": "Walk north towards St Peter's Green and The Broadway.",
+      "Hint_2": "Find the standing statue holding an open Bible near St Peter's Church.",
+      "Unlock_Fact": "The statue honours John Bunyan, Bedford's author of The Pilgrim's Progress. He spent about twelve years in prison after refusing to stop preaching without official permission, and began the book associated with him during his imprisonment.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bedford",
+      "Route": "Pilgrims, Castles & Riverside",
+      "Stop_ID": "BED003",
+      "Stop_Order": 3,
+      "Stop_Name": "Bedford Castle Mound",
+      "Target_Lat": 52.13578,
+      "Target_Long": -0.46376,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Climb what remains of a fortress that survived eight weeks, but not a furious young king.",
+      "Hint_1": "Head south-east towards The Higgins and Castle Lane.",
+      "Hint_2": "Find the landscaped earth mound overlooking the river, not a standing stone castle.",
+      "Unlock_Fact": "Bedford Castle endured an eight-week siege by Henry III in 1224. Royal forces captured it after repeated assaults and mining beneath its walls; the castle was then deliberately dismantled. The mound is the clearest surviving part of the Norman fortress.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bedford",
+      "Route": "Pilgrims, Castles & Riverside",
+      "Stop_ID": "BED004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Embankment",
+      "Target_Lat": 52.1350224,
+      "Target_Long": -0.4602112,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Follow the Great Ouse east to a gabled riverside house built for Victorian thirsts.",
+      "Hint_1": "Join the Embankment path and keep the river beside you.",
+      "Hint_2": "Look for the large black-and-white pub and hotel at number 6.",
+      "Unlock_Fact": "Route complete! The Embankment is a riverside pub and hotel built in 1891, looking across Bedford's famous tree-lined river walk. You have followed preachers and sieges all the way to food, a pint or a soft drink by the Great Ouse.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

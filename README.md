@@ -1,48 +1,37 @@
-# GeoQuest — modular route-pack edition
+# GeoQuest — Discovery Edition
 
-A static, mobile-friendly location quiz. Every route is stored as a separate JSON pack under `packs/`.
+A GitHub Pages-ready static GPS adventure game with modular JSON route packs.
 
-## Included packs
+## Uploading to GitHub
+Upload every file in this folder to the root of your existing repository, replacing matching files. Keep `packs/` as a folder. Commit to `main`; GitHub Pages will redeploy automatically.
 
-- Peterborough — Main Route
-- Ely — Main Route
-- Huntingdon — Main Route
-- St Ives — Main Route
-- St Neots — Main Route
-
-## Publish or update with GitHub Pages
-
-### Replacing the existing project
-
-1. Extract this ZIP.
-2. In your GitHub repository, upload the contents of this folder to the repository root.
-3. Replace the old `app.js`, `service-worker.js`, and other matching files.
-4. Delete the old root-level `data.json`; it is no longer used.
-5. Upload the complete `packs` folder, including `packs/index.json`.
-6. Commit the changes.
-7. GitHub Pages will rebuild automatically. Open the HTTPS Pages address after the deployment completes.
-
-If the old version appears, refresh the page, close and reopen it, or clear the site's cached data. The service-worker cache name has changed for this edition.
-
-## Add another route later
-
+## Adding a route
 1. Copy `packs/PACK_TEMPLATE.json`.
-2. Rename and edit it.
+2. Add your route and stop data.
 3. Add the filename to `packs/index.json`.
-4. Upload/commit those two changed files.
+4. Upload both files and commit.
 
-The website loads every enabled entry listed in the index. A broken pack is skipped while valid packs continue to load; errors are shown in the browser console.
+## Pack discovery metadata
+Cards and filters use: `route_distance_km`, `estimated_minutes`, `difficulty_label`, `tags`, `collections`, `featured`, `daily_eligible`, and `cover_theme`.
 
-## Why an index is required
+## Map
+The map uses Leaflet and OpenStreetMap tiles. The overview shows town-level adventure pins only. The route line, numbered stops and landmark names are revealed in the completed-route recap, so the clues are not spoiled before play. GPS and compass permission require HTTPS, which GitHub Pages provides.
 
-GitHub Pages is a static web host. Browser JavaScript cannot ask it to list all files inside `packs/`, so `packs/index.json` acts as the folder catalogue. This is the only extra file you update when adding or removing a route.
+## Player record
 
-## GPS and HTTPS
+Scores, achievements, daily completions, route progress, distance-unit preference and personal bests are stored locally in the browser. A discovered stop awards 100 points, with 25 points deducted for each revealed hint. Skipped stops award no points. Explorer totals are open-ended and do not require players to finish every installed pack. No account or server is required.
 
-Use the HTTPS GitHub Pages address on your phone. Browser geolocation is blocked on ordinary insecure HTTP pages, except local development addresses such as `localhost`.
+## Live guidance
 
-## Local testing
+On supported phones, the guidance arrow uses the device compass and points relative to the top of the phone. If compass data is unavailable, it falls back to a north-relative bearing. The in-game GPS scanner supports kilometres or miles, remembers the player's choice, and turns raw distance readings into visual comparisons.
 
-Windows: double-click `START_GAME_WINDOWS.bat`.
+Distance comparisons are loaded from `data/distance-comparisons.json`, so new objects, animals, landmarks and journeys can be added without changing the game code. The catalogue includes both near-match and scaled comparisons, with a light-speed fact as a bonus.
 
-macOS/Linux: run `START_GAME_MAC_LINUX.command`.
+## Hidden test mode
+
+Tap **I'm stuck** five times within roughly two seconds to unlock the location simulator. Its logarithmic slider covers 0 metres to 5,000 kilometres and includes useful presets. A simulated reading inside the current stop's discovery radius opens the normal arrival-confirmation flow and advances local progress like a real location check.
+
+
+## Safety and GPS confirmation update
+
+This edition includes a first-run safety disclaimer and accuracy-aware location checks. Poor GPS accuracy does not automatically reject a player. Instead, the app allows a capped amount of extra tolerance and asks the player to visually confirm that they can genuinely see the target landmark before submitting.

@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "coventry-godiva-guilds-phoenix",
+  "version": 1,
+  "town": "Coventry",
+  "display_name": "Coventry",
+  "route_name": "Godiva, Guilds & Phoenix",
+  "description": "Unravel Coventry's legendary rider, medieval power and extraordinary story of destruction and reconciliation.",
+  "short_description": "Follow Lady Godiva from a royal guildhall to a cathedral reborn from fire.",
+  "centre": {
+    "lat": 52.40784,
+    "long": -1.50879
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.1,
+  "estimated_minutes": 55,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "legends",
+    "medieval",
+    "wartime-history",
+    "pub-finish"
+  ],
+  "collections": [
+    "Legends & Literature"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A very compact pedestrian route through Coventry's historic centre. Cathedral opening is not required.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Coventry",
+      "Route": "Godiva, Guilds & Phoenix",
+      "Stop_ID": "COV001",
+      "Stop_Order": 1,
+      "Stop_Name": "Lady Godiva Statue",
+      "Target_Lat": 52.4080271,
+      "Target_Long": -1.5104176,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find the noble rider whose legendary protest required one city to close every curtain.",
+      "Hint_1": "Begin in Broadgate at the centre of Coventry.",
+      "Hint_2": "Look for the bronze figure of Lady Godiva riding a horse.",
+      "Unlock_Fact": "Lady Godiva was a real 11th-century noblewoman and major landowner. The story that she rode unclothed through Coventry to persuade her husband to reduce taxes was written down much later, while the Peeping Tom character appeared centuries after that. The statue was unveiled in 1949.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Coventry",
+      "Route": "Godiva, Guilds & Phoenix",
+      "Stop_ID": "COV002",
+      "Stop_Order": 2,
+      "Stop_Name": "St Mary's Guildhall",
+      "Target_Lat": 52.4076265,
+      "Target_Long": -1.5079081,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a medieval hall where merchants feasted beneath a tapestry fit for kings.",
+      "Hint_1": "Walk east into the Cathedral Quarter and Bayley Lane.",
+      "Hint_2": "Look for the historic guildhall beside the old cathedral ruins.",
+      "Unlock_Fact": "St Mary's Guildhall was built in the 1340s for Coventry's powerful merchant guilds. Its Great Hall holds the Coventry Tapestry, made around 1500 and showing a royal court surrounded by saints. The building survived the bombing that devastated its neighbours in 1940.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Coventry",
+      "Route": "Godiva, Guilds & Phoenix",
+      "Stop_ID": "COV003",
+      "Stop_Order": 3,
+      "Stop_Name": "Coventry Cathedral Ruins",
+      "Target_Lat": 52.4079309,
+      "Target_Long": -1.5080534,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find a roofless cathedral where charred beams became a cross and ruins became a promise.",
+      "Hint_1": "The ruined shell stands immediately beside the guildhall.",
+      "Hint_2": "Look for the surviving tower and open-air walls of the old Cathedral of St Michael.",
+      "Unlock_Fact": "German bombing destroyed most of the cathedral on 14 November 1940. The morning after, two charred roof beams were tied into a cross. Rather than erase the ruins, Coventry preserved them beside Basil Spence's new cathedral as a powerful symbol of reconciliation and peace.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Coventry",
+      "Route": "Godiva, Guilds & Phoenix",
+      "Stop_ID": "COV004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Golden Cross",
+      "Target_Lat": 52.4077571,
+      "Target_Long": -1.5087887,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish beneath black timbers and a golden name in a survivor from Shakespeare's century.",
+      "Hint_1": "Walk a few steps west from the cathedral into Hay Lane.",
+      "Hint_2": "Find the brightly restored timber-framed pub at number 8.",
+      "Unlock_Fact": "Route complete! The Golden Cross building dates from 1583 and has operated as a pub since about 1661. It survived later redevelopment and the wartime destruction around the cathedral, making it one of Coventry's finest historic pub interiors and a perfect place to finish with food or a drink.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

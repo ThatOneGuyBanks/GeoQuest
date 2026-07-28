@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "lincoln-imps-arches-charters",
+  "version": 1,
+  "town": "Lincoln",
+  "display_name": "Lincoln",
+  "route_name": "Imps, Arches & Charters",
+  "description": "Climb from a bridge of shops through a medieval gateway to one of Europe's great Gothic skylines.",
+  "short_description": "Conquer Steep Hill, spot Lincoln's stone imp and finish beside a world-changing charter.",
+  "centre": {
+    "lat": 53.23162,
+    "long": -0.53935
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.6,
+  "estimated_minutes": 75,
+  "difficulty_label": "Challenging",
+  "tags": [
+    "medieval",
+    "cathedral",
+    "steep-hill",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "This route climbs the aptly named Steep Hill. Take your time; an alternative accessible uphill route may be preferable for some explorers.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Lincoln",
+      "Route": "Imps, Arches & Charters",
+      "Stop_ID": "LIN001",
+      "Stop_Order": 1,
+      "Stop_Name": "High Bridge",
+      "Target_Lat": 53.2285107,
+      "Target_Long": -0.5406671,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a medieval bridge hiding beneath shops while the Witham squeezes through its Glory Hole.",
+      "Hint_1": "Begin on the pedestrianised High Street where it crosses the river.",
+      "Hint_2": "Look for black-and-white buildings standing directly above the water.",
+      "Unlock_Fact": "High Bridge was built around 1160 and is the oldest bridge in Britain that still carries buildings. Its narrow river arch is nicknamed the Glory Hole; larger boats cannot pass beneath it, although pedestrians may barely notice they are crossing a medieval structure.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Imps, Arches & Charters",
+      "Stop_ID": "LIN002",
+      "Stop_Order": 2,
+      "Stop_Name": "The Stonebow and Guildhall",
+      "Target_Lat": 53.2290063,
+      "Target_Long": -0.5394988,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Walk beneath a stone bow where city business still happens above passing heads.",
+      "Hint_1": "Continue north along High Street before beginning the main climb.",
+      "Hint_2": "Find the large medieval gateway spanning the road near Saltergate.",
+      "Unlock_Fact": "The Stonebow was completed in the early 16th century on the line of Lincoln's Roman south gate. The Guildhall rooms above it remain the ceremonial meeting place of Lincoln City Council, continuing a civic tradition on this site stretching back through the Middle Ages.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Imps, Arches & Charters",
+      "Stop_ID": "LIN003",
+      "Stop_Order": 3,
+      "Stop_Name": "Lincoln Cathedral and the Imp",
+      "Target_Lat": 53.2342885,
+      "Target_Long": -0.5362358,
+      "Win_Radius_m": 65,
+      "Cryptic_Clue": "Climb until three towers rule the skyline, then seek the little stone troublemaker frozen inside.",
+      "Hint_1": "Follow Steep Hill and keep climbing towards the Cathedral Quarter.",
+      "Hint_2": "Your GPS target is outside the cathedral; the famous imp sits high inside if the building is open.",
+      "Unlock_Fact": "Lincoln Cathedral was once topped by a timber spire that may have made it the world's tallest building until the spire collapsed in 1548. Inside, the Lincoln Imp crouches high on a pillar; legend says an angel turned the mischievous creature to stone after it caused chaos.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Imps, Arches & Charters",
+      "Stop_ID": "LIN004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Magna Carta",
+      "Target_Lat": 53.2347,
+      "Target_Long": -0.538,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Finish at a great charter you can order by the glass, opposite the castle guarding the real thing.",
+      "Hint_1": "Cross Castle Square towards Exchequer Gate.",
+      "Hint_2": "Find the pub and restaurant at number 1 whose name means Great Charter.",
+      "Unlock_Fact": "Route complete! The Magna Carta pub takes its name from Lincoln's 1215 copy of the famous charter, now displayed in the castle opposite. Lincoln's copy was sent to the cathedral after King John sealed the agreement, making this a suitably historic place to end with food or a drink.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

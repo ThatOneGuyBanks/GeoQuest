@@ -1,10 +1,10 @@
 {
-  "pack_format": 1,
+  "pack_format": 2,
   "pack_id": "peterborough-main-route",
   "version": 1,
   "town": "Peterborough",
   "display_name": "Peterborough",
-  "route_name": "Main Route",
+  "route_name": "Queens, Tolls & Highwaymen",
   "description": "Peterborough walking trail",
   "centre": {
     "lat": 52.582125,
@@ -14,7 +14,7 @@
   "stops": [
     {
       "Town": "Peterborough",
-      "Route": "Main Route",
+      "Route": "Queens, Tolls & Highwaymen",
       "Stop_ID": "PET001",
       "Stop_Order": 1,
       "Stop_Name": "Guildhall",
@@ -31,7 +31,7 @@
     },
     {
       "Town": "Peterborough",
-      "Route": "Main Route",
+      "Route": "Queens, Tolls & Highwaymen",
       "Stop_ID": "PET002",
       "Stop_Order": 2,
       "Stop_Name": "Cathedral West Front",
@@ -48,7 +48,7 @@
     },
     {
       "Town": "Peterborough",
-      "Route": "Main Route",
+      "Route": "Queens, Tolls & Highwaymen",
       "Stop_ID": "PET003",
       "Stop_Order": 3,
       "Stop_Name": "Customs House",
@@ -65,7 +65,7 @@
     },
     {
       "Town": "Peterborough",
-      "Route": "Main Route",
+      "Route": "Queens, Tolls & Highwaymen",
       "Stop_ID": "PET004",
       "Stop_Order": 4,
       "Stop_Name": "The Blue Bell (Werrington)",
@@ -80,5 +80,22 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "short_description": "Decode the cathedral city through kings, queens and river trade.",
+  "cover_theme": "cathedral",
+  "route_distance_km": 6.2,
+  "estimated_minutes": 115,
+  "difficulty_label": "Detective",
+  "tags": [
+    "history",
+    "architecture",
+    "city-centre"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "Designed as a walking route."
 }

@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "cambridge-clocks-colleges-code",
+  "version": 1,
+  "town": "Cambridge",
+  "display_name": "Cambridge",
+  "route_name": "Clocks, Colleges & Code",
+  "description": "A compact Cambridge mystery through strange clocks, wooden engineering and scientific history.",
+  "short_description": "Outwit a time-eater, test a famous bridge myth and finish beneath an RAF ceiling.",
+  "centre": {
+    "lat": 52.20395,
+    "long": 0.11718
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 55,
+  "difficulty_label": "Detective",
+  "tags": [
+    "history",
+    "science",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "University Cities"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central walking route. The bridge checkpoint is at a free public viewpoint; no college admission is required.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Cambridge",
+      "Route": "Clocks, Colleges & Code",
+      "Stop_ID": "CAM001",
+      "Stop_Order": 1,
+      "Stop_Name": "Great St Mary's Church",
+      "Target_Lat": 52.20531,
+      "Target_Long": 0.11797,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the church whose four-note voice travelled from Cambridge to Westminster.",
+      "Hint_1": "Begin beside Market Hill, near the Senate House and King's Parade.",
+      "Hint_2": "Look for the University Church with a tall square tower.",
+      "Unlock_Fact": "Great St Mary's is the University Church. Its bells play the Cambridge Quarters, the familiar pattern later adopted by the clock at the Palace of Westminster - the clock commonly nicknamed Big Ben after its great bell.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Clocks, Colleges & Code",
+      "Stop_ID": "CAM002",
+      "Stop_Order": 2,
+      "Stop_Name": "Corpus Clock",
+      "Target_Lat": 52.2037552,
+      "Target_Long": 0.1176458,
+      "Win_Radius_m": 35,
+      "Cryptic_Clue": "A golden eye has no hands, while a metal monster eats every second above it.",
+      "Hint_1": "Walk south along King's Parade and Trumpington Street.",
+      "Hint_2": "Search the street-facing window of Corpus Christi College for a huge rippling gold clock.",
+      "Unlock_Fact": "Inventor John Taylor created the Corpus Clock, unveiled in 2008. The creature on top is the Chronophage - the 'time eater'. There are no hands or numbers: blue lights reveal the time through rings cut into the face.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Clocks, Colleges & Code",
+      "Stop_ID": "CAM003",
+      "Stop_Order": 3,
+      "Stop_Name": "Mathematical Bridge Viewpoint",
+      "Target_Lat": 52.2017,
+      "Target_Long": 0.11565,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find a wooden curve that looks impossible, but do not blame Newton for building it without bolts.",
+      "Hint_1": "Head to the public bridge on Silver Street and look north along the River Cam.",
+      "Hint_2": "You are hunting the timber footbridge linking the two sides of Queens' College.",
+      "Unlock_Fact": "The Mathematical Bridge was first built in 1749 by James Essex to a design by William Etheridge. It has been rebuilt, and the story that Newton made it without fixings is a myth: Newton died before it was built, and the bridge always used fastenings.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Clocks, Colleges & Code",
+      "Stop_ID": "CAM004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Eagle",
+      "Target_Lat": 52.204066,
+      "Target_Long": 0.1179405,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Land where an Eagle remembers airmen overhead and a double helix announced below.",
+      "Hint_1": "Return towards Bene't Street, just behind the first church.",
+      "Hint_2": "Find the historic pub opposite St Bene't's Church.",
+      "Unlock_Fact": "Route complete! The Eagle is linked to Watson and Crick's 1953 announcement of the DNA double-helix model, work that also depended on crucial research by Rosalind Franklin and Maurice Wilkins. Its RAF Bar ceiling preserves names and markings left by Second World War airmen. Time for a well-earned drink or meal.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

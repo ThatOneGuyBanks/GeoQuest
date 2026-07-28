@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "leicester-romans-kings-clocks",
+  "version": 1,
+  "town": "Leicester",
+  "display_name": "Leicester",
+  "route_name": "Romans, Kings & Clocks",
+  "description": "Jump from Roman baths to a lost king, medieval civic life and a Victorian meeting point.",
+  "short_description": "Decode two thousand years of Leicester before discovering the well beneath your final pub.",
+  "centre": {
+    "lat": 52.63535,
+    "long": -1.1371
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.5,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "roman",
+    "royal-history",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact city-centre route. Every checkpoint can be reached from public pavements without buying museum admission.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Leicester",
+      "Route": "Romans, Kings & Clocks",
+      "Stop_ID": "LEI001",
+      "Stop_Order": 1,
+      "Stop_Name": "Jewry Wall",
+      "Target_Lat": 52.6350668,
+      "Target_Long": -1.1410826,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find a wall with no surviving roof that once warmed Roman citizens after a bath.",
+      "Hint_1": "Begin beside St Nicholas Circle, west of the old town.",
+      "Hint_2": "Look for the enormous exposed Roman masonry beside the museum and St Nicholas' Church.",
+      "Unlock_Fact": "The Jewry Wall is a surviving section of the entrance to Leicester's Roman public baths, built around the second century. Standing roughly nine metres high, it is one of the largest pieces of Roman civil architecture still standing in Britain.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Romans, Kings & Clocks",
+      "Stop_ID": "LEI002",
+      "Stop_Order": 2,
+      "Stop_Name": "Leicester Guildhall",
+      "Target_Lat": 52.6348058,
+      "Target_Long": -1.1376428,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a timber hall where guilds governed, actors performed and a defeated king's story now waits next door.",
+      "Hint_1": "Walk east into the Cathedral Quarter.",
+      "Hint_2": "Look along Guildhall Lane for the black-and-white medieval building beside Leicester Cathedral.",
+      "Unlock_Fact": "Leicester Guildhall dates from about 1390 and is one of the best-preserved timber-framed halls in England. It served as a guild meeting place, town hall, courtroom, prison and performance venue; travelling companies are believed to have staged plays here.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Romans, Kings & Clocks",
+      "Stop_ID": "LEI003",
+      "Stop_Order": 3,
+      "Stop_Name": "Haymarket Memorial Clock Tower",
+      "Target_Lat": 52.6362309,
+      "Target_Long": -1.1330642,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find four local giants holding up a clock where five busy streets collide.",
+      "Hint_1": "Head north-east through the city centre towards Humberstone Gate.",
+      "Hint_2": "Look for the ornate stone clock tower standing alone at a major pedestrian junction.",
+      "Unlock_Fact": "The Haymarket Memorial Clock Tower was completed in 1868 to organise traffic at a notoriously crowded junction. Its statues portray four Leicester benefactors and historical figures: Simon de Montfort, William Wyggeston, Sir Thomas White and Alderman Gabriel Newton.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Romans, Kings & Clocks",
+      "Stop_ID": "LEI004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Globe",
+      "Target_Lat": 52.6353105,
+      "Target_Long": -1.13612,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Return to Silver Street and circle the Globe, where an old well once helped fill every glass.",
+      "Hint_1": "Walk west from the Clock Tower towards Silver Street.",
+      "Hint_2": "Find the historic pub at number 43 with a round world on its sign.",
+      "Unlock_Fact": "Route complete! The Globe has served ale and food since 1720. Beer was once brewed using spring water drawn from the well beneath the pub, which still survives below the building. After Romans, kings and clocks, you have earned food or a drink above one final hidden layer of history.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

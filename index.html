@@ -1,135 +1,48 @@
-<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-  <meta name="theme-color" content="#171c2d" />
-  <meta name="description" content="A location-based cryptic town trail game." />
-  <title>GeoQuest</title>
-  <link rel="manifest" href="manifest.webmanifest" />
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <main id="app" class="app-shell">
-    <header class="topbar">
-      <button id="backButton" class="icon-button hidden" aria-label="Go back">←</button>
-      <div class="brand"><span class="brand-mark">⌖</span><span>GeoQuest</span></div>
-      <button id="notesButton" class="icon-button" aria-label="Open playtest notes">✎</button>
-    </header>
-
-    <section id="homeScreen" class="screen active">
-      <div class="hero-card">
-        <div class="eyebrow">WALK · SOLVE · DISCOVER</div>
-        <h1>Your town is the game board.</h1>
-        <p>Follow cryptic clues, hunt down hidden landmarks and unlock the story behind each stop.</p>
-      </div>
-      <div class="section-heading">
-        <div><span class="eyebrow">SELECT A TRAIL</span><h2>Choose your town</h2></div>
-        <span id="townCount" class="pill"></span>
-      </div>
-      <div id="townGrid" class="town-grid"></div>
-      <button id="resumeButton" class="primary-button hidden">Resume current trail</button>
-    </section>
-
-    <section id="gameScreen" class="screen">
-      <div class="progress-wrap">
-        <div class="progress-copy"><span id="townName"></span><span id="progressText"></span></div>
-        <div class="progress-track"><div id="progressBar" class="progress-bar"></div></div>
-      </div>
-
-      <article class="clue-card">
-        <div class="clue-number">STOP <span id="stopNumber"></span></div>
-        <div class="clue-icon">?</div>
-        <h2 id="crypticClue"></h2>
-        <p class="muted">Find the place described by the clue. Check your location when you think you are there.</p>
-      </article>
-
-      <div class="hint-stack">
-        <button id="hint1Button" class="hint-button"><span>💡 Reveal hint 1</span><span>−1 star</span></button>
-        <div id="hint1Panel" class="hint-panel hidden"></div>
-        <button id="hint2Button" class="hint-button locked"><span>🔒 Reveal hint 2</span><span>−1 star</span></button>
-        <div id="hint2Panel" class="hint-panel hidden"></div>
-      </div>
-
-      <section class="location-card">
-        <div class="location-head">
-          <div><span class="eyebrow">LOCATION CHECK</span><h3 id="locationStatus">Ready when you are</h3></div>
-          <div id="accuracyBadge" class="signal-badge">GPS</div>
-        </div>
-        <div id="distanceDisplay" class="distance-display">—</div>
-        <div id="distanceCaption" class="muted">Your distance will appear here.</div>
-        <button id="checkLocationButton" class="primary-button">⌖ Check my location</button>
-        <button id="stuckButton" class="secondary-button stuck-button">I’m stuck</button>
-        <button id="toggleDemoButton" class="text-button">Use desktop test mode</button>
-
-        <div id="guidePanel" class="guide-panel hidden" aria-live="polite">
-          <div class="guide-top">
-            <div><span class="eyebrow">GUIDE MODE</span><h3>Head <span id="guideDirection">—</span></h3></div>
-            <div id="guideArrow" class="guide-arrow">↑</div>
-          </div>
-          <strong id="guideDistance">Finding you…</strong>
-          <p id="guideAccuracy" class="muted">Keep this page open while walking.</p>
-          <button id="stopGuideButton" class="text-button">Stop guiding me</button>
-        </div>
-
-        <div id="demoPanel" class="demo-panel hidden">
-          <div class="demo-heading"><strong>Playtest mode</strong><span id="demoDistanceLabel">500 m away</span></div>
-          <input id="demoDistance" type="range" min="0" max="1500" step="5" value="500" />
-          <p class="muted">Move the slider toward zero, then press “Check simulated location”.</p>
-          <button id="demoCheckButton" class="secondary-button">Check simulated location</button>
-        </div>
-      </section>
-    </section>
-
-    <section id="successScreen" class="screen">
-      <div id="successBurst" class="success-burst">✓</div>
-      <div id="successEyebrow" class="eyebrow">LOCATION CONFIRMED</div>
-      <h1 id="foundName"></h1>
-      <div id="starsEarned" class="stars"></div>
-      <article class="fact-card">
-        <span class="eyebrow">UNLOCKED STORY</span>
-        <p id="unlockFact"></p>
-      </article>
-      <button id="nextStopButton" class="primary-button">Continue to next stop</button>
-    </section>
-
-    <section id="completeScreen" class="screen">
-      <div class="success-burst trophy">★</div>
-      <div class="eyebrow">TRAIL COMPLETE</div>
-      <h1 id="completeTitle"></h1>
-      <p class="muted">You reached the end of this route.</p>
-      <div class="summary-grid">
-        <div><strong id="summaryStops"></strong><span>Stops found</span></div>
-        <div><strong id="summaryStars"></strong><span>Stars earned</span></div>
-        <div><strong id="summarySkipped"></strong><span>Skipped</span></div>
-      </div>
-      <button id="restartButton" class="primary-button">Play this trail again</button>
-      <button id="chooseTownButton" class="secondary-button">Choose another town</button>
-    </section>
-  </main>
-
-  <dialog id="stuckDialog" class="notes-dialog">
-    <div class="notes-sheet">
-      <div class="notes-head"><div><span class="eyebrow">NEED A HAND?</span><h2>Choose some help</h2></div><button id="closeStuckButton" class="icon-button" aria-label="Close">×</button></div>
-      <p class="muted">Guidance points you toward the target. Skipping gives no stars for this stop.</p>
-      <div class="stuck-options">
-        <button id="stuckHintButton" class="secondary-button">Reveal the next hint</button>
-        <button id="guideButton" class="primary-button">Guide me toward it</button>
-        <button id="skipButton" class="danger-button">Skip this stop</button>
-      </div>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10131a"><title>GeoQuest</title><link rel="manifest" href="manifest.webmanifest"><link rel="preconnect" href="https://unpkg.com"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="styles.css"></head><body>
+<div id="app">
+<header class="topbar"><button class="brand" data-home><span class="brandmark">GQ</span><span>GeoQuest</span></button><div class="top-actions"><button id="searchToggle" class="icon-btn" aria-label="Search">⌕</button><button id="mapOpen" class="map-nav-btn" aria-label="Explore adventure map"><span>⌖</span><b>Map</b></button></div></header>
+<div id="searchWrap" class="search-wrap hidden"><input id="searchInput" placeholder="Search places, themes or routes…"><button id="searchClose">×</button></div>
+<main id="homeView">
+<section class="hero"><div><span class="eyebrow">REAL-WORLD ADVENTURES</span><h1>Where will your next clue lead?</h1><p>Pick a route, solve the clues and discover the stories hiding around you.</p></div><button id="surpriseHero" class="dice-btn"><span>⚄</span><b>Surprise me</b><small>Choose an adventure</small></button></section>
+<section class="section map-feature-section"><button id="mapFeature" class="map-feature-card"><div class="map-feature-copy"><span class="eyebrow">EXPLORE THE ADVENTURE MAP</span><h2>See every quest in one place.</h2><p>Browse towns visually, compare what is nearby and jump straight into a route.</p><span class="map-feature-cta">Open the map <b>→</b></span></div><div class="map-feature-art" aria-hidden="true"><i></i><i></i><i></i><span class="map-feature-pin pin-one">⌖</span><span class="map-feature-pin pin-two">⌖</span><span class="map-feature-pin pin-three">⌖</span><b id="mapPackCount">All adventures</b></div></button></section>
+<section id="continueSection" class="section hidden"><div class="section-head"><h2>Continue exploring</h2></div><div id="continueCard"></div></section>
+<section id="explorerSection" class="section"><div class="section-head"><div><span class="eyebrow">YOUR ADVENTURES</span><h2>Explorer record</h2></div></div><div id="explorerStats" class="explorer-stats"></div><div id="achievementSpotlight"></div><div id="achievementMore" class="collapsible-panel hidden"><div id="achievementGrid" class="achievement-grid"></div></div><button id="achievementToggle" class="expand-btn hidden" aria-expanded="false" aria-controls="achievementMore"></button></section>
+<section class="section"><div class="section-head"><div><span class="eyebrow">TODAY ONLY</span><h2>Daily adventure</h2></div><span id="dailyDate" class="pill"></span></div><div id="dailyCard"></div></section>
+<section id="featuredSection" class="section hidden"><div class="section-head"><div><span class="eyebrow">HAND-PICKED</span><h2>Featured adventures</h2></div></div><div id="featuredGrid" class="route-grid preview-grid"></div><div id="featuredMore" class="collapsible-panel hidden"><div id="featuredMoreGrid" class="route-grid preview-grid"></div></div><button id="featuredToggle" class="expand-btn hidden" aria-expanded="false" aria-controls="featuredMore"></button></section>
+<section id="nearbySection" class="section"><div class="section-head"><div><span class="eyebrow">CLOSE TO HOME</span><h2>Nearby adventures</h2></div><button id="locateBtn" class="text-btn">Use my location</button></div><div id="nearbyStatus" class="muted">Allow location to sort routes nearest to you.</div><div id="nearbyGrid" class="route-grid preview-grid"></div><div id="nearbyMore" class="collapsible-panel hidden"><div id="nearbyMoreGrid" class="route-grid preview-grid"></div></div><button id="nearbyToggle" class="expand-btn hidden" aria-expanded="false" aria-controls="nearbyMore"></button></section>
+<section class="section"><div class="section-head"><div><span class="eyebrow">BROWSE YOUR WAY</span><h2>Collections</h2></div></div><div id="collectionGrid" class="collection-grid"></div></section>
+<section class="section browse-section"><div class="section-head"><div><span class="eyebrow">FIT YOUR DAY</span><h2>Find your perfect adventure</h2></div></div><div id="filterPanel" class="browse-controls"></div><div class="browse-results-head"><p id="browseCount" class="muted"></p><button id="clearFilters" class="text-btn">Reset filters</button></div><div id="browseGrid" class="route-grid"></div></section>
+</main>
+<section id="mapView" class="view hidden"><div class="view-head"><button class="back-btn" data-home>←</button><div><span class="eyebrow">EXPLORE THE MAP</span><h2>Pick a pin. Start an adventure.</h2></div></div><div id="map"></div></section>
+<section id="collectionView" class="view hidden"><div class="view-head"><button class="back-btn" data-home>←</button><div><span class="eyebrow">COLLECTION</span><h2 id="collectionTitle"></h2></div></div><div id="collectionRoutes" class="route-grid pad"></div></section>
+<section id="detailView" class="view hidden"><div id="detailContent"></div></section>
+<section id="gameView" class="view hidden"><div id="gameContent"></div></section>
+<div id="toast" class="toast"></div>
+<div id="safetyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
+  <div class="modal-card safety-card">
+    <span class="eyebrow">BEFORE YOU EXPLORE</span>
+    <h2 id="safetyTitle">Adventure responsibly.</h2>
+    <p>GeoQuest does its best to work out where you are, but phone GPS is not magic and can sometimes be inaccurate.</p>
+    <ul class="safety-list">
+      <li>Stay on public paths and never enter private property.</li>
+      <li>Do not cross unsafe roads, climb barriers, enter water, or put yourself in danger.</li>
+      <li>Look around you and use common sense. The app should never be more important than your safety.</li>
+      <li>Children should explore with a responsible adult.</li>
+    </ul>
+    <p class="safety-fun">Be sensible, keep your eyes open, and have fun.</p>
+    <button id="acceptSafety" class="primary">I understand — let’s explore</button>
+  </div>
+</div>
+<div id="arrivalModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="arrivalTitle">
+  <div class="modal-card arrival-card">
+    <span id="arrivalEyebrow" class="eyebrow">LOCATION CHECK</span>
+    <h2 id="arrivalTitle">Are you at the landmark?</h2>
+    <div id="arrivalReading" class="accuracy-reading"></div>
+    <p id="arrivalMessage"></p>
+    <div class="modal-actions">
+      <button id="confirmArrival" class="primary">Yes, I can see it — submit</button>
+      <button id="keepSearching" class="secondary">Not yet — keep searching</button>
     </div>
-  </dialog>
-
-  <dialog id="notesDialog" class="notes-dialog">
-    <form method="dialog" class="notes-sheet">
-      <div class="notes-head"><div><span class="eyebrow">PLAYTEST</span><h2>Your notes</h2></div><button class="icon-button">×</button></div>
-      <p class="muted">Notes save automatically in this browser.</p>
-      <textarea id="notesArea" placeholder="What feels good? What is confusing? What should change?"></textarea>
-      <div class="notes-actions"><button id="copyNotesButton" type="button" class="secondary-button">Copy notes</button><button class="primary-button">Done</button></div>
-    </form>
-  </dialog>
-
-  <div id="toast" class="toast"></div>
-  <script src="app.js"></script>
-</body>
-</html>
+  </div>
+</div>
+</div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><script src="app.js"></script></body></html>

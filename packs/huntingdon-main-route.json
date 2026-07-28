@@ -1,10 +1,10 @@
 {
-  "pack_format": 1,
+  "pack_format": 2,
   "pack_id": "huntingdon-main-route",
   "version": 1,
   "town": "Huntingdon",
   "display_name": "Huntingdon",
-  "route_name": "Main Route",
+  "route_name": "Cromwell, Bridges & Players",
   "description": "Huntingdon walking trail",
   "centre": {
     "lat": 52.329075,
@@ -14,7 +14,7 @@
   "stops": [
     {
       "Town": "Huntingdon",
-      "Route": "Main Route",
+      "Route": "Cromwell, Bridges & Players",
       "Stop_ID": "HUN001",
       "Stop_Order": 1,
       "Stop_Name": "Cromwell Museum (Grammar School)",
@@ -31,7 +31,7 @@
     },
     {
       "Town": "Huntingdon",
-      "Route": "Main Route",
+      "Route": "Cromwell, Bridges & Players",
       "Stop_ID": "HUN002",
       "Stop_Order": 2,
       "Stop_Name": "The Falcon Inn",
@@ -48,7 +48,7 @@
     },
     {
       "Town": "Huntingdon",
-      "Route": "Main Route",
+      "Route": "Cromwell, Bridges & Players",
       "Stop_ID": "HUN003",
       "Stop_Order": 3,
       "Stop_Name": "The Old Bridge",
@@ -65,7 +65,7 @@
     },
     {
       "Town": "Huntingdon",
-      "Route": "Main Route",
+      "Route": "Cromwell, Bridges & Players",
       "Stop_ID": "HUN004",
       "Stop_Order": 4,
       "Stop_Name": "The George Hotel",
@@ -80,5 +80,22 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "short_description": "Follow old streets, river crossings and remarkable local characters.",
+  "cover_theme": "river",
+  "route_distance_km": 3.0,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "history",
+    "riverside",
+    "hidden-gems"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "Designed as a walking route."
 }

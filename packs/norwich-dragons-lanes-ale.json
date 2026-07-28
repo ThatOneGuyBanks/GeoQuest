@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "norwich-dragons-lanes-ale",
+  "version": 1,
+  "town": "Norwich",
+  "display_name": "Norwich",
+  "route_name": "Dragons, Lanes & Ancient Ale",
+  "description": "Track medieval merchants, a city-devouring fire and a soaring Norman landmark through Norwich's old streets.",
+  "short_description": "Hunt carved dragons and crooked lanes before reaching Norwich's oldest recorded alehouse.",
+  "centre": {
+    "lat": 52.63021,
+    "long": 1.30046
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.7,
+  "estimated_minutes": 70,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "medieval",
+    "architecture",
+    "merchants",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central walking route on public streets and cathedral paths. Dragon Hall can be solved from King Street without entering.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Norwich",
+      "Route": "Dragons, Lanes & Ancient Ale",
+      "Stop_ID": "NOR001",
+      "Stop_Order": 1,
+      "Stop_Name": "Dragon Hall",
+      "Target_Lat": 52.6254011,
+      "Target_Long": 1.3015027,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a merchant's hall where fifteen timber beasts once watched cargo arrive from across the sea.",
+      "Hint_1": "Begin on King Street, close to the River Wensum.",
+      "Hint_2": "Look for the medieval trading hall now occupied by the National Centre for Writing.",
+      "Unlock_Fact": "Merchant Robert Toppes built Dragon Hall in about 1427 to display, store and sell goods from Norfolk and Europe. Its great trading room used more than 500 oak timbers and was decorated with fifteen carved dragons, giving the restored building its modern name.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Dragons, Lanes & Ancient Ale",
+      "Stop_ID": "NOR002",
+      "Stop_Order": 2,
+      "Stop_Name": "Elm Hill",
+      "Target_Lat": 52.6316616,
+      "Target_Long": 1.2969808,
+      "Win_Radius_m": 65,
+      "Cryptic_Clue": "Find a crooked hill rebuilt after flames ate nearly every house but one.",
+      "Hint_1": "Head north-west towards the Norwich Lanes and cross the river.",
+      "Hint_2": "Search for the cobbled street of leaning timber-framed buildings near Princes Street.",
+      "Unlock_Fact": "A major fire swept through Elm Hill in 1507 and destroyed most of the street. The Britons Arms is traditionally identified as the only surviving building from before the blaze; the picturesque houses around it were rebuilt during the Tudor period and later centuries.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Dragons, Lanes & Ancient Ale",
+      "Stop_ID": "NOR003",
+      "Stop_Order": 3,
+      "Stop_Name": "Norwich Cathedral",
+      "Target_Lat": 52.6319818,
+      "Target_Long": 1.3011455,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Pass through a gate to find a Norman giant wearing a stone spire and watched by peregrines.",
+      "Hint_1": "Walk east into the Cathedral Close.",
+      "Hint_2": "Look for the vast pale-stone cathedral with a spire rising above the city.",
+      "Unlock_Fact": "Construction of Norwich Cathedral began in 1096 under Bishop Herbert de Losinga. Its Norman nave remains remarkably complete, while the 96-metre stone spire is the second tallest cathedral spire in England. Peregrine falcons have also nested high on the building.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Dragons, Lanes & Ancient Ale",
+      "Stop_ID": "NOR004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Adam and Eve",
+      "Target_Lat": 52.6338027,
+      "Target_Long": 1.3031948,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Leave the Close to find the first couple sharing Norwich's oldest recorded pint.",
+      "Hint_1": "Continue north-east towards Bishopgate and the river.",
+      "Hint_2": "Find the small flint-walled pub at number 17 named after the biblical pair.",
+      "Unlock_Fact": "Route complete! The Adam and Eve is traditionally called Norwich's oldest pub, with its earliest known written reference dating to 1249. The present building has changed over the centuries, but the tiny rooms still provide an atmospheric finish for food, a pint or a soft drink.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

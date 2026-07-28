@@ -20,6 +20,66 @@
     {
       "file": "st-neots-main-route.json",
       "enabled": true
+    },
+    {
+      "file": "cambridge-clocks-colleges-code.json",
+      "enabled": true
+    },
+    {
+      "file": "bedford-pilgrims-castles-riverside.json",
+      "enabled": true
+    },
+    {
+      "file": "stamford-wool-stone-secrets.json",
+      "enabled": true
+    },
+    {
+      "file": "bury-st-edmunds-kings-abbeys-ales.json",
+      "enabled": true
+    },
+    {
+      "file": "kings-lynn-hanseatic-harbour.json",
+      "enabled": true
+    },
+    {
+      "file": "norwich-dragons-lanes-ale.json",
+      "enabled": true
+    },
+    {
+      "file": "lincoln-imps-arches-charters.json",
+      "enabled": true
+    },
+    {
+      "file": "leicester-romans-kings-clocks.json",
+      "enabled": true
+    },
+    {
+      "file": "northampton-shoes-spires-stories.json",
+      "enabled": true
+    },
+    {
+      "file": "oxford-martyrs-minds-mysteries.json",
+      "enabled": true
+    },
+    {
+      "file": "york-walls-vikings-wobbly-ale.json",
+      "enabled": true
+    },
+    {
+      "file": "nottingham-outlaws-lace-caves.json",
+      "enabled": true
+    },
+    {
+      "file": "birmingham-clocks-canals-code.json",
+      "enabled": true
+    },
+    {
+      "file": "coventry-godiva-guilds-phoenix.json",
+      "enabled": true
+    },
+    {
+      "file": "stratford-shakespeare-swans-spirits.json",
+      "enabled": true
     }
   ]
 }

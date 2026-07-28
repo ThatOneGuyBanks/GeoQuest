@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "oxford-martyrs-minds-mysteries",
+  "version": 1,
+  "town": "Oxford",
+  "display_name": "Oxford",
+  "route_name": "Martyrs, Minds & Mysteries",
+  "description": "Decode Oxford through religious conflict, architectural illusions and a round library built for science.",
+  "short_description": "Follow burned bishops, a bridge that sighs and hidden alleys to a tavern beside the city wall.",
+  "centre": {
+    "lat": 51.75443,
+    "long": -1.25491
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 65,
+  "difficulty_label": "Detective",
+  "tags": [
+    "university",
+    "religious-history",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "University Cities"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A public-street route; no college ticket is needed. The final tavern is reached through a narrow pedestrian alley.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Oxford",
+      "Route": "Martyrs, Minds & Mysteries",
+      "Stop_ID": "OXF001",
+      "Stop_Order": 1,
+      "Stop_Name": "Martyrs' Memorial",
+      "Target_Lat": 51.755087,
+      "Target_Long": -1.2589965,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a stone flame for three men whose real fires burned a short walk away.",
+      "Hint_1": "Begin at the south end of St Giles', close to the Randolph Hotel.",
+      "Hint_2": "Look for the tall Gothic monument in Magdalen Street.",
+      "Unlock_Fact": "The memorial was completed in 1843 for Protestant bishops Thomas Cranmer, Hugh Latimer and Nicholas Ridley. They were executed for heresy during the reign of Mary I in 1555 and 1556; a cross in nearby Broad Street marks the traditional site of the burnings.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Oxford",
+      "Route": "Martyrs, Minds & Mysteries",
+      "Stop_ID": "OXF002",
+      "Stop_Order": 2,
+      "Stop_Name": "Bridge of Sighs",
+      "Target_Lat": 51.7545023,
+      "Target_Long": -1.253781,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a bridge that crosses no river and borrows a mournful nickname from Venice.",
+      "Hint_1": "Walk east towards Catte Street and New College Lane.",
+      "Hint_2": "Look up for the enclosed stone bridge connecting two parts of Hertford College.",
+      "Unlock_Fact": "Its official name is Hertford Bridge. Architect Sir Thomas Jackson designed it, and it was completed in 1914. Although popularly compared with Venice's Bridge of Sighs, the two structures look quite different and Oxford's bridge crosses a street rather than a canal.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Oxford",
+      "Route": "Martyrs, Minds & Mysteries",
+      "Stop_ID": "OXF003",
+      "Stop_Order": 3,
+      "Stop_Name": "Radcliffe Camera",
+      "Target_Lat": 51.7534528,
+      "Target_Long": -1.2539906,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a camera that takes no photographs: a round room built to hold the science of its age.",
+      "Hint_1": "Walk south into Radcliffe Square.",
+      "Hint_2": "Look for Oxford's famous circular domed library.",
+      "Unlock_Fact": "Here 'camera' uses the Latin word for a chamber or room. James Gibbs designed the Radcliffe Camera, built between 1737 and 1749 as the Radcliffe Science Library. It is now a reading room of the Bodleian Library and one of Oxford's most recognisable buildings.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Oxford",
+      "Route": "Martyrs, Minds & Mysteries",
+      "Stop_ID": "OXF004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Turf Tavern",
+      "Target_Lat": 51.7546944,
+      "Target_Long": -1.2528561,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Slip through a passage to the turf where drinkers hide against Oxford's medieval wall.",
+      "Hint_1": "Return north-east towards Holywell Street and Bath Place.",
+      "Hint_2": "Follow the narrow signed alley to the hidden historic pub.",
+      "Unlock_Fact": "Route complete! The Turf Tavern is tucked against a surviving stretch of Oxford's medieval city wall. A drinking house has occupied this hidden site for centuries, and the present pub's low rooms and courtyards make a suitably secret ending for food or a drink.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}

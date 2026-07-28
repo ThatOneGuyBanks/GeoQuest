@@ -1,0 +1,102 @@
+{
+  "pack_format": 2,
+  "pack_id": "birmingham-clocks-canals-code",
+  "version": 1,
+  "town": "Birmingham",
+  "display_name": "Birmingham",
+  "route_name": "Clocks, Canals & Code",
+  "description": "Follow Birmingham's makers from a Jewellery Quarter landmark to books, waterways and a theatrical bank.",
+  "short_description": "Wind up an iron clock, unlock a golden library and solve a canal water war.",
+  "centre": {
+    "lat": 52.48125,
+    "long": -1.90771
+  },
+  "author": "GeoQuest",
+  "route_distance_km": 2.8,
+  "estimated_minutes": 85,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "industry",
+    "canals",
+    "modern-architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A longer city-centre route using pavements and canal-side public paths. Keep away from the water's edge.",
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Birmingham",
+      "Route": "Clocks, Canals & Code",
+      "Stop_ID": "BIR001",
+      "Stop_Order": 1,
+      "Stop_Name": "Chamberlain Clock",
+      "Target_Lat": 52.4870085,
+      "Target_Long": -1.9125779,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find an iron timekeeper where jewellers once set their pocket watches before work.",
+      "Hint_1": "Begin at the junction of Vyse Street and Frederick Street in the Jewellery Quarter.",
+      "Hint_2": "Look for the ornate green clock tower standing in the middle of the road junction.",
+      "Unlock_Fact": "The Chamberlain Clock was erected in 1903 to commemorate Joseph Chamberlain's tour of South Africa. Jewellery Quarter workers reportedly used its four clock faces to regulate their working day, making it both a political monument and a practical neighbourhood timepiece.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Clocks, Canals & Code",
+      "Stop_ID": "BIR002",
+      "Stop_Order": 2,
+      "Stop_Name": "Library of Birmingham",
+      "Target_Lat": 52.4796863,
+      "Target_Long": -1.9084783,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Find stacked boxes wrapped in silver and gold, hiding Shakespeare in a Victorian room at the top.",
+      "Hint_1": "Walk south towards Centenary Square.",
+      "Hint_2": "Look for the enormous modern library with circular metal patterns across its facade.",
+      "Unlock_Fact": "The Library of Birmingham opened in 2013. High inside it sits the wood-panelled Shakespeare Memorial Room, originally created for the city's 1882 library and carefully dismantled, stored and rebuilt. The old room now lives inside one of Birmingham's boldest modern buildings.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Clocks, Canals & Code",
+      "Stop_ID": "BIR003",
+      "Stop_Order": 3,
+      "Stop_Name": "Gas Street Basin",
+      "Target_Lat": 52.4775061,
+      "Target_Long": -1.9096652,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Find the watery junction where rival canals once refused to share a single drop.",
+      "Hint_1": "Continue south-west from Centenary Square towards the canals.",
+      "Hint_2": "Look for narrowboats and brick warehouses around Gas Street Basin.",
+      "Unlock_Fact": "Gas Street Basin linked major canal routes, but competing companies initially kept them apart with the Worcester Bar to prevent one canal stealing water from another. A stop lock finally connected the waterways in 1815. Today the wider Birmingham Canal Navigations include more than 100 miles of canal.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Clocks, Canals & Code",
+      "Stop_ID": "BIR004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Old Joint Stock",
+      "Target_Lat": 52.4807984,
+      "Target_Long": -1.9001191,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Bank your final answer beneath a glass dome where money became theatre and ale.",
+      "Hint_1": "Walk east through the city centre towards the cathedral and Temple Row West.",
+      "Hint_2": "Find the grand former bank opposite St Philip's Cathedral.",
+      "Unlock_Fact": "Route complete! The Old Joint Stock occupies a lavish Grade II listed former bank, with a dramatic central dome and richly decorated interior. It now combines a pub, restaurant and studio theatre, turning Birmingham's financial architecture into a fitting place for food, a drink or a show.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ]
+}
