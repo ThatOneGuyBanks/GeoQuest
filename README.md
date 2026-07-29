@@ -17,9 +17,17 @@ Cards and filters use: `route_distance_km`, `estimated_minutes`, `difficulty_lab
 ## Map
 The map uses Leaflet and OpenStreetMap tiles. The overview shows town-level adventure pins only. The route line, numbered stops and landmark names are revealed in the completed-route recap, so the clues are not spoiled before play. GPS and compass permission require HTTPS, which GitHub Pages provides.
 
-## Player record
+## Player record and scoring
 
-Scores, achievements, daily completions, route progress, distance-unit preference and personal bests are stored locally in the browser. A discovered stop awards 100 points, with 25 points deducted for each revealed hint. Skipped stops award no points. Explorer totals are open-ended and do not require players to finish every installed pack. No account or server is required.
+Scores, achievement awards, daily completions, route progress, distance-unit preference, passport stamps and personal bests are stored locally in the browser. No account or server is required.
+
+A discovered stop awards 1,000 points. Solving without hints adds 250 points; the first hint deducts 100 points and both hints deduct 250 points in total. After each real-world discovery, an optional **Fieldwork** activity adds another 250 points. The player must either capture a discovery photo or write an observation of at least 12 characters. Skipped stops award no points.
+
+Discovery photos and field-note text are never uploaded or written to browser storage. Photo object URLs, decoded images and note text exist only in memory for the current adventure. In the postcard editor, up to six photos and six notes appear in a collapsible Extras list. Each extra starts unchecked, can be added or removed independently, and can be dragged anywhere on the fixed 1080 × 1350 postcard. Dragging uses a lightweight live preview; the full-quality share or download is regenerated once the player releases the item, preserving its exact final position. Leaving the adventure or refreshing the page discards these temporary memories. Only the completed bonus type and point totals are saved.
+
+Completing a route awards 1,000 points, plus 500 for skipping no stops, 750 for a hint-free route and 500 for a route's first completion. Adventures chosen through **Surprise Me** receive a 20% completion bonus. The daily adventure is a **Daily Double** and receives a 100% completion bonus once per calendar day.
+
+Achievements award one-time Explorer Points in 500, 1,500, 3,000 and 5,000-point tiers. The Explorer total combines route personal bests with unlocked achievement awards, while the completion postcard shows the score from that particular outing. Existing saved scores are upgraded automatically to the larger scoring scale.
 
 ## Live guidance
 

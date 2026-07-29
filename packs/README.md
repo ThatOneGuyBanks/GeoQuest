@@ -78,6 +78,8 @@ Every stop requires:
 - A specific, accurately checked `Unlock_Fact`
 - Numeric `Difficulty`
 
+Stops may also include an optional `Explorer_Prompt`. This powers the 250-point **Fieldwork** activity after a discovery. Write a short prompt that makes the player look away from the screen and notice a safe, publicly visible detail: a date, carving, symbol, material, old sign or relationship to the surrounding street. The player can respond by taking a discovery photo or writing a short field note. Never require entry, a purchase, touching property, climbing or crossing an unsafe road. If this field is omitted, the game uses a general observation prompt.
+
 Keep the `Town` and `Route` values consistent with the pack metadata. Coordinates must point to safe, publicly accessible locations and clues must not require trespassing, crossing unsafe areas or entering a building.
 
 The final stop must be a real pub, restaurant or café where players can end their day. Its unlock text should begin with “Route complete!”, contain an interesting checked fact and avoid promising that the venue will be open.

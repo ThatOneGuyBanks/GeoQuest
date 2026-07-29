@@ -68,6 +68,7 @@
       "Hint_1": "Give a useful direction or describe the area where the player should look.",
       "Hint_2": "Give a clearer visual description that should help a stuck player find the exact landmark.",
       "Unlock_Fact": "Reveal the landmark and tell a specific, interesting and accurately checked story about it.",
+      "Explorer_Prompt": "Ask the player to look away from the screen and notice a safe, visible detail such as a carving, date, symbol or building material.",
       "Difficulty": 2,
       "Image": null,
       "Audio": null
@@ -85,6 +86,7 @@
       "Hint_1": "Guide players towards the final venue without giving its name away immediately.",
       "Hint_2": "Describe the venue, its sign or its location clearly enough to finish the route.",
       "Unlock_Fact": "Begin with ‘Route complete!’ and share a checked fact about the venue or building, then invite players to finish with food or a drink if it is open.",
+      "Explorer_Prompt": "Ask the player to notice one distinctive exterior detail without requiring entry or a purchase.",
       "Difficulty": 1,
       "Image": null,
       "Audio": null

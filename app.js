@@ -17,6 +17,8 @@ let orientationHandler = null;
 let latestGuideReading = null;
 let lastScanReading = null;
 let selectedAsDaily = false;
+let selectedAsSurprise = false;
+let selectedDailyDate = null;
 let stuckTapTimes = [];
 let debugMode = false;
 let debugStop = null;
@@ -37,6 +39,12 @@ let guideSession = 0;
 let currentCollection = null;
 let pendingDiscovery = null;
 let postcardEditorState = null;
+let adventurePhotos = [];
+let adventureNotes = [];
+const POSTCARD_WIDTH = 1080;
+const POSTCARD_HEIGHT = 1350;
+const POSTCARD_PREVIEW_WIDTH = 540;
+const POSTCARD_PREVIEW_HEIGHT = 675;
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -45,6 +53,26 @@ const LEGACY_KEY = 'geoquest-progress-v3';
 const LEGACY_SAFETY_KEY = 'geoquest-safety-accepted-v1';
 const LEGACY_PROFILE_KEY = 'geoquest-profile-v1';
 const VIEW_KEY = 'day-tripping-quiz-view-v1';
+const SCORE_VERSION = 2;
+const SCORING = Object.freeze({
+  discovery: 1000,
+  noHint: 250,
+  curiosity: 250,
+  completion: 1000,
+  noSkip: 500,
+  noHintRoute: 750,
+  firstCompletion: 500,
+  surpriseRate: 0.2,
+  dailyRate: 1
+});
+const CURIOSITY_PROMPTS = [
+  'Look above eye level. Find one detail most people would walk straight past.',
+  'Find a date, name or symbol nearby that helps tell this place\'s story.',
+  'Step back somewhere safe and spot one feature that reveals what this place was built for.',
+  'Study the materials and decoration. Find one detail that could not have come from a modern building.',
+  'Look for an animal, face, crest, pattern or maker\'s mark hidden in the scene.',
+  'Turn away from the screen and notice one connection between this landmark and the street around it.'
+];
 const progress = readProgress();
 const profile = readProfile();
 const TUTORIAL_STEPS = [
@@ -78,10 +106,11 @@ function readProfile() {
       achievementDates: saved.achievementDates && typeof saved.achievementDates === 'object' ? saved.achievementDates : {},
       sound: saved.sound !== false,
       vibration: saved.vibration !== false,
-      tutorialSeen: saved.tutorialSeen === true
+      tutorialSeen: saved.tutorialSeen === true,
+      surpriseCompletions: Math.max(0, Number(saved.surpriseCompletions) || 0)
     };
   } catch {
-    return { unit: 'km', dailyDates: [], achievementDates: {}, sound: true, vibration: true, tutorialSeen: false };
+    return { unit: 'km', dailyDates: [], achievementDates: {}, sound: true, vibration: true, tutorialSeen: false, surpriseCompletions: 0 };
   }
 }
 
@@ -108,6 +137,8 @@ function rememberView(view) {
     if (currentPack) {
       state.packId = currentPack.pack_id;
       state.isDaily = selectedAsDaily;
+      state.isSurprise = selectedAsSurprise;
+      if (selectedDailyDate) state.dailyDate = selectedDailyDate;
     }
     if (view === 'collectionView' && currentCollection) state.collection = currentCollection;
     if (view === 'gameView') {
@@ -121,6 +152,10 @@ function rememberView(view) {
 
 function restoreView() {
   const state = readViewState();
+  if (state.view === 'passportView') {
+    showPassport();
+    return;
+  }
   if (state.view === 'mapView') {
     showMap();
     return;
@@ -131,7 +166,7 @@ function restoreView() {
   }
   const pack = state.packId ? packs.find(item => item.pack_id === state.packId) : null;
   if (state.view === 'detailView' && pack) {
-    openDetail(pack, Boolean(state.isDaily));
+    openDetail(pack, Boolean(state.isDaily && state.dailyDate === todayKey()), Boolean(state.isSurprise));
     return;
   }
   if (state.view === 'gameView' && pack) {
@@ -143,13 +178,15 @@ function restoreView() {
       save();
     }
     selectedAsDaily = Boolean(state.isDaily) || Boolean(routeState.dailyRunDate);
+    selectedAsSurprise = Boolean(state.isSurprise) || routeState.runMode === 'surprise';
+    selectedDailyDate = routeState.dailyRunDate || (state.dailyDate === todayKey() ? state.dailyDate : null);
     currentStop = Math.max(0, Math.min(pack.stops.length, Number(routeState.stop) || 0));
     const discovery = state.discovery;
     if (discovery && Number(discovery.stopIndex) === currentStop && pack.stops[currentStop]) {
       currentHints = Math.max(0, Math.min(2, Number(discovery.hints) || 0));
       applyRouteTheme(pack);
       showOnly('gameView');
-      renderDiscoveryScreen(pack.stops[currentStop], Boolean(discovery.skip), Boolean(discovery.debug), true);
+      renderDiscoveryScreen(pack.stops[currentStop], Boolean(discovery.skip), Boolean(discovery.debug), true, Boolean(discovery.curiosityClaimed), String(discovery.fieldworkType || ''));
     } else {
       renderGame({ hints: Math.max(0, Math.min(2, Number(state.hints) || 0)) });
     }
@@ -268,6 +305,7 @@ function resetAllProgress() {
   Object.keys(progress).forEach(key => delete progress[key]);
   profile.dailyDates = [];
   profile.achievementDates = {};
+  profile.surpriseCompletions = 0;
   localStorage.removeItem(KEY);
   localStorage.removeItem(LEGACY_KEY);
   saveProfile();
@@ -282,6 +320,77 @@ function esc(value = '') {
   return String(value).replace(/[&<>'"]/g, character => ({
     '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;'
   })[character]);
+}
+
+function formatPoints(value) {
+  return Math.max(0, Math.round(Number(value) || 0)).toLocaleString('en-GB');
+}
+
+function emptyScoreBreakdown() {
+  return {
+    landmarks: 0,
+    hintPenalty: 0,
+    sharpEyes: 0,
+    curiosity: 0,
+    completion: 0,
+    noSkip: 0,
+    noHintRoute: 0,
+    firstCompletion: 0,
+    modeBonus: 0
+  };
+}
+
+function scoreForStop(hints = 0, skip = false, curiosityClaimed = false) {
+  if (skip) return { total: 0, landmarks: 0, hintPenalty: 0, sharpEyes: 0, curiosity: 0 };
+  const safeHints = Math.max(0, Math.min(2, Number(hints) || 0));
+  const hintPenalty = safeHints === 0 ? 0 : safeHints === 1 ? 100 : 250;
+  const sharpEyes = safeHints === 0 ? SCORING.noHint : 0;
+  const curiosity = curiosityClaimed ? SCORING.curiosity : 0;
+  return {
+    total: SCORING.discovery - hintPenalty + sharpEyes + curiosity,
+    landmarks: SCORING.discovery,
+    hintPenalty,
+    sharpEyes,
+    curiosity
+  };
+}
+
+function curiosityPrompt(stop) {
+  if (stop?.Explorer_Prompt) return String(stop.Explorer_Prompt);
+  const seed = [...String(stop?.Stop_ID || stop?.Stop_Name || currentStop)]
+    .reduce((total, character) => total + character.charCodeAt(0), 0);
+  return CURIOSITY_PROMPTS[seed % CURIOSITY_PROMPTS.length];
+}
+
+function modeName(mode) {
+  if (mode === 'daily') return 'Daily Double';
+  if (mode === 'surprise') return 'Surprise Me';
+  return 'Standard adventure';
+}
+
+function migrateProgressScoring() {
+  let changed = false;
+  Object.values(progress).forEach(state => {
+    if (!state || typeof state !== 'object' || Number(state.scoreVersion) >= SCORE_VERSION) return;
+    const currentScore = Math.max(0, Number(state.score) || 0);
+    const bestScore = Math.max(currentScore, Number(state.bestScore) || 0);
+    const currentCompletionBonus = state.completed && currentScore > 0
+      ? SCORING.completion
+        + (Number(state.skipped) === 0 ? SCORING.noSkip : 0)
+        + (Number(state.hintsUsed) === 0 ? SCORING.noHintRoute : 0)
+        + (Number(state.completions) <= 1 ? SCORING.firstCompletion : 0)
+      : 0;
+    const bestCompletionBonus = bestScore > 0 && (state.completed || state.everCompleted)
+      ? SCORING.completion + SCORING.noSkip
+      : 0;
+    state.score = Math.round(currentScore * 10 + currentCompletionBonus);
+    state.bestScore = Math.max(state.score, Math.round(bestScore * 10 + bestCompletionBonus));
+    state.baseScore = state.score;
+    state.bestBaseScore = Math.max(Number(state.bestBaseScore) || 0, state.bestScore);
+    state.scoreVersion = SCORE_VERSION;
+    changed = true;
+  });
+  if (changed) localStorage.setItem(KEY, JSON.stringify(progress));
 }
 
 async function init() {
@@ -310,6 +419,7 @@ async function init() {
       .filter(item => Number(item.metres) > 0 && item.singular && item.plural)
       .sort((a, b) => Number(a.metres) - Number(b.metres));
     if (!packs.length) throw Error('No route packs loaded');
+    migrateProgressScoring();
     renderAll();
     bind();
     restoreContinue();
@@ -551,7 +661,7 @@ function venueTimingCard(pack, state) {
   return `<section id="venueTimingCard" class="venue-disclosure ${venueHoursExpanded ? 'expanded' : ''}"><button id="venueTimingToggle" class="venue-disclosure-toggle" aria-expanded="${venueHoursExpanded}" aria-controls="venueTimingPanel"><span class="venue-disclosure-icon">◷</span><span class="venue-disclosure-label"><b>Finish availability</b><small>${esc(availabilityHint)}</small></span><span class="venue-disclosure-arrow">⌄</span></button><div id="venueTimingPanel" class="venue-disclosure-panel ${venueHoursExpanded ? '' : 'hidden'}"><div class="venue-gentle-warning"><span>WITHOUT SPOILERS</span><p>${esc(gentleMessage)}</p></div>${locationButton}<div class="venue-spoiler-wrap">${exactDetails}${spoilerShield}</div></div></section>`;
 }
 
-function bindVenueDisclosure(pack, state, isDaily) {
+function bindVenueDisclosure(pack, state, isDaily, isSurprise = false) {
   const toggle = $('#venueTimingToggle');
   const panel = $('#venueTimingPanel');
   const card = $('#venueTimingCard');
@@ -572,7 +682,7 @@ function bindVenueDisclosure(pack, state, isDaily) {
         venueDetailsRevealed = true;
         const currentCard = $('#venueTimingCard');
         if (currentCard) currentCard.outerHTML = venueTimingCard(pack, state);
-        bindVenueDisclosure(pack, state, isDaily);
+        bindVenueDisclosure(pack, state, isDaily, isSurprise);
         return;
       }
       reveal.dataset.confirming = 'true';
@@ -585,7 +695,7 @@ function bindVenueDisclosure(pack, state, isDaily) {
       }, 10000);
     };
   }
-  if ($('#checkVenueLocation')) $('#checkVenueLocation').onclick = () => checkVenueLocation(pack, isDaily);
+  if ($('#checkVenueLocation')) $('#checkVenueLocation').onclick = () => checkVenueLocation(pack, isDaily, isSurprise);
 }
 
 function bind() {
@@ -604,6 +714,7 @@ function bind() {
   };
   $('#mapOpen').onclick = showMap;
   $('#mapFeature').onclick = showMap;
+  $('#passportOpen').onclick = showPassport;
   $('#surpriseHero').onclick = surprise;
   $('#settingsOpen').onclick = openSettings;
   $('#settingsClose').onclick = closeSettings;
@@ -653,7 +764,7 @@ function playPageTransition() {
 }
 
 function showOnly(id) {
-  const views = ['homeView', 'mapView', 'collectionView', 'detailView', 'gameView'];
+  const views = ['homeView', 'passportView', 'mapView', 'collectionView', 'detailView', 'gameView'];
   const currentView = views.find(view => !$(`#${view}`).classList.contains('hidden'));
   if (navigationTransitionsReady && currentView && currentView !== id) playPageTransition();
   views.forEach(view => $(`#${view}`).classList.toggle('hidden', view !== id));
@@ -661,9 +772,22 @@ function showOnly(id) {
   rememberView(id);
 }
 
+function showPassport() {
+  stopWatch();
+  destroyCompletionMap();
+  closeArrival();
+  currentCollection = null;
+  pendingDiscovery = null;
+  currentPack = null;
+  applyRouteTheme(null);
+  renderExplorerRecord();
+  showOnly('passportView');
+}
+
 function showHome() {
   stopWatch();
   closePostcardEditor();
+  clearAdventurePhotos();
   destroyCompletionMap();
   debugMode = false;
   debugStop = null;
@@ -676,6 +800,9 @@ function showHome() {
   currentCollection = null;
   pendingDiscovery = null;
   currentPack = null;
+  selectedAsDaily = false;
+  selectedAsSurprise = false;
+  selectedDailyDate = null;
   applyRouteTheme(null);
   showOnly('homeView');
 }
@@ -705,15 +832,21 @@ function endAdventure(pack, isDaily) {
       completed: true,
       everCompleted: true,
       score: 0,
+      baseScore: 0,
       bestScore: Math.max(Number(state.bestScore) || 0, Number(state.score) || 0),
+      bestBaseScore: Math.max(Number(state.bestBaseScore) || 0, Number(state.baseScore) || 0),
       perfectStops: Number(state.perfectStops) || 0,
       perfectCompletions: Number(state.perfectCompletions) || 0,
+      curiosityFinds: Number(state.curiosityFinds) || 0,
+      photoFinds: Number(state.photoFinds) || 0,
+      noteFinds: Number(state.noteFinds) || 0,
       elapsedSeconds: Number(state.lastElapsedSeconds) || Number(state.elapsedSeconds) || 0,
       lastElapsedSeconds: Number(state.lastElapsedSeconds) || Number(state.elapsedSeconds) || 0,
       bestElapsedSeconds: Number(state.bestElapsedSeconds) || Number(state.elapsedSeconds) || 0,
       skipped: 0,
       hintsUsed: 0,
-      completions: Number(state.completions) || 1
+      completions: Number(state.completions) || 1,
+      scoreVersion: SCORE_VERSION
     };
   } else {
     delete progress[pack.pack_id];
@@ -785,7 +918,7 @@ function routeCard(pack, extra = '') {
     <h3>${esc(pack.route_name)}</h3>
     <p>${esc(pack.short_description || pack.description)}</p>
     <div class="card-bottom">
-      <div class="meta-row"><span class="meta">${icon} ${label}</span><span class="meta">${esc(nearby)}</span><span class="meta">${esc(pack.difficulty_label)}</span>${score ? `<span class="meta score-chip">✦ ${score} pts</span>` : ''}</div>
+      <div class="meta-row"><span class="meta">${icon} ${label}</span><span class="meta">${esc(nearby)}</span><span class="meta">${esc(pack.difficulty_label)}</span>${score ? `<span class="meta score-chip">✦ ${formatPoints(score)} pts</span>` : ''}</div>
       ${completed(pack) ? `<div class="completion-bar" aria-label="${completed(pack)}% complete"><i style="width:${completed(pack)}%"></i></div>` : ''}
     </div>
   </article>`;
@@ -802,13 +935,18 @@ function wireCards() {
 
 function daily() {
   const eligible = packs.filter(pack => pack.daily_eligible !== false);
-  const pool = eligible.length ? eligible : packs;
+  const available = eligible.length ? eligible : packs;
+  const pool = userPos
+    ? [...available]
+      .sort((a, b) => distance(userPos, [a.centre.lat, a.centre.long]) - distance(userPos, [b.centre.lat, b.centre.long]))
+      .slice(0, Math.min(6, available.length))
+    : available;
   const date = new Date();
   const seed = Number(`${date.getFullYear()}${date.getMonth() + 1}${date.getDate()}`);
   return pool[seed % pool.length];
 }
 
-function renderAll() {
+function renderDaily() {
   const pick = daily();
   const streak = dailyStreak();
   const streakLabel = streak.current
@@ -816,7 +954,12 @@ function renderAll() {
     : streak.best ? `🔥 Best streak: ${streak.best} days · Play today to begin again` : '🔥 Complete today’s pick to start a streak';
   $('#mapPackCount').textContent = `${packs.length} adventures mapped`;
   $('#dailyDate').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY PICK</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${pick.route_distance_km} km</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Play today →</span></div>`;
+  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY DOUBLE · ×2 POINTS</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${pick.route_distance_km} km</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Double it →</span></div>`;
+  wireCards();
+}
+
+function renderAll() {
+  renderDaily();
   renderExplorerRecord();
   renderFeatured();
   renderNearby();
@@ -852,32 +995,51 @@ function configureDisclosure(toggleId, panelId, expanded, hiddenCount, noun, act
 }
 
 function achievements() {
-  const points = packs.reduce((total, pack) => total + displayScore(pack), 0);
+  const routePoints = packs.reduce((total, pack) => total + displayScore(pack), 0);
   const completedRoutes = packs.filter(hasCompleted).length;
   const routeCompletions = packs.reduce((total, pack) => total + (Number(packProgress(pack).completions) || 0), 0);
   const perfectStops = packs.reduce((total, pack) => total + (Number(packProgress(pack).perfectStops) || 0), 0);
   const perfectRoutes = packs.reduce((total, pack) => total + (Number(packProgress(pack).perfectCompletions) || 0), 0);
+  const curiosityFinds = packs.reduce((total, pack) => total + (Number(packProgress(pack).curiosityFinds) || 0), 0);
   const dailyCompletions = profile.dailyDates.length;
+  const completedPacks = packs.filter(hasCompleted);
+  const towns = new Set(completedPacks.map(pack => pack.town));
+  const collections = new Set(completedPacks.flatMap(pack => pack.collections));
   return [
-    { id: 'first-find', icon: '✦', name: 'First Points', description: 'Earn points from your first landmark.', unlocked: points > 0 },
-    { id: 'sharp-eyes', icon: '◇', name: 'Sharp Eyes', description: 'Find a stop without using a hint.', unlocked: perfectStops >= 1 },
-    { id: 'trailblazer', icon: '⚑', name: 'Trailblazer', description: 'Complete your first route.', unlocked: completedRoutes >= 1 },
-    { id: 'daily-detective', icon: '☀', name: 'Daily Detective', description: 'Complete a daily adventure.', unlocked: dailyCompletions >= 1 },
-    { id: 'daily-regular', icon: '▦', name: 'Daily Regular', description: 'Complete three daily adventures.', unlocked: dailyCompletions >= 3 },
-    { id: 'route-regular', icon: '⌖', name: 'Route Regular', description: 'Complete three routes, including replays.', unlocked: routeCompletions >= 3 },
-    { id: 'seasoned-explorer', icon: '♜', name: 'Seasoned Explorer', description: 'Complete ten routes, including replays.', unlocked: routeCompletions >= 10 },
-    { id: 'flawless-route', icon: '★', name: 'Flawless Route', description: 'Finish a route with no hints or skips.', unlocked: perfectRoutes >= 1 }
+    { id: 'first-find', icon: '✦', name: 'First Points', description: 'Earn points from your first landmark.', points: 500, tier: 'bronze', unlocked: routePoints > 0 },
+    { id: 'sharp-eyes', icon: '◇', name: 'Sharp Eyes', description: 'Find a stop without using a hint.', points: 500, tier: 'bronze', unlocked: perfectStops >= 1 },
+    { id: 'trailblazer', icon: '⚑', name: 'Trailblazer', description: 'Complete your first route.', points: 1500, tier: 'silver', unlocked: completedRoutes >= 1 },
+    { id: 'curious-mind', icon: '◎', name: 'Curious Mind', description: 'Complete ten photo or field-note discoveries.', points: 1500, tier: 'silver', unlocked: curiosityFinds >= 10 },
+    { id: 'daily-detective', icon: '☀', name: 'Daily Detective', description: 'Complete a Daily Double adventure.', points: 1500, tier: 'silver', unlocked: dailyCompletions >= 1 },
+    { id: 'daily-regular', icon: '▦', name: 'Daily Regular', description: 'Complete three Daily Double adventures.', points: 3000, tier: 'gold', unlocked: dailyCompletions >= 3 },
+    { id: 'daily-legend', icon: '✺', name: 'Daily Legend', description: 'Complete seven Daily Double adventures.', points: 5000, tier: 'legendary', unlocked: dailyCompletions >= 7 },
+    { id: 'lucky-dip', icon: '⚄', name: 'Lucky Dip', description: 'Complete an adventure chosen by Surprise Me.', points: 1500, tier: 'silver', unlocked: profile.surpriseCompletions >= 1 },
+    { id: 'route-regular', icon: '⌖', name: 'Route Regular', description: 'Complete three routes, including replays.', points: 1500, tier: 'silver', unlocked: routeCompletions >= 3 },
+    { id: 'seasoned-explorer', icon: '♜', name: 'Seasoned Explorer', description: 'Complete ten routes, including replays.', points: 5000, tier: 'legendary', unlocked: routeCompletions >= 10 },
+    { id: 'town-collector', icon: '▣', name: 'Town Collector', description: 'Complete adventures in five different towns.', points: 3000, tier: 'gold', unlocked: towns.size >= 5 },
+    { id: 'grand-tourer', icon: '✥', name: 'Grand Tourer', description: 'Complete adventures in ten different towns.', points: 5000, tier: 'legendary', unlocked: towns.size >= 10 },
+    { id: 'theme-hunter', icon: '◈', name: 'Theme Hunter', description: 'Complete an adventure from every collection.', points: 3000, tier: 'gold', unlocked: collections.size >= 5 },
+    { id: 'long-way-round', icon: '↗', name: 'The Long Way Round', description: 'Complete an adventure lasting 100 minutes or more.', points: 1500, tier: 'silver', unlocked: completedPacks.some(pack => Number(pack.estimated_minutes) >= 100) },
+    { id: 'flawless-route', icon: '★', name: 'Flawless Route', description: 'Finish a route with no hints or skips.', points: 3000, tier: 'gold', unlocked: perfectRoutes >= 1 }
   ];
+}
+
+function achievementPointsTotal(badges = achievements()) {
+  return badges.filter(badge => badge.unlocked).reduce((total, badge) => total + Number(badge.points || 0), 0);
+}
+
+function explorerPointsTotal(badges = achievements()) {
+  return packs.reduce((total, pack) => total + displayScore(pack), 0) + achievementPointsTotal(badges);
 }
 
 function renderExplorerRecord() {
   if (!packs.length || !$('#explorerStats')) return;
   const discoveries = packs.reduce((total, pack) => total + discoveryCount(pack), 0);
   const completedRoutes = packs.filter(hasCompleted).length;
-  const points = packs.reduce((total, pack) => total + displayScore(pack), 0);
   const badges = achievements();
+  const points = explorerPointsTotal(badges);
   $('#explorerStats').innerHTML = `
-    <div><span>Points</span><b>${points}</b></div>
+    <div><span>Explorer points</span><b>${formatPoints(points)}</b></div>
     <div><span>Discoveries</span><b>${discoveries}</b></div>
     <div><span>Routes completed</span><b>${completedRoutes}</b></div>
     <div><span>Achievements earned</span><b>${badges.filter(badge => badge.unlocked).length}</b></div>`;
@@ -896,10 +1058,45 @@ function renderExplorerRecord() {
     achievementsExpanded = !achievementsExpanded;
     renderExplorerRecord();
   });
+  renderPassport();
 }
 
 function achievementCard(badge) {
-  return `<div class="achievement ${badge.unlocked ? 'unlocked' : 'locked'}"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small></div></div>`;
+  return `<div class="achievement ${badge.unlocked ? 'unlocked' : 'locked'} ${esc(badge.tier || 'bronze')}"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small><em>+${formatPoints(badge.points)} Explorer Points</em></div></div>`;
+}
+
+function passportStamp(pack) {
+  const state = packProgress(pack);
+  const initials = String(pack.display_name || pack.town || '?')
+    .split(/[\s-]+/).map(word => word[0]).join('').slice(0, 3).toUpperCase();
+  const completedDate = Number(state.completedAt)
+    ? new Date(Number(state.completedAt)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
+    : 'Adventure complete';
+  return `<article class="passport-stamp" style="--stamp:${colour(pack)}"><div class="passport-seal"><b>${esc(initials)}</b><span>EXPLORED</span></div><div><span>${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b><small>${esc(completedDate)} · ${formatPoints(displayScore(pack))} pts</small><em>${esc(pack.collections[0] || 'Local discovery')}</em></div></article>`;
+}
+
+function renderPassport() {
+  if (!packs.length || !$('#passportGrid')) return;
+  const completedPacks = packs.filter(hasCompleted)
+    .sort((a, b) => Number(packProgress(b).completedAt) - Number(packProgress(a).completedAt));
+  const towns = new Set(completedPacks.map(pack => pack.town));
+  const allCollections = [...new Set(packs.flatMap(pack => pack.collections))];
+  const badges = achievements();
+  const recentPack = completedPacks[0];
+  const nextPacks = packs.filter(pack => !hasCompleted(pack)).slice(0, 3);
+  if ($('#passportHero')) $('#passportHero').innerHTML = `<div class="passport-title-card"><span>YOUR ADVENTURE HIGHLIGHTS</span><h1>${recentPack ? `${esc(recentPack.display_name)} looks good on you.` : 'Your story starts out there.'}</h1><p>${recentPack ? 'A bright, growing record of the routes you finished, the details you noticed and the places you made your own.' : 'Choose an adventure, follow your curiosity and build a collection worth showing off.'}</p></div><div class="passport-hero-stickers" aria-label="Explorer highlights"><span class="sticker-points">✦ ${formatPoints(explorerPointsTotal(badges))}<small>EXPLORER POINTS</small></span><span class="sticker-towns">${towns.size}<small>TOWNS</small></span><span class="sticker-badges">${badges.filter(badge => badge.unlocked).length}<small>BADGES</small></span></div><div class="passport-scribble" aria-hidden="true">GO SOMEWHERE · NOTICE EVERYTHING · ✦</div>`;
+  $('#passportCount').textContent = `${towns.size} ${towns.size === 1 ? 'town' : 'towns'} explored`;
+  $('#passportSummary').innerHTML = allCollections.map((collection, index) => {
+    const total = packs.filter(pack => pack.collections.includes(collection)).length;
+    const found = completedPacks.filter(pack => pack.collections.includes(collection)).length;
+    return `<div class="collection-patch ${found ? 'started' : ''} ${found === total ? 'complete' : ''}"><span>${['♜', '≈', '✎', '⚙', '◇'][index % 5]}</span><div><b>${esc(collection)}</b><small>${found}/${total} explored</small></div></div>`;
+  }).join('');
+  const completedHtml = completedPacks.length
+    ? completedPacks.map(passportStamp).join('')
+    : '<div class="passport-empty"><span>◎</span><div><b>Your first highlight is waiting.</b><p>Complete an adventure and this space starts becoming unmistakably yours.</p></div></div>';
+  const nextHtml = nextPacks.length ? `<div class="passport-next-label"><span>WHAT'S NEXT?</span><b>Your next story starts here</b></div>${nextPacks.map(pack => `<button class="passport-next" data-pack="${esc(pack.pack_id)}" style="--stamp:${colour(pack)}"><span>↗</span><div><b>${esc(pack.display_name)}</b><small>${esc(pack.route_name)} · ${pack.estimated_minutes} min</small></div></button>`).join('')}` : '';
+  $('#passportGrid').innerHTML = completedHtml + nextHtml;
+  wireCards();
 }
 
 function renderNearby() {
@@ -997,7 +1194,7 @@ function surprise() {
   const pool = userPos
     ? [...packs].sort((a, b) => distance(userPos, [a.centre.lat, a.centre.long]) - distance(userPos, [b.centre.lat, b.centre.long])).slice(0, Math.min(5, packs.length))
     : packs;
-  openDetail(pool[Math.floor(Math.random() * pool.length)]);
+  openDetail(pool[Math.floor(Math.random() * pool.length)], false, true);
 }
 
 function getNearby() {
@@ -1006,6 +1203,7 @@ function getNearby() {
   navigator.geolocation.getCurrentPosition(position => {
     userPos = [position.coords.latitude, position.coords.longitude];
     $('#nearbyStatus').textContent = 'Sorted by distance from your current location.';
+    renderDaily();
     renderNearby();
     renderFilters();
     renderBrowse($('#searchInput').value);
@@ -1014,7 +1212,7 @@ function getNearby() {
   }, { enableHighAccuracy: true, timeout: 12000 });
 }
 
-function checkVenueLocation(pack, isDaily) {
+function checkVenueLocation(pack, isDaily, isSurprise = false) {
   if (!navigator.geolocation) return toast('Location is not available');
   const button = $('#checkVenueLocation');
   if (button) {
@@ -1023,7 +1221,7 @@ function checkVenueLocation(pack, isDaily) {
   }
   navigator.geolocation.getCurrentPosition(position => {
     userPos = [position.coords.latitude, position.coords.longitude];
-    openDetail(pack, isDaily);
+    openDetail(pack, isDaily, isSurprise);
     setTimeout(() => $('#venueTimingCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
   }, () => {
     if (button) {
@@ -1149,7 +1347,7 @@ async function saveAdventureOffline(pack) {
 
 window.openPack = id => openDetail(packs.find(pack => pack.pack_id === id), false);
 
-function openDetail(pack, isDaily = false) {
+function openDetail(pack, isDaily = false, isSurprise = false) {
   if (!pack) return;
   stopWatch();
   destroyCompletionMap();
@@ -1159,6 +1357,8 @@ function openDetail(pack, isDaily = false) {
     venueDetailsRevealed = false;
   }
   selectedAsDaily = isDaily;
+  selectedAsSurprise = isSurprise;
+  selectedDailyDate = isDaily ? todayKey() : null;
   currentCollection = null;
   pendingDiscovery = null;
   currentPack = pack;
@@ -1168,6 +1368,7 @@ function openDetail(pack, isDaily = false) {
   const activeAdventure = isActiveAdventure(pack);
   const chips = [...pack.collections, ...pack.tags].map(item => `<span class="meta">${esc(item)}</span>`).join('');
   const score = displayScore(pack);
+  const activeMode = activeAdventure ? state.runMode : isDaily ? 'daily' : isSurprise ? 'surprise' : 'standard';
   $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-home>←</button><span class="eyebrow detail-location">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
     <div class="detail-body">
       <div class="detail-stats">
@@ -1183,8 +1384,9 @@ function openDetail(pack, isDaily = false) {
       <p class="muted">${esc(pack.transport_note || '')}</p>
       ${beforeYouGoCard(pack)}
       <div class="route-practical"><button id="directionsToStart" class="directions-btn"><span>↗</span><div><b>Directions to the start</b><small>Opens walking directions in your maps app</small></div></button><div class="offline-row"><div id="offlineStatus" class="offline-status"><i></i><span>Checking offline availability…</span></div><button id="saveOffline" class="text-btn">Save offline</button></div></div>
-      ${score ? `<div class="personal-best"><span>Personal best</span><b>✦ ${score} points</b></div>` : ''}
-      ${isDaily ? '<div class="daily-mission"><span>✦ Daily adventure</span><b>Finish this route to earn a daily achievement.</b></div>' : ''}
+      ${score ? `<div class="personal-best"><span>Personal best</span><b>✦ ${formatPoints(score)} points</b></div>` : ''}
+      ${activeMode === 'daily' ? '<div class="daily-mission"><span>×2</span><b>Daily Double: complete the route to double your Adventure Score.</b></div>' : ''}
+      ${activeMode === 'surprise' ? '<div class="surprise-mission"><span>+20%</span><b>Surprise Me bonus: complete the route for 20% extra.</b></div>' : ''}
       ${venueTimingCard(pack, state)}
       <button id="startRoute" class="primary">${activeAdventure ? 'Continue adventure' : hasCompleted(pack) ? 'Play again' : 'Start adventure'}</button>
       ${activeAdventure ? '<button id="endRoute" class="end-adventure-btn">End adventure</button>' : ''}
@@ -1194,7 +1396,7 @@ function openDetail(pack, isDaily = false) {
   $('#directionsToStart').onclick = () => openStartDirections(pack);
   $('#saveOffline').onclick = () => saveAdventureOffline(pack);
   bindEndAdventure(pack, isDaily);
-  bindVenueDisclosure(pack, state, isDaily);
+  bindVenueDisclosure(pack, state, isDaily, isSurprise);
   renderOfflineControls(pack);
 }
 
@@ -1234,8 +1436,17 @@ function loadCanvasImage(src) {
   });
 }
 
+function clearAdventurePhotos() {
+  adventurePhotos.forEach(photo => {
+    if (photo?.url) URL.revokeObjectURL(photo.url);
+  });
+  adventurePhotos = [];
+  adventureNotes = [];
+}
+
 function closePostcardEditor() {
   if (postcardEditorState?.renderTimer) clearTimeout(postcardEditorState.renderTimer);
+  if (postcardEditorState?.dragFrame) cancelAnimationFrame(postcardEditorState.dragFrame);
   if (postcardEditorState?.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
   postcardEditorState = null;
   $('#postcardModal')?.classList.add('hidden');
@@ -1260,11 +1471,14 @@ function schedulePostcardRender(delay = 160) {
         photoImage: editor.photoImage,
         photoX: editor.photoX,
         photoY: editor.photoY,
-        photoZoom: editor.photoZoom
+        photoZoom: editor.photoZoom,
+        memoryItems: editor.memoryItems.filter(item => item.enabled)
       });
       if (postcardEditorState !== editor || editor.renderToken !== token) return;
       editor.rendered = rendered;
       const preview = $('#postcardPreviewCanvas');
+      preview.width = POSTCARD_PREVIEW_WIDTH;
+      preview.height = POSTCARD_PREVIEW_HEIGHT;
       const previewContext = preview.getContext('2d');
       previewContext.clearRect(0, 0, preview.width, preview.height);
       previewContext.drawImage(rendered.canvas, 0, 0, preview.width, preview.height);
@@ -1282,9 +1496,15 @@ function schedulePostcardRender(delay = 160) {
 function updatePostcardPreview(renderDelay = 160) {
   if (!postcardEditorState) return;
   const { message, photoUrl, photoX, photoY, photoZoom } = postcardEditorState;
+  const selectedExtras = postcardEditorState.memoryItems.filter(item => item.enabled).length;
+  const canDrag = Boolean(photoUrl) || selectedExtras > 0;
   $('#postcardMessageCount').textContent = `${message.length}/120`;
-  $('#postcardPreviewCanvas').classList.toggle('photo-adjustable', Boolean(photoUrl));
-  $('#postcardDragHint').classList.toggle('hidden', !photoUrl);
+  $('#postcardPreviewCanvas').classList.toggle('photo-adjustable', canDrag);
+  $('#postcardDragHint').classList.toggle('hidden', !canDrag);
+  $('#postcardDragHint').textContent = selectedExtras
+    ? 'Drag extras anywhere to arrange them'
+    : 'Drag the photo to reposition it';
+  $('#postcardExtrasCount').textContent = `${selectedExtras} selected`;
   $('#removePostcardPhoto').classList.toggle('hidden', !photoUrl);
   $('#postcardPhotoAdjustments').classList.toggle('hidden', !photoUrl);
   $('#postcardPhotoLabel').textContent = photoUrl ? 'Choose another' : 'Choose a photo';
@@ -1323,46 +1543,147 @@ function selectPostcardPhoto(file, sourceInput) {
   }).catch(() => {});
 }
 
-function bindPostcardPhotoDragging() {
+function createPostcardMemoryItems(photos, notes) {
+  const defaultPositions = [
+    [58, 554], [382, 600], [708, 528],
+    [72, 776], [405, 748], [726, 797],
+    [75, 1005], [390, 986], [706, 1025],
+    [62, 342], [392, 360], [720, 350]
+  ];
+  return adventureMemoryItems(photos, notes).map((item, index) => {
+    const [x, y] = defaultPositions[index % defaultPositions.length];
+    return {
+      ...item,
+      id: `${item.type}-${Number(item.stopIndex) || 0}-${index}`,
+      enabled: false,
+      x,
+      y,
+      width: item.type === 'photo' ? 326 : 286,
+      height: item.type === 'photo' ? 228 : 174,
+      colourIndex: index,
+      angle: item.type === 'photo'
+        ? MEMORY_ANGLES[index % MEMORY_ANGLES.length]
+        : -MEMORY_ANGLES[index % MEMORY_ANGLES.length] * 1.12
+    };
+  });
+}
+
+function renderPostcardExtras() {
+  if (!postcardEditorState) return;
+  const details = $('#postcardExtras');
+  const list = $('#postcardExtrasList');
+  const items = postcardEditorState.memoryItems;
+  details.classList.toggle('hidden', items.length === 0);
+  list.innerHTML = items.map(item => {
+    const thumbnail = item.type === 'photo'
+      ? `<span class="postcard-extra-thumb"><img src="${esc(item.url)}" alt=""></span>`
+      : '<span class="postcard-extra-thumb">✎</span>';
+    const description = item.type === 'photo' ? 'Discovery photo' : String(item.text || 'Field note');
+    return `<label class="postcard-extra-option"><input type="checkbox" data-postcard-extra="${esc(item.id)}" ${item.enabled ? 'checked' : ''}>${thumbnail}<span class="postcard-extra-copy"><b>${esc(item.stopName || (item.type === 'photo' ? 'Discovery photo' : 'Field note'))}</b><small>${esc(description)}</small></span></label>`;
+  }).join('');
+  $('#postcardExtrasCount').textContent = `${items.filter(item => item.enabled).length} selected`;
+}
+
+function pointInsidePostcardMemory(item, canvasX, canvasY) {
+  const centreX = item.x + item.width / 2;
+  const centreY = item.y + item.height / 2;
+  const dx = canvasX - centreX;
+  const dy = canvasY - centreY;
+  const cosine = Math.cos(item.angle);
+  const sine = Math.sin(item.angle);
+  const localX = dx * cosine + dy * sine;
+  const localY = -dx * sine + dy * cosine;
+  return Math.abs(localX) <= item.width / 2 && Math.abs(localY) <= item.height / 2;
+}
+
+function postcardMemoryDragLimits(item, canvas) {
+  const rotatedWidth = Math.abs(item.width * Math.cos(item.angle)) + Math.abs(item.height * Math.sin(item.angle));
+  const rotatedHeight = Math.abs(item.width * Math.sin(item.angle)) + Math.abs(item.height * Math.cos(item.angle));
+  const xPadding = Math.max(0, (rotatedWidth - item.width) / 2);
+  const yPadding = Math.max(0, (rotatedHeight - item.height) / 2);
+  return {
+    minX: xPadding,
+    maxX: canvas.width - item.width - xPadding,
+    minY: yPadding,
+    maxY: canvas.height - item.height - yPadding
+  };
+}
+
+function bindPostcardDragging() {
   const canvas = $('#postcardPreviewCanvas');
   canvas.onpointerdown = event => {
-    if (!postcardEditorState?.photoUrl) return;
+    if (!postcardEditorState) return;
     const rect = canvas.getBoundingClientRect();
-    const canvasX = (event.clientX - rect.left) * (canvas.width / rect.width);
-    const canvasY = (event.clientY - rect.top) * (canvas.height / rect.height);
-    if (canvasX < 630 || canvasX > 1010 || canvasY < 62 || canvasY > 337) return;
+    const canvasX = (event.clientX - rect.left) * (POSTCARD_WIDTH / rect.width);
+    const canvasY = (event.clientY - rect.top) * (POSTCARD_HEIGHT / rect.height);
+    const memory = [...postcardEditorState.memoryItems]
+      .reverse()
+      .find(item => item.enabled && pointInsidePostcardMemory(item, canvasX, canvasY));
+    if (memory) {
+      const memoryIndex = postcardEditorState.memoryItems.findIndex(item => item.id === memory.id);
+      postcardEditorState.memoryItems.splice(memoryIndex, 1);
+      postcardEditorState.memoryItems.push(memory);
+      postcardEditorState.drag = {
+        type: 'memory',
+        memoryId: memory.id,
+        pointerId: event.pointerId,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        memoryX: memory.x,
+        memoryY: memory.y,
+        lastRender: 0
+      };
+    } else if (postcardEditorState.photoUrl && canvasX >= 630 && canvasX <= 1010 && canvasY >= 62 && canvasY <= 337) {
+      postcardEditorState.drag = {
+        type: 'photo',
+        pointerId: event.pointerId,
+        clientX: event.clientX,
+        clientY: event.clientY,
+        photoX: postcardEditorState.photoX,
+        photoY: postcardEditorState.photoY,
+        lastRender: 0
+      };
+    } else {
+      return;
+    }
     event.preventDefault();
-    postcardEditorState.drag = {
-      pointerId: event.pointerId,
-      clientX: event.clientX,
-      clientY: event.clientY,
-      photoX: postcardEditorState.photoX,
-      photoY: postcardEditorState.photoY,
-      lastRender: 0
-    };
     canvas.setPointerCapture?.(event.pointerId);
     canvas.classList.add('dragging');
+    $('#sharePostcard').disabled = true;
+    $('#downloadPostcard').disabled = true;
+    $('#sharePostcard').textContent = 'Release to update postcard';
+    queuePostcardLivePreview();
   };
   canvas.onpointermove = event => {
     const drag = postcardEditorState?.drag;
     if (!drag || drag.pointerId !== event.pointerId) return;
     const rect = canvas.getBoundingClientRect();
-    const photoWidth = rect.width * (380 / 1080);
-    const photoHeight = rect.height * (275 / 1350);
-    postcardEditorState.photoX = Math.max(0, Math.min(1, drag.photoX - (event.clientX - drag.clientX) / photoWidth));
-    postcardEditorState.photoY = Math.max(0, Math.min(1, drag.photoY - (event.clientY - drag.clientY) / photoHeight));
-    const now = performance.now();
-    if (now - drag.lastRender > 50) {
-      drag.lastRender = now;
-      updatePostcardPreview(35);
+    const coalesced = event.getCoalescedEvents?.();
+    const point = coalesced?.length ? coalesced[coalesced.length - 1] : event;
+    if (drag.type === 'memory') {
+      const memory = postcardEditorState.memoryItems.find(item => item.id === drag.memoryId);
+      if (!memory) return;
+      const deltaX = (point.clientX - drag.clientX) * (POSTCARD_WIDTH / rect.width);
+      const deltaY = (point.clientY - drag.clientY) * (POSTCARD_HEIGHT / rect.height);
+      const limits = postcardMemoryDragLimits(memory, { width: POSTCARD_WIDTH, height: POSTCARD_HEIGHT });
+      memory.x = Math.max(limits.minX, Math.min(limits.maxX, drag.memoryX + deltaX));
+      memory.y = Math.max(limits.minY, Math.min(limits.maxY, drag.memoryY + deltaY));
+    } else {
+      const photoWidth = rect.width * (380 / POSTCARD_WIDTH);
+      const photoHeight = rect.height * (275 / POSTCARD_HEIGHT);
+      postcardEditorState.photoX = Math.max(0, Math.min(1, drag.photoX - (point.clientX - drag.clientX) / photoWidth));
+      postcardEditorState.photoY = Math.max(0, Math.min(1, drag.photoY - (point.clientY - drag.clientY) / photoHeight));
     }
+    queuePostcardLivePreview();
   };
   const finishDrag = event => {
     const drag = postcardEditorState?.drag;
     if (!drag || (event.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
     postcardEditorState.drag = null;
+    if (postcardEditorState.dragFrame) cancelAnimationFrame(postcardEditorState.dragFrame);
+    postcardEditorState.dragFrame = null;
     canvas.classList.remove('dragging');
-    updatePostcardPreview(40);
+    updatePostcardPreview(0);
   };
   canvas.onpointerup = finishDrag;
   canvas.onpointercancel = finishDrag;
@@ -1370,6 +1691,8 @@ function bindPostcardPhotoDragging() {
 
 function openPostcardEditor(pack, score) {
   closePostcardEditor();
+  const editorPhotos = adventurePhotos.filter(photo => photo.packId === pack.pack_id).slice(0, 6);
+  const editorNotes = adventureNotes.filter(note => note.packId === pack.pack_id).slice(0, 6);
   postcardEditorState = {
     pack,
     score,
@@ -1380,7 +1703,9 @@ function openPostcardEditor(pack, score) {
     photoX: 0.5,
     photoY: 0.5,
     photoZoom: 1,
+    memoryItems: createPostcardMemoryItems(editorPhotos, editorNotes),
     drag: null,
+    dragFrame: null,
     rendered: null,
     renderTimer: null,
     renderToken: 0
@@ -1388,9 +1713,18 @@ function openPostcardEditor(pack, score) {
   $('#postcardMessage').value = '';
   $('#postcardPhoto').value = '';
   $('#postcardCamera').value = '';
+  $('#postcardExtras').open = false;
+  const photoCount = editorPhotos.length;
+  const noteCount = editorNotes.length;
+  const collageCount = photoCount + noteCount;
+  $('#adventurePhotoNotice').classList.toggle('hidden', collageCount === 0);
+  $('#adventurePhotoNotice').innerHTML = collageCount
+    ? `<span>▣</span><div><b>${collageCount} fieldwork ${collageCount === 1 ? 'extra is' : 'extras are'} ready</b><small>Open Postcard extras to choose what appears, then drag each one into place.</small></div>`
+    : '';
+  renderPostcardExtras();
   $('#postcardModal').classList.remove('hidden');
   updatePostcardPreview();
-  bindPostcardPhotoDragging();
+  bindPostcardDragging();
   $('#postcardClose').onclick = closePostcardEditor;
   $('#postcardModal').onclick = event => {
     if (event.target === $('#postcardModal')) closePostcardEditor();
@@ -1398,6 +1732,14 @@ function openPostcardEditor(pack, score) {
   $('#postcardMessage').oninput = event => {
     postcardEditorState.message = event.target.value.slice(0, 120);
     updatePostcardPreview();
+  };
+  $('#postcardExtrasList').onchange = event => {
+    const checkbox = event.target.closest('[data-postcard-extra]');
+    if (!checkbox || !postcardEditorState) return;
+    const item = postcardEditorState.memoryItems.find(memory => memory.id === checkbox.dataset.postcardExtra);
+    if (!item) return;
+    item.enabled = checkbox.checked;
+    updatePostcardPreview(30);
   };
   $('#postcardPhoto').onchange = event => selectPostcardPhoto(event.target.files?.[0], event.target);
   $('#postcardCamera').onchange = event => selectPostcardPhoto(event.target.files?.[0], event.target);
@@ -1466,19 +1808,139 @@ function drawCanvasCover(context, image, x, y, width, height, accent, options = 
   context.stroke();
 }
 
+const MEMORY_ANGLES = [-0.052, 0.038, -0.026, 0.042, -0.036, 0.024, -0.018, 0.047, -0.041, 0.029, -0.032, 0.021];
+
+function adventureMemoryItems(photos, notes) {
+  return [
+    ...photos.slice(0, 6).map((item, order) => ({ ...item, type: 'photo', order })),
+    ...notes.slice(0, 6).map((item, order) => ({ ...item, type: 'note', order }))
+  ].sort((a, b) => (Number(a.stopIndex) || a.order) - (Number(b.stopIndex) || b.order) || (a.type === 'photo' ? -1 : 1));
+}
+
+function drawMemoryMount(context, x, y, width, accent, angle = 0) {
+  context.save();
+  context.translate(x, y);
+  context.rotate(angle);
+  context.globalAlpha = 0.88;
+  context.fillStyle = accent;
+  context.beginPath();
+  context.roundRect(-width / 2, -8, width, 16, 8);
+  context.fill();
+  context.restore();
+}
+
+function drawAdventureMemories(context, items, accent) {
+  const noteColours = ['#c8ff5a', '#61e7ff', '#ffb21f', '#f4a8d4', '#a9a4ff', '#79efc1'];
+  items.forEach((item, index) => {
+    const width = item.width;
+    const height = item.height;
+    const angle = item.angle;
+    if (item.type === 'photo' && item.image) {
+      context.save();
+      context.translate(item.x + width / 2, item.y + height / 2);
+      context.rotate(angle);
+      context.shadowColor = '#00000077';
+      context.shadowBlur = 18;
+      context.shadowOffsetY = 9;
+      context.fillStyle = '#f8fafb';
+      context.beginPath();
+      context.roundRect(-width / 2, -height / 2, width, height, 12);
+      context.fill();
+      context.shadowColor = 'transparent';
+      drawCanvasCover(context, item.image, -width / 2 + 11, -height / 2 + 11, width - 22, 169, accent, {}, 7);
+      context.fillStyle = '#14212b';
+      context.font = '850 14px system-ui, sans-serif';
+      context.fillText(String(item.stopName || 'A brilliant find').slice(0, 34), -width / 2 + 17, height / 2 - 18);
+      drawMemoryMount(context, width / 2 - 33, -height / 2 + 8, 62, accent, 0.12);
+      context.restore();
+      return;
+    }
+    const cardColour = noteColours[item.colourIndex % noteColours.length];
+    context.save();
+    context.translate(item.x + width / 2, item.y + height / 2);
+    context.rotate(angle);
+    context.shadowColor = '#00000066';
+    context.shadowBlur = 16;
+    context.shadowOffsetY = 8;
+    context.fillStyle = cardColour;
+    context.beginPath();
+    context.roundRect(-width / 2, -height / 2, width, height, 24);
+    context.fill();
+    context.shadowColor = 'transparent';
+    context.globalAlpha = 0.18;
+    context.fillStyle = '#0b151d';
+    context.beginPath();
+    context.arc(width / 2 - 20, -height / 2 + 18, 54, 0, Math.PI * 2);
+    context.fill();
+    context.globalAlpha = 1;
+    context.fillStyle = '#14212b';
+    context.font = '950 11px system-ui, sans-serif';
+    context.fillText(String(item.stopName || 'FIELD NOTE').toUpperCase().slice(0, 32), -width / 2 + 17, -height / 2 + 28);
+    context.font = '750 16px "Segoe Print", "Comic Sans MS", cursive';
+    wrapCanvasText(context, String(item.text || ''), -width / 2 + 17, -height / 2 + 57, width - 34, 23, 4);
+    drawMemoryMount(context, -width / 2 + 35, -height / 2 + 5, 54, '#ffffff', -0.08);
+    context.restore();
+  });
+}
+
+function drawPostcardLivePreview() {
+  const editor = postcardEditorState;
+  const staticCanvas = editor?.rendered?.staticCanvas;
+  if (!editor || !staticCanvas) return;
+  const preview = $('#postcardPreviewCanvas');
+  const context = preview.getContext('2d');
+  context.clearRect(0, 0, preview.width, preview.height);
+  context.drawImage(staticCanvas, 0, 0, preview.width, preview.height);
+  context.save();
+  context.scale(preview.width / POSTCARD_WIDTH, preview.height / POSTCARD_HEIGHT);
+  const chosenPhoto = editor.photoImage || editor.rendered.photoImage;
+  if (editor.photoUrl && chosenPhoto) {
+    drawCanvasCover(context, chosenPhoto, 630, 62, 380, 275, colour(editor.pack), {
+      x: editor.photoX,
+      y: editor.photoY,
+      zoom: editor.photoZoom
+    });
+  }
+  const selectedExtras = editor.memoryItems.filter(item => item.enabled);
+  if (selectedExtras.length) drawAdventureMemories(context, selectedExtras, colour(editor.pack));
+  context.restore();
+}
+
+function queuePostcardLivePreview() {
+  const editor = postcardEditorState;
+  if (!editor || editor.dragFrame) return;
+  editor.dragFrame = requestAnimationFrame(() => {
+    if (postcardEditorState !== editor) return;
+    editor.dragFrame = null;
+    drawPostcardLivePreview();
+  });
+}
+
+function copyPostcardCanvas(source) {
+  const copy = document.createElement('canvas');
+  copy.width = source.width;
+  copy.height = source.height;
+  copy.getContext('2d').drawImage(source, 0, 0);
+  return copy;
+}
+
 async function buildCompletionPostcard(pack, score, options = {}) {
+  const state = packProgress(pack);
+  const mode = state.lastRunMode || state.runMode || 'standard';
+  const memoryItems = Array.isArray(options.memoryItems) ? options.memoryItems.slice(0, 12) : [];
+  const message = String(options.message || '').trim();
   const canvas = document.createElement('canvas');
-  canvas.width = 1080;
-  canvas.height = 1350;
+  canvas.width = POSTCARD_WIDTH;
+  canvas.height = POSTCARD_HEIGHT;
   const context = canvas.getContext('2d');
-  const gradient = context.createLinearGradient(0, 0, 1080, 1350);
+  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
   gradient.addColorStop(0, '#162938');
   gradient.addColorStop(0.58, '#0c161f');
   gradient.addColorStop(1, '#080e13');
   context.fillStyle = gradient;
   context.fillRect(0, 0, canvas.width, canvas.height);
   context.fillStyle = colour(pack);
-  context.fillRect(0, 0, 1080, 24);
+  context.fillRect(0, 0, POSTCARD_WIDTH, 24);
   context.globalAlpha = 0.12;
   context.beginPath();
   context.arc(950, 140, 380, 0, Math.PI * 2);
@@ -1488,18 +1950,17 @@ async function buildCompletionPostcard(pack, score, options = {}) {
     const logo = await loadCanvasImage('assets/day-tripping-quiz-icon-512.png');
     context.drawImage(logo, 70, 60, 250, 250);
   } catch {}
-  if (options.photoUrl) {
-    const photo = options.photoImage || await loadCanvasImage(options.photoUrl);
-    drawCanvasCover(context, photo, 630, 62, 380, 275, colour(pack), {
-      x: options.photoX,
-      y: options.photoY,
-      zoom: options.photoZoom
-    });
-  }
+  context.fillStyle = mode === 'daily' ? '#ffb21f' : mode === 'surprise' ? '#c8ff5a' : colour(pack);
+  context.beginPath();
+  context.roundRect(350, 82, 235, 58, 29);
+  context.fill();
+  context.fillStyle = '#101820';
+  context.font = '950 20px system-ui, sans-serif';
+  context.fillText(mode === 'daily' ? '×2 DAILY DOUBLE' : mode === 'surprise' ? '+20% SURPRISE' : 'PASSPORT STAMP', 375, 119);
   context.fillStyle = colour(pack);
   context.font = '900 30px system-ui, sans-serif';
   context.letterSpacing = '4px';
-  context.fillText('ADVENTURE COMPLETE', 76, 390);
+  context.fillText(adventureTitle(state), 76, 390);
   context.fillStyle = '#fffaf0';
   context.font = '950 76px system-ui, sans-serif';
   const titleBottom = wrapCanvasText(context, pack.route_name, 72, 475, 930, 82, 3);
@@ -1514,9 +1975,9 @@ async function buildCompletionPostcard(pack, score, options = {}) {
   context.roundRect(65, statsY, 950, 220, 35);
   context.fill();
   context.stroke();
-  const elapsed = formatAdventureTime(packProgress(pack).elapsedSeconds, true) || '—';
+  const elapsed = formatAdventureTime(state.elapsedSeconds, true) || '—';
   const stats = [
-    ['POINTS', String(score)],
+    ['ADVENTURE', formatPoints(score)],
     ['STOPS', String(pack.stops.length)],
     ['WALK', `${pack.route_distance_km} KM`],
     ['TIME', elapsed.toUpperCase()]
@@ -1530,23 +1991,35 @@ async function buildCompletionPostcard(pack, score, options = {}) {
     context.font = `950 ${item[1].length > 8 ? 32 : 44}px system-ui, sans-serif`;
     context.fillText(item[1], x, statsY + 145);
   });
-  const message = String(options.message || '').trim();
   if (message) {
     context.fillStyle = '#fffaf0';
     context.font = '700 28px system-ui, sans-serif';
     wrapCanvasText(context, `“${message}”`, 72, statsY + 275, 930, 36, 3);
   }
+  const footerTitleY = canvas.height - 78;
+  const footerTotalY = canvas.height - 40;
   context.fillStyle = '#ffb21f';
   context.font = '900 28px system-ui, sans-serif';
-  context.fillText('DAY TRIPPING QUIZ', 72, 1272);
+  context.fillText('DAY TRIPPING QUIZ', 72, footerTitleY);
   context.fillStyle = '#9daab4';
-  context.font = '500 22px system-ui, sans-serif';
-  context.fillText('I followed the clues. I found the stories.', 72, 1310);
+  context.font = '700 22px system-ui, sans-serif';
+  context.fillText(`EXPLORER TOTAL · ${formatPoints(explorerPointsTotal())} POINTS`, 72, footerTotalY);
+  const staticCanvas = copyPostcardCanvas(canvas);
+  let photoImage = options.photoImage || null;
+  if (options.photoUrl) {
+    photoImage ||= await loadCanvasImage(options.photoUrl);
+    drawCanvasCover(context, photoImage, 630, 62, 380, 275, colour(pack), {
+      x: options.photoX,
+      y: options.photoY,
+      zoom: options.photoZoom
+    });
+  }
+  if (memoryItems.length) drawAdventureMemories(context, memoryItems, colour(pack));
   const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
   if (!blob) throw Error('Postcard could not be created');
   const fileName = `day-tripping-${pack.pack_id}.png`;
   const file = typeof File === 'function' ? new File([blob], fileName, { type: 'image/png' }) : null;
-  return { canvas, blob, file, fileName };
+  return { canvas, staticCanvas, photoImage, blob, file, fileName };
 }
 
 function downloadCompletionPostcard(blob, fileName) {
@@ -1638,6 +2111,39 @@ function destroyCompletionMap() {
   detailMap = null;
 }
 
+function adventureTitle(state) {
+  const mode = state.lastRunMode || state.runMode;
+  if (mode === 'daily') return 'DAILY LEGEND';
+  if (mode === 'surprise') return 'FORTUNE FAVOURS THE CURIOUS';
+  if (Number(state.curiosityBonuses) > 0 && Number(state.curiosityBonuses) >= currentPack?.stops?.length) return 'DETAIL HUNTER';
+  if (Number(state.hintsUsed) === 0 && Number(state.skipped) === 0) return 'EAGLE-EYED EXPLORER';
+  if (Number(state.skipped) === 0) return 'STORY SEEKER';
+  return 'ADVENTURE FINISHER';
+}
+
+function scoreBreakdownRows(state) {
+  const breakdown = { ...emptyScoreBreakdown(), ...(state.scoreBreakdown || {}) };
+  const rows = [
+    ['Landmark discoveries', breakdown.landmarks],
+    ['Hint deductions', -breakdown.hintPenalty],
+    ['Sharp Eyes bonuses', breakdown.sharpEyes],
+    ['Photo and field-note discoveries', breakdown.curiosity],
+    ['Route complete', breakdown.completion],
+    ['No stops skipped', breakdown.noSkip],
+    ['Hint-free route', breakdown.noHintRoute],
+    ['First completion', breakdown.firstCompletion],
+    [state.lastRunMode === 'daily' || state.runMode === 'daily' ? 'Daily Double' : 'Surprise Me bonus', breakdown.modeBonus]
+  ].filter(([, value]) => Number(value) !== 0);
+  const accounted = rows.reduce((total, [, value]) => total + Number(value), 0);
+  const unaccounted = Math.round((Number(state.score) || 0) - accounted);
+  if (unaccounted > 0) rows.unshift(['Earlier discoveries', unaccounted]);
+  return rows;
+}
+
+function scoreBreakdownHtml(state) {
+  return `<section class="score-receipt"><div class="section-heading"><div><span class="eyebrow">HOW YOU EARNED IT</span><h2>Adventure score</h2></div></div><div>${scoreBreakdownRows(state).map(([label, points]) => `<p><span>${esc(label)}</span><b class="${points < 0 ? 'deduction' : ''}">${points > 0 ? '+' : '−'}${formatPoints(Math.abs(points))}</b></p>`).join('')}</div></section>`;
+}
+
 function startGame(pack) {
   destroyCompletionMap();
   debugMode = false;
@@ -1649,6 +2155,7 @@ function startGame(pack) {
   applyRouteTheme(pack);
   const existing = packProgress(pack);
   const continuingAdventure = isActiveAdventure(pack);
+  if (!continuingAdventure) clearAdventurePhotos();
   if (existing.completed) {
     progress[pack.pack_id] = {
       active: true,
@@ -1656,14 +2163,21 @@ function startGame(pack) {
       completed: false,
       everCompleted: true,
       score: 0,
+      baseScore: 0,
       bestScore: Math.max(Number(existing.bestScore) || 0, Number(existing.score) || 0),
+      bestBaseScore: Math.max(Number(existing.bestBaseScore) || 0, Number(existing.baseScore) || 0),
       perfectStops: Number(existing.perfectStops) || 0,
       perfectCompletions: Number(existing.perfectCompletions) || 0,
+      curiosityFinds: Number(existing.curiosityFinds) || 0,
+      photoFinds: Number(existing.photoFinds) || 0,
+      noteFinds: Number(existing.noteFinds) || 0,
       lastElapsedSeconds: Number(existing.lastElapsedSeconds) || Number(existing.elapsedSeconds) || 0,
       bestElapsedSeconds: Number(existing.bestElapsedSeconds) || Number(existing.elapsedSeconds) || 0,
       skipped: 0,
       hintsUsed: 0,
-      completions: Number(existing.completions) || 1
+      completions: Number(existing.completions) || 1,
+      scoreVersion: SCORE_VERSION,
+      scoreBreakdown: emptyScoreBreakdown()
     };
   }
   const state = packProgress(pack);
@@ -1672,10 +2186,28 @@ function startGame(pack) {
     delete state.completedAt;
     delete state.elapsedSeconds;
   }
-  state.active = true;
-  if (selectedAsDaily && daily().pack_id === pack.pack_id) {
-    state.dailyRunDate = todayKey();
+  if (!continuingAdventure) {
+    state.score = 0;
+    state.baseScore = 0;
+    state.skipped = 0;
+    state.hintsUsed = 0;
+    state.curiosityBonuses = 0;
+    state.scoreVersion = SCORE_VERSION;
+    state.scoreBreakdown = emptyScoreBreakdown();
+    const today = todayKey();
+    const canClaimDaily = selectedAsDaily
+      && selectedDailyDate === today
+      && !profile.dailyDates.includes(today);
+    state.runMode = canClaimDaily ? 'daily' : selectedAsSurprise ? 'surprise' : 'standard';
+    if (canClaimDaily) state.dailyRunDate = today;
+    else delete state.dailyRunDate;
+    if (selectedAsDaily && !canClaimDaily && profile.dailyDates.includes(today)) {
+      toast('Today\'s Daily Double is already in your passport. This run uses standard scoring.');
+    }
   }
+  state.active = true;
+  selectedAsDaily = state.runMode === 'daily';
+  selectedAsSurprise = state.runMode === 'surprise';
   progress[pack.pack_id] = state;
   save();
   currentStop = Number(packProgress(pack).stop) || 0;
@@ -1694,17 +2226,21 @@ function renderGame(options = {}) {
   if (!stop) {
     const score = Number(state.score) || 0;
     const elapsedTime = formatAdventureTime(state.elapsedSeconds);
-    const unlocked = achievements().filter(achievement => achievement.unlocked);
+    const badges = achievements();
+    const unlocked = badges.filter(achievement => achievement.unlocked);
+    const explorerTotal = explorerPointsTotal(badges);
     const recommendations = recommendationsFor(pack);
     const streak = dailyStreak();
     $('#gameContent').innerHTML = `<div class="game-shell completion-screen">
-      <span class="eyebrow">ROUTE COMPLETE</span><h1>${esc(pack.display_name)} conquered!</h1><p>You uncovered ${pack.stops.length} landmarks and their stories.</p>
+      <span class="eyebrow">${esc(adventureTitle(state))}</span><h1>${esc(pack.display_name)} conquered!</h1><p>You uncovered ${pack.stops.length} landmarks and their stories.</p>
       ${state.lastDailyDate ? `<div class="daily-complete"><span>☀</span><div><b>Daily adventure complete</b><small>${streak.current > 1 ? `${streak.current}-day streak — keep it going tomorrow.` : 'Your daily streak has begun.'}</small></div></div>` : ''}
-      <div class="finish-score"><span>Route score</span><b>✦ ${score}</b><small>Best: ${displayScore(pack)} points</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${pack.route_distance_km} km</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
+      ${(state.lastRunMode || state.runMode) === 'surprise' ? '<div class="surprise-complete"><span>⚄</span><div><b>Surprise accepted</b><small>Your completed score includes the 20% Lucky Dip bonus.</small></div></div>' : ''}
+      <div class="finish-score"><span>Adventure score</span><b>✦ ${formatPoints(score)}</b><small>Best: ${formatPoints(displayScore(pack))} points · Explorer total: ${formatPoints(explorerTotal)}</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${pack.route_distance_km} km</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
+      ${scoreBreakdownHtml(state)}
       <div class="route-map-head"><div><span class="eyebrow">YOUR ROUTE</span><h2>Stops at a glance</h2></div><span class="pill">Unlocked</span></div>
       <div id="completionMap" aria-label="Completed route map"></div>
       <ol class="route-recap-list">${pack.stops.map((item, index) => `<li><span>${index + 1}</span><b>${esc(item.Stop_Name)}</b></li>`).join('')}</ol>
-      <h2>Your achievements</h2><div class="achievement-grid">${unlocked.map(badge => `<div class="achievement unlocked"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small></div></div>`).join('')}</div>
+      <h2>Your achievements</h2><p class="muted">One-time achievement awards contribute ${formatPoints(achievementPointsTotal(badges))} points to your Explorer total.</p><div class="achievement-grid">${unlocked.map(achievementCard).join('')}</div>
       <button id="shareCompletion" class="postcard-btn"><span>▣</span><div><b>Personalise my completion postcard</b><small>Add an optional photo and message before sharing</small></div></button>
       ${recommendations.length ? `<section class="completion-next"><span class="eyebrow">KEEP EXPLORING</span><h2>Two adventures nearby</h2><p>Carry the momentum into another town when you are ready.</p><div class="route-grid preview-grid">${recommendations.map(candidate => routeCard(candidate)).join('')}</div></section>` : ''}
       <button class="primary" data-home>Back to adventures</button>
@@ -1715,16 +2251,23 @@ function renderGame(options = {}) {
     renderCompletionMap(pack);
     return;
   }
-  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${Number(state.score) || 0}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${state.dailyRunDate ? '<div class="game-meta-row"><span class="daily-run-badge">☀ Daily adventure</span></div>' : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−25 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
+  const modeBadge = state.runMode === 'daily'
+    ? '<span class="daily-run-badge">×2 Daily Double</span>'
+    : state.runMode === 'surprise'
+      ? '<span class="surprise-run-badge">+20% Surprise Me</span>'
+      : '';
+  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${formatPoints(state.score)}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${modeBadge ? `<div class="game-meta-row">${modeBadge}</div>` : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−100 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
   $$('[data-home]').forEach(button => button.onclick = showHome);
   if (debugMode) renderDebugPanel(stop, debugDistance);
   if (currentHints > 0) {
     $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
+    if (currentHints === 1) $('#hintBtn').innerHTML = 'Reveal the second hint <small>−150 points</small>';
     if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
   }
   $('#hintBtn').onclick = () => {
     currentHints = Math.min(2, currentHints + 1);
     $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
+    if (currentHints === 1) $('#hintBtn').innerHTML = 'Reveal the second hint <small>−150 points</small>';
     if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
     rememberView('gameView');
   };
@@ -2105,20 +2648,103 @@ function completeStop(stop, skip = false, debug = false) {
   renderDiscoveryScreen(stop, skip, debug);
 }
 
-function renderDiscoveryScreen(stop, skip = false, debug = false, restored = false) {
+function renderDiscoveryScreen(stop, skip = false, debug = false, restored = false, restoredCuriosity = false, restoredFieldworkType = '') {
   stopWatch();
-  const points = skip ? 0 : Math.max(0, 100 - currentHints * 25);
-  pendingDiscovery = { stopIndex: currentStop, skip, debug, hints: currentHints };
-  $('#gameContent').innerHTML = `<div class="game-shell discovery-screen ${skip ? '' : 'celebrate'}"><div class="discovery-burst" aria-hidden="true">${'<i></i>'.repeat(12)}<b>✦</b></div><span class="eyebrow">${skip ? 'STOP SKIPPED' : debug ? 'TEST LOCATION FOUND' : 'LOCATION FOUND'}</span><h1>${esc(stop.Stop_Name)}</h1><div class="points-earned ${skip ? 'skipped' : ''}">${skip ? 'No points for this stop' : `+${points} points`}</div><div class="clue-card"><p>${esc(stop.Unlock_Fact)}</p></div><button id="nextStop" class="primary">${currentStop + 1 >= currentPack.stops.length ? 'Finish route' : 'Next stop'}</button></div>`;
+  let fieldworkType = !skip ? String(restoredFieldworkType || (restoredCuriosity ? 'note' : '')) : '';
+  let fieldworkClaimed = Boolean(fieldworkType);
+  let award = scoreForStop(currentHints, skip, fieldworkClaimed);
+  pendingDiscovery = { stopIndex: currentStop, skip, debug, hints: currentHints, curiosityClaimed: fieldworkClaimed, fieldworkType };
+  const sharpEyes = !skip && currentHints === 0
+    ? `<span>Sharp Eyes +${formatPoints(SCORING.noHint)}</span>`
+    : !skip && currentHints > 0
+      ? `<span>Hints −${formatPoints(award.hintPenalty)}</span>`
+      : '';
+  const fieldworkCard = skip ? '' : `<section id="curiosityCard" class="curiosity-card fieldwork-card ${fieldworkClaimed ? 'claimed' : ''}"><span class="eyebrow">FIELDWORK BONUS · +${formatPoints(SCORING.curiosity)}</span><h2>Bring back one detail</h2><p>${esc(curiosityPrompt(stop))}</p><div id="fieldworkChoices" class="fieldwork-choices ${fieldworkClaimed ? 'hidden' : ''}"><label class="secondary fieldwork-camera"><span>▣ Take a discovery photo</span><input id="fieldworkPhoto" type="file" accept="image/*" capture="environment"></label><button id="openFieldNote" class="secondary">✎ Write a field note</button></div><div id="fieldNotePanel" class="field-note-panel hidden"><label for="fieldNoteText">What did you notice?</label><textarea id="fieldNoteText" maxlength="160" rows="3" placeholder="A date, carving, old sign, material, symbol or tiny detail…"></textarea><div><small id="fieldNoteCount">0/160 · at least 12 characters</small><button id="saveFieldNote" class="secondary" disabled>Save note · +${formatPoints(SCORING.curiosity)}</button></div></div><div id="fieldworkConfirmation" class="fieldwork-confirmation ${fieldworkClaimed ? '' : 'hidden'}"><span>${fieldworkType === 'photo' ? '▣' : '✎'}</span><div><b>${fieldworkType === 'photo' ? 'Discovery photo captured' : 'Field note complete'}</b><small>Well done — you looked beyond the clue. +${formatPoints(SCORING.curiosity)} points</small></div></div><small class="fieldwork-privacy">Photos and note text are never uploaded or saved. Both stay in memory only for this adventure and can join your downloadable adventure postcard.</small></section>`;
+  $('#gameContent').innerHTML = `<div class="game-shell discovery-screen ${skip ? '' : 'celebrate'}"><div class="discovery-burst" aria-hidden="true">${'<i></i>'.repeat(12)}<b>✦</b></div><span class="eyebrow">${skip ? 'STOP SKIPPED' : debug ? 'TEST LOCATION FOUND' : 'LOCATION FOUND'}</span><h1>${esc(stop.Stop_Name)}</h1><div id="pointsEarned" class="points-earned ${skip ? 'skipped' : ''}">${skip ? 'No points for this stop' : `+${formatPoints(award.total)} points`}</div><div class="stop-score-chips">${skip ? '' : `<span>Discovery +${formatPoints(SCORING.discovery)}</span>${sharpEyes}`}</div><div class="clue-card"><p>${esc(stop.Unlock_Fact)}</p></div>${fieldworkCard}<button id="nextStop" class="primary">${currentStop + 1 >= currentPack.stops.length ? 'Finish route' : 'Next stop'}</button></div>`;
   rememberView('gameView');
   if (!restored) playDiscoveryFeedback(skip);
+  const claimFieldwork = type => {
+    if (fieldworkClaimed) return;
+    fieldworkClaimed = true;
+    fieldworkType = type;
+    award = scoreForStop(currentHints, skip, true);
+    pendingDiscovery.curiosityClaimed = true;
+    pendingDiscovery.fieldworkType = type;
+    $('#pointsEarned').textContent = `+${formatPoints(award.total)} points`;
+    $('#curiosityCard').classList.add('claimed');
+    $('#fieldworkChoices').classList.add('hidden');
+    $('#fieldNotePanel').classList.add('hidden');
+    $('#fieldworkConfirmation').classList.remove('hidden');
+    $('#fieldworkConfirmation').innerHTML = `<span>${type === 'photo' ? '▣' : '✎'}</span><div><b>${type === 'photo' ? 'Discovery photo captured' : 'Field note complete'}</b><small>Well done — you looked beyond the clue. +${formatPoints(SCORING.curiosity)} points</small></div>`;
+    rememberView('gameView');
+    toast(`Fieldwork bonus: +${formatPoints(SCORING.curiosity)} points`);
+  };
+  if ($('#fieldworkPhoto')) $('#fieldworkPhoto').onchange = event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/') || file.size > 20 * 1024 * 1024) {
+      event.target.value = '';
+      return toast('Choose a photo under 20 MB.');
+    }
+    event.target.disabled = true;
+    $('#nextStop').disabled = true;
+    const capturedPackId = currentPack.pack_id;
+    const capturedStopIndex = currentStop;
+    const url = URL.createObjectURL(file);
+    loadCanvasImage(url).then(image => {
+      if (currentPack?.pack_id !== capturedPackId || currentStop !== capturedStopIndex || !$('#fieldworkConfirmation')) {
+        URL.revokeObjectURL(url);
+        return;
+      }
+      if (adventurePhotos.length >= 6) {
+        const oldest = adventurePhotos.shift();
+        if (oldest?.url) URL.revokeObjectURL(oldest.url);
+      }
+      adventurePhotos.push({ url, image, stopName: stop.Stop_Name, stopIndex: currentStop, packId: currentPack.pack_id });
+      claimFieldwork('photo');
+      $('#nextStop').disabled = false;
+    }).catch(() => {
+      URL.revokeObjectURL(url);
+      event.target.disabled = false;
+      event.target.value = '';
+      if ($('#nextStop')) $('#nextStop').disabled = false;
+      toast('That photo could not be read. Try another.');
+    });
+  };
+  if ($('#openFieldNote')) $('#openFieldNote').onclick = () => {
+    $('#fieldNotePanel').classList.remove('hidden');
+    $('#fieldNoteText').focus();
+  };
+  if ($('#fieldNoteText')) $('#fieldNoteText').oninput = event => {
+    const length = event.target.value.trim().length;
+    $('#fieldNoteCount').textContent = `${event.target.value.length}/160 · ${length < 12 ? 'at least 12 characters' : 'ready to save'}`;
+    $('#saveFieldNote').disabled = length < 12;
+  };
+  if ($('#saveFieldNote')) $('#saveFieldNote').onclick = () => {
+    if (fieldworkClaimed) return;
+    const noteText = $('#fieldNoteText').value.trim();
+    if (noteText.length < 12) return;
+    if (adventureNotes.length >= 6) adventureNotes.shift();
+    adventureNotes.push({ text: noteText, stopName: stop.Stop_Name, stopIndex: currentStop, packId: currentPack.pack_id });
+    claimFieldwork('note');
+  };
   $('#nextStop').onclick = () => {
     const before = new Set(achievements().filter(item => item.unlocked).map(item => item.id));
     const state = packProgress(currentPack);
+    const breakdown = state.scoreBreakdown ||= emptyScoreBreakdown();
     pendingDiscovery = null;
-    state.score = (Number(state.score) || 0) + points;
+    state.score = (Number(state.score) || 0) + award.total;
+    state.baseScore = (Number(state.baseScore) || 0) + award.total;
+    breakdown.landmarks += award.landmarks;
+    breakdown.hintPenalty += award.hintPenalty;
+    breakdown.sharpEyes += award.sharpEyes;
+    breakdown.curiosity += award.curiosity;
     state.hintsUsed = (Number(state.hintsUsed) || 0) + currentHints;
     state.skipped = (Number(state.skipped) || 0) + (skip ? 1 : 0);
+    state.curiosityBonuses = (Number(state.curiosityBonuses) || 0) + (fieldworkClaimed ? 1 : 0);
+    state.curiosityFinds = (Number(state.curiosityFinds) || 0) + (fieldworkClaimed ? 1 : 0);
+    state.photoFinds = (Number(state.photoFinds) || 0) + (fieldworkType === 'photo' ? 1 : 0);
+    state.noteFinds = (Number(state.noteFinds) || 0) + (fieldworkType === 'note' ? 1 : 0);
     state.perfectStops = (Number(state.perfectStops) || 0) + (!skip && currentHints === 0 ? 1 : 0);
     currentStop += 1;
     state.stop = currentStop;
@@ -2126,6 +2752,21 @@ function renderDiscoveryScreen(stop, skip = false, debug = false, restored = fal
     if (currentStop >= currentPack.stops.length) {
       const completedAt = Date.now();
       const startedAt = Number(state.startedAt) || completedAt;
+      const firstCompletion = !state.everCompleted;
+      const completionBonus = SCORING.completion
+        + (Number(state.skipped) === 0 ? SCORING.noSkip : 0)
+        + (Number(state.hintsUsed) === 0 ? SCORING.noHintRoute : 0)
+        + (firstCompletion ? SCORING.firstCompletion : 0);
+      breakdown.completion += SCORING.completion;
+      if (Number(state.skipped) === 0) breakdown.noSkip += SCORING.noSkip;
+      if (Number(state.hintsUsed) === 0) breakdown.noHintRoute += SCORING.noHintRoute;
+      if (firstCompletion) breakdown.firstCompletion += SCORING.firstCompletion;
+      state.score += completionBonus;
+      state.baseScore = state.score;
+      const modeRate = state.runMode === 'daily' ? SCORING.dailyRate : state.runMode === 'surprise' ? SCORING.surpriseRate : 0;
+      const modeBonus = Math.round(state.score * modeRate);
+      state.score += modeBonus;
+      breakdown.modeBonus += modeBonus;
       state.completedAt = completedAt;
       state.elapsedSeconds = Math.max(1, Math.round((completedAt - startedAt) / 1000));
       state.lastElapsedSeconds = state.elapsedSeconds;
@@ -2137,6 +2778,8 @@ function renderDiscoveryScreen(stop, skip = false, debug = false, restored = fal
       state.everCompleted = true;
       state.completions = (Number(state.completions) || 0) + 1;
       state.bestScore = Math.max(Number(state.bestScore) || 0, Number(state.score) || 0);
+      state.bestBaseScore = Math.max(Number(state.bestBaseScore) || 0, Number(state.baseScore) || 0);
+      state.lastRunMode = state.runMode || 'standard';
       if ((Number(state.hintsUsed) || 0) === 0 && (Number(state.skipped) || 0) === 0) {
         state.perfectCompletions = (Number(state.perfectCompletions) || 0) + 1;
       }
@@ -2146,11 +2789,13 @@ function renderDiscoveryScreen(stop, skip = false, debug = false, restored = fal
         if (isNewDaily) profile.dailyDates.push(dailyDate);
         state.lastDailyDate = isNewDaily ? dailyDate : null;
         delete state.dailyRunDate;
-        saveProfile();
       } else {
         state.lastDailyDate = null;
       }
+      if (state.lastRunMode === 'surprise') profile.surpriseCompletions = (Number(profile.surpriseCompletions) || 0) + 1;
+      saveProfile();
     }
+    state.scoreVersion = SCORE_VERSION;
     progress[currentPack.pack_id] = state;
     save();
     const newlyUnlocked = achievements().filter(item => item.unlocked && !before.has(item.id));
@@ -2161,7 +2806,7 @@ function renderDiscoveryScreen(stop, skip = false, debug = false, restored = fal
       saveProfile();
     }
     renderGame();
-    if (newlyUnlocked.length) toast(`Achievement unlocked: ${newlyUnlocked[0].name}`);
+    if (newlyUnlocked.length) toast(`Achievement unlocked: ${newlyUnlocked[0].name} · +${formatPoints(newlyUnlocked[0].points)} Explorer Points`);
   };
 }
 
