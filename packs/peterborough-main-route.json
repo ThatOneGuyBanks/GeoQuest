@@ -10,7 +10,7 @@
     "lat": 52.582125,
     "long": -0.252025
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "stops": [
     {
       "Town": "Peterborough",
@@ -82,6 +82,16 @@
     }
   ],
   "short_description": "Decode the cathedral city through kings, queens and river trade.",
+  "before_you_go": {
+    "terrain": "Designed as a walking route.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "cathedral",
   "route_distance_km": 6.2,
   "estimated_minutes": 115,
@@ -97,5 +107,56 @@
   "featured": true,
   "daily_eligible": true,
   "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route."
+  "transport_note": "Designed as a walking route.",
+  "final_venue": {
+    "name": "The Blue Bell (Werrington)",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://peterborough.camra.org.uk/viewnode.php?id=93615",
+    "hours": {
+      "mon": [
+        [
+          "13:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "13:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "13:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "13:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }

@@ -10,7 +10,7 @@
     "lat": 52.2274,
     "long": -0.266825
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "stops": [
     {
       "Town": "St Neots",
@@ -82,6 +82,16 @@
     }
   ],
   "short_description": "A gentle riverside mystery through the heart of St Neots.",
+  "before_you_go": {
+    "terrain": "Designed as a walking route.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
   "cover_theme": "meadow",
   "route_distance_km": 3.0,
   "estimated_minutes": 70,
@@ -97,5 +107,56 @@
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route."
+  "transport_note": "Designed as a walking route.",
+  "final_venue": {
+    "name": "The Coach House",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.greeneking.co.uk/pubs/cambridgeshire/coach-house/find-us",
+    "hours": {
+      "mon": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }

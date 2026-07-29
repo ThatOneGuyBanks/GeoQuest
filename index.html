@@ -1,6 +1,6 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#10131a"><title>GeoQuest</title><link rel="manifest" href="manifest.webmanifest"><link rel="preconnect" href="https://unpkg.com"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="styles.css"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#0c161f"><meta name="description" content="Real-world walking adventures, clues and local discoveries."><meta name="application-name" content="Day Tripping Quiz"><meta name="apple-mobile-web-app-title" content="Day Tripping"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><title>Day Tripping Quiz</title><link rel="icon" type="image/png" sizes="32x32" href="assets/day-tripping-quiz-icon-32.png"><link rel="apple-touch-icon" sizes="180x180" href="assets/day-tripping-quiz-apple-180.png"><link rel="manifest" href="manifest.webmanifest"><link rel="preconnect" href="https://unpkg.com"><link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""><link rel="stylesheet" href="styles.css"></head><body>
 <div id="app">
-<header class="topbar"><button class="brand" data-home><span class="brandmark">GQ</span><span>GeoQuest</span></button><div class="top-actions"><button id="searchToggle" class="icon-btn" aria-label="Search">⌕</button><button id="mapOpen" class="map-nav-btn" aria-label="Explore adventure map"><span>⌖</span><b>Map</b></button></div></header>
+<header class="topbar"><button class="brand" data-home aria-label="Day Tripping Quiz home"><img class="brand-logo" src="assets/day-tripping-quiz-icon-192.png" alt=""><span class="brand-name">Day Tripping Quiz</span></button><div class="top-actions"><button id="searchToggle" class="icon-btn" aria-label="Search">⌕</button><button id="settingsOpen" class="icon-btn" aria-label="Help and settings">?</button><button id="mapOpen" class="map-nav-btn" aria-label="Explore adventure map"><span>⌖</span><b>Map</b></button></div></header>
 <div id="searchWrap" class="search-wrap hidden"><input id="searchInput" placeholder="Search places, themes or routes…"><button id="searchClose">×</button></div>
 <main id="homeView">
 <section class="hero"><div><span class="eyebrow">REAL-WORLD ADVENTURES</span><h1>Where will your next clue lead?</h1><p>Pick a route, solve the clues and discover the stories hiding around you.</p></div><button id="surpriseHero" class="dice-btn"><span>⚄</span><b>Surprise me</b><small>Choose an adventure</small></button></section>
@@ -17,12 +17,13 @@
 <section id="collectionView" class="view hidden"><div class="view-head"><button class="back-btn" data-home>←</button><div><span class="eyebrow">COLLECTION</span><h2 id="collectionTitle"></h2></div></div><div id="collectionRoutes" class="route-grid pad"></div></section>
 <section id="detailView" class="view hidden"><div id="detailContent"></div></section>
 <section id="gameView" class="view hidden"><div id="gameContent"></div></section>
+<div id="brandTransition" class="brand-transition hidden" aria-hidden="true"><div class="brand-transition-logo"><img class="brand-transition-base" src="assets/day-tripping-quiz-icon-512.png" alt=""><span class="brand-transition-fill"><img src="assets/day-tripping-quiz-icon-512.png" alt=""></span></div><span class="brand-transition-name">DAY TRIPPING QUIZ</span></div>
 <div id="toast" class="toast"></div>
 <div id="safetyModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="safetyTitle">
   <div class="modal-card safety-card">
     <span class="eyebrow">BEFORE YOU EXPLORE</span>
     <h2 id="safetyTitle">Adventure responsibly.</h2>
-    <p>GeoQuest does its best to work out where you are, but phone GPS is not magic and can sometimes be inaccurate.</p>
+    <p>Day Tripping Quiz does its best to work out where you are, but phone GPS is not magic and can sometimes be inaccurate.</p>
     <ul class="safety-list">
       <li>Stay on public paths and never enter private property.</li>
       <li>Do not cross unsafe roads, climb barriers, enter water, or put yourself in danger.</li>
@@ -31,6 +32,17 @@
     </ul>
     <p class="safety-fun">Be sensible, keep your eyes open, and have fun.</p>
     <button id="acceptSafety" class="primary">I understand — let’s explore</button>
+  </div>
+</div>
+<div id="tutorialModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="tutorialTitle">
+  <div class="modal-card tutorial-card">
+    <button id="tutorialClose" class="modal-close" aria-label="Close tutorial">×</button>
+    <div id="tutorialDots" class="tutorial-dots" aria-hidden="true"></div>
+    <div id="tutorialVisual" class="tutorial-visual" aria-hidden="true"></div>
+    <span id="tutorialEyebrow" class="eyebrow"></span>
+    <h2 id="tutorialTitle"></h2>
+    <p id="tutorialText"></p>
+    <div class="tutorial-actions"><button id="tutorialBack" class="secondary">Back</button><button id="tutorialNext" class="primary">Next</button></div>
   </div>
 </div>
 <div id="arrivalModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="arrivalTitle">
@@ -44,5 +56,15 @@
       <button id="keepSearching" class="secondary">Not yet — keep searching</button>
     </div>
   </div>
+</div>
+<div id="settingsBackdrop" class="settings-backdrop hidden">
+  <aside class="settings-drawer" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="settings-head"><div><span class="eyebrow">MAKE IT YOURS</span><h2 id="settingsTitle">Help & settings</h2></div><button id="settingsClose" class="modal-close" aria-label="Close settings">×</button></div>
+    <section class="settings-section"><h3>Distance units</h3><div class="unit-toggle settings-units" role="group" aria-label="Distance units"><button type="button" data-settings-unit="km">KM</button><button type="button" data-settings-unit="mi">MI</button></div></section>
+    <section class="settings-section"><h3>Discovery feedback</h3><button id="soundSetting" class="setting-row" role="switch"><span><b>Discovery sound</b><small>A short celebratory chime.</small></span><i></i></button><button id="vibrationSetting" class="setting-row" role="switch"><span><b>Vibration</b><small>A gentle pulse when you find a stop.</small></span><i></i></button></section>
+    <section class="settings-section"><h3>Need a refresher?</h3><button id="replayTutorial" class="settings-action"><span>◎</span><div><b>Replay the quick tutorial</b><small>Clues, distance scans and discoveries in three steps.</small></div></button><div class="test-mode-note"><span>TEST MODE</span><p>For route testing, tap <b>I’m stuck</b> five times quickly during a game to unlock the hidden distance simulator.</p></div></section>
+    <section class="settings-section"><h3>Your progress</h3><button id="exportProgress" class="settings-action"><span>⇩</span><div><b>Export progress</b><small>Download a private backup to this device.</small></div></button><button id="resetProgress" class="settings-action danger"><span>↺</span><div><b>Reset all progress</b><small>Achievements, scores and active adventures.</small></div></button></section>
+    <p class="settings-footnote">Everything stays on this device. Day Tripping Quiz does not need an account or server.</p>
+  </aside>
 </div>
 </div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><script src="app.js"></script></body></html>

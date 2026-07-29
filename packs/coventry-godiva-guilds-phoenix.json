@@ -11,7 +11,7 @@
     "lat": 52.40784,
     "long": -1.50879
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 1.1,
   "estimated_minutes": 55,
   "difficulty_label": "Relaxed",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A very compact pedestrian route through Coventry's historic centre. Cathedral opening is not required.",
+  "before_you_go": {
+    "terrain": "A very compact pedestrian route through Coventry's historic centre. Cathedral opening is not required.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "cathedral",
   "stops": [
     {
@@ -98,5 +108,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "The Golden Cross",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.coventrycitycentre.co.uk/directory/dine/the-golden-cross/",
+    "hours": {
+      "mon": [
+        [
+          "11:30",
+          "21:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:30",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:30",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:30",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "18:00"
+        ]
+      ]
+    }
+  }
 }

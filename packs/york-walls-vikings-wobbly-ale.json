@@ -11,7 +11,7 @@
     "lat": 53.96125,
     "long": -1.08204
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 1.4,
   "estimated_minutes": 70,
   "difficulty_label": "Detective",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A compact central walk. The checkpoint at Bootham Bar is at street level, so climbing the walls is optional.",
+  "before_you_go": {
+    "terrain": "A compact central walk. The checkpoint at Bootham Bar is at street level, so climbing the walls is optional.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No steps are required; climbing the city walls is optional.",
+    "accessibility": "Public routes throughout; some cobbles or historic paving may be uneven.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Usually possible, though cobbles and uneven paving may be uncomfortable."
+  },
   "cover_theme": "cathedral",
   "stops": [
     {
@@ -98,5 +108,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "House of the Trembling Madness",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.tremblingmadness.com/Imprint-c149730842",
+    "hours": {
+      "mon": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "tue": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "wed": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "thu": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "fri": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "sat": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ],
+      "sun": [
+        [
+          "10:00",
+          "23:30"
+        ]
+      ]
+    }
+  }
 }

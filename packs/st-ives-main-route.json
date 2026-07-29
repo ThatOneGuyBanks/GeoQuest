@@ -10,7 +10,7 @@
     "lat": 52.33215,
     "long": -0.074325
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "stops": [
     {
       "Town": "St Ives",
@@ -82,6 +82,16 @@
     }
   ],
   "short_description": "Explore a beautiful market town shaped by its medieval bridge and river.",
+  "before_you_go": {
+    "terrain": "Designed as a walking route.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "bridge",
   "route_distance_km": 3.0,
   "estimated_minutes": 70,
@@ -97,5 +107,56 @@
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route."
+  "transport_note": "Designed as a walking route.",
+  "final_venue": {
+    "name": "The Oliver Cromwell",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://theolivercromwellpub.co.uk/food-2/",
+    "hours": {
+      "mon": [
+        [
+          "09:30",
+          "22:00"
+        ]
+      ],
+      "tue": [
+        [
+          "09:30",
+          "22:00"
+        ]
+      ],
+      "wed": [
+        [
+          "09:30",
+          "22:00"
+        ]
+      ],
+      "thu": [
+        [
+          "09:30",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "09:30",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "09:30",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:30",
+          "21:00"
+        ]
+      ]
+    }
+  }
 }

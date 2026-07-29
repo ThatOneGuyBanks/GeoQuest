@@ -1,5 +1,5 @@
-GEOQUEST GITHUB-READY VERSION
-============================
+DAY TRIPPING QUIZ — GITHUB-READY VERSION
+========================================
 Read README.md for full instructions.
 
 For phone GPS testing, publish on GitHub Pages and open the HTTPS Pages address.

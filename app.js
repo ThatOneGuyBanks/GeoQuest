@@ -25,16 +25,40 @@ let stuckTapTimer = null;
 let achievementsExpanded = false;
 let featuredExpanded = false;
 let nearbyExpanded = false;
+let venueDisclosurePackId = null;
+let venueHoursExpanded = false;
+let venueDetailsRevealed = false;
+let navigationTransitionsReady = false;
+let pageTransitionCycle = 0;
+let pageTransitionTimers = [];
+let tutorialStep = 0;
+let resetProgressTimer = null;
 
-const KEY = 'geoquest-progress-v3';
-const SAFETY_KEY = 'geoquest-safety-accepted-v1';
-const PROFILE_KEY = 'geoquest-profile-v1';
+const KEY = 'day-tripping-quiz-progress-v1';
+const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
+const PROFILE_KEY = 'day-tripping-quiz-profile-v1';
+const LEGACY_KEY = 'geoquest-progress-v3';
+const LEGACY_SAFETY_KEY = 'geoquest-safety-accepted-v1';
+const LEGACY_PROFILE_KEY = 'geoquest-profile-v1';
 const progress = readProgress();
 const profile = readProfile();
+const TUTORIAL_STEPS = [
+  { icon: '◇', eyebrow: 'STEP 1 · SOLVE', title: 'Follow the cryptic clue', text: 'Each stop begins with a clue. Look around the real world, reveal hints only when you need them, and keep your eyes off the screen while walking.' },
+  { icon: '⌖', eyebrow: 'STEP 2 · SCAN', title: 'Check your distance', text: 'Use the location scanner when you think you are close. It shows kilometres or miles and turns the distance into memorable comparisons.' },
+  { icon: '✦', eyebrow: 'STEP 3 · DISCOVER', title: 'Unlock the story', text: 'Confirm the landmark when you can genuinely see it. You will earn points, reveal its story and move on to the next mystery.' }
+];
+
+function readStoredValue(key, legacyKey) {
+  const current = localStorage.getItem(key);
+  if (current !== null) return current;
+  const legacy = localStorage.getItem(legacyKey);
+  if (legacy !== null) localStorage.setItem(key, legacy);
+  return legacy;
+}
 
 function readProgress() {
   try {
-    return JSON.parse(localStorage.getItem(KEY) || '{}');
+    return JSON.parse(readStoredValue(KEY, LEGACY_KEY) || '{}');
   } catch {
     return {};
   }
@@ -42,14 +66,17 @@ function readProgress() {
 
 function readProfile() {
   try {
-    const saved = JSON.parse(localStorage.getItem(PROFILE_KEY) || '{}');
+    const saved = JSON.parse(readStoredValue(PROFILE_KEY, LEGACY_PROFILE_KEY) || '{}');
     return {
       unit: saved.unit === 'mi' ? 'mi' : 'km',
       dailyDates: Array.isArray(saved.dailyDates) ? saved.dailyDates : [],
-      achievementDates: saved.achievementDates && typeof saved.achievementDates === 'object' ? saved.achievementDates : {}
+      achievementDates: saved.achievementDates && typeof saved.achievementDates === 'object' ? saved.achievementDates : {},
+      sound: saved.sound !== false,
+      vibration: saved.vibration !== false,
+      tutorialSeen: saved.tutorialSeen === true
     };
   } catch {
-    return { unit: 'km', dailyDates: [], achievementDates: {} };
+    return { unit: 'km', dailyDates: [], achievementDates: {}, sound: true, vibration: true, tutorialSeen: false };
   }
 }
 
@@ -59,6 +86,126 @@ function saveProfile() {
 
 function todayKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function dateFromKey(key) {
+  const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(key || ''));
+  return match ? new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]), 12) : null;
+}
+
+function dailyStreak() {
+  const dates = [...new Set(profile.dailyDates)].map(dateFromKey).filter(Boolean).sort((a, b) => a - b);
+  let best = 0;
+  let run = 0;
+  let previous = null;
+  dates.forEach(date => {
+    const gap = previous ? Math.round((date - previous) / 86400000) : null;
+    run = gap === 1 ? run + 1 : 1;
+    best = Math.max(best, run);
+    previous = date;
+  });
+  if (!dates.length) return { current: 0, best: 0 };
+  const last = dates[dates.length - 1];
+  const today = dateFromKey(todayKey());
+  const age = Math.round((today - last) / 86400000);
+  return { current: age <= 1 ? run : 0, best };
+}
+
+function maybeShowTutorial() {
+  if (!profile.tutorialSeen) openTutorial(0);
+}
+
+function openTutorial(step = 0) {
+  tutorialStep = Math.max(0, Math.min(TUTORIAL_STEPS.length - 1, Number(step) || 0));
+  const item = TUTORIAL_STEPS[tutorialStep];
+  $('#tutorialVisual').textContent = item.icon;
+  $('#tutorialEyebrow').textContent = item.eyebrow;
+  $('#tutorialTitle').textContent = item.title;
+  $('#tutorialText').textContent = item.text;
+  $('#tutorialDots').innerHTML = TUTORIAL_STEPS.map((_, index) => `<i class="${index === tutorialStep ? 'active' : ''}"></i>`).join('');
+  $('#tutorialBack').disabled = tutorialStep === 0;
+  $('#tutorialNext').textContent = tutorialStep === TUTORIAL_STEPS.length - 1 ? 'Start exploring' : 'Next';
+  $('#tutorialModal').classList.remove('hidden');
+}
+
+function closeTutorial(markSeen = false) {
+  if (markSeen) {
+    profile.tutorialSeen = true;
+    saveProfile();
+  }
+  $('#tutorialModal').classList.add('hidden');
+}
+
+function openSettings() {
+  renderSettings();
+  $('#settingsBackdrop').classList.remove('hidden');
+}
+
+function closeSettings() {
+  $('#settingsBackdrop').classList.add('hidden');
+}
+
+function renderSettings() {
+  $$('[data-settings-unit]').forEach(button => {
+    const active = button.dataset.settingsUnit === profile.unit;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  [['soundSetting', 'sound'], ['vibrationSetting', 'vibration']].forEach(([id, key]) => {
+    const button = $(`#${id}`);
+    if (!button) return;
+    button.classList.toggle('active', Boolean(profile[key]));
+    button.setAttribute('aria-checked', String(Boolean(profile[key])));
+  });
+}
+
+function setFeedbackSetting(key, value) {
+  profile[key] = Boolean(value);
+  saveProfile();
+  renderSettings();
+}
+
+function exportProgress() {
+  const backup = {
+    app: 'Day Tripping Quiz',
+    exported_at: new Date().toISOString(),
+    progress,
+    profile
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = `day-tripping-quiz-progress-${todayKey()}.json`;
+  link.click();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+  toast('Progress backup downloaded.');
+}
+
+function resetAllProgress() {
+  const button = $('#resetProgress');
+  if (button.dataset.confirming !== 'true') {
+    button.dataset.confirming = 'true';
+    button.classList.add('confirming');
+    button.querySelector('b').textContent = 'Press again to reset everything';
+    clearTimeout(resetProgressTimer);
+    resetProgressTimer = setTimeout(() => {
+      button.dataset.confirming = 'false';
+      button.classList.remove('confirming');
+      button.querySelector('b').textContent = 'Reset all progress';
+    }, 10000);
+    return;
+  }
+  Object.keys(progress).forEach(key => delete progress[key]);
+  profile.dailyDates = [];
+  profile.achievementDates = {};
+  localStorage.removeItem(KEY);
+  localStorage.removeItem(LEGACY_KEY);
+  saveProfile();
+  clearTimeout(resetProgressTimer);
+  closeSettings();
+  renderAll();
+  showHome();
+  toast('Progress reset. Your preferences were kept.');
 }
 
 function esc(value = '') {
@@ -86,7 +233,7 @@ async function init() {
       .map(entry => fetch(`packs/${entry.file}`, { cache: 'no-store' }).then(response => {
         if (!response.ok) throw Error(entry.file);
         return response.json();
-      })));
+      }).then(pack => ({ ...pack, source_file: entry.file }))));
     packs = results.filter(result => result.status === 'fulfilled').map(result => normalise(result.value));
     const comparisonCatalogue = await comparisonRequest;
     distanceComparisons = comparisonCatalogue.comparisons
@@ -96,6 +243,7 @@ async function init() {
     renderAll();
     bind();
     restoreContinue();
+    navigationTransitionsReady = true;
   } catch (error) {
     document.body.innerHTML = `<main class="detail-body"><h1>Could not load game data</h1><p>${esc(error.message)}</p><p>Serve the project through GitHub Pages or the included local server.</p></main>`;
   }
@@ -109,11 +257,253 @@ function normalise(pack) {
     difficulty_label: pack.difficulty_label || 'Detective',
     collections: pack.collections || [],
     tags: pack.tags || [],
-    author: pack.author || 'GeoQuest',
+    author: pack.author || 'Day Tripping Quiz',
     recommended_age: pack.recommended_age || 'All ages',
     display_name: pack.display_name || pack.town,
+    before_you_go: pack.before_you_go || {},
     stops: [...(pack.stops || [])].sort((a, b) => Number(a.Stop_Order) - Number(b.Stop_Order))
   };
+}
+
+const VENUE_DAYS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+
+function clockMinutes(value) {
+  const match = /^(\d{1,2}):(\d{2})$/.exec(String(value || ''));
+  if (!match) return null;
+  const hours = Number(match[1]);
+  const minutes = Number(match[2]);
+  if (hours < 0 || hours > 24 || minutes < 0 || minutes > 59 || (hours === 24 && minutes !== 0)) return null;
+  return hours * 60 + minutes;
+}
+
+function formatClock(value) {
+  const minutes = clockMinutes(value);
+  if (minutes === null) return String(value || '');
+  const normalised = minutes % 1440;
+  const hour = Math.floor(normalised / 60);
+  const minute = normalised % 60;
+  return new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' })
+    .format(new Date(2020, 0, 1, hour, minute));
+}
+
+function formatMinutes(minutes) {
+  minutes = Math.max(0, Math.round(minutes));
+  if (minutes < 60) return `${minutes} min`;
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`;
+}
+
+function venueLocalTime(date, timeZone) {
+  const parts = new Intl.DateTimeFormat('en-GB', {
+    timeZone,
+    weekday: 'short',
+    hour: '2-digit',
+    minute: '2-digit',
+    hourCycle: 'h23'
+  }).formatToParts(date).reduce((result, part) => ({ ...result, [part.type]: part.value }), {});
+  const day = parts.weekday.toLowerCase().slice(0, 3);
+  return { day, dayIndex: VENUE_DAYS.indexOf(day), minutes: Number(parts.hour) * 60 + Number(parts.minute) };
+}
+
+function validIntervals(hours, day) {
+  return Array.isArray(hours?.[day])
+    ? hours[day].map(interval => ({ start: clockMinutes(interval?.[0]), end: clockMinutes(interval?.[1]) }))
+      .filter(interval => interval.start !== null && interval.end !== null && interval.start !== interval.end)
+    : [];
+}
+
+function openingWindowAt(hours, local) {
+  const today = validIntervals(hours, local.day);
+  for (const interval of today) {
+    if (interval.end > interval.start && local.minutes >= interval.start && local.minutes < interval.end) {
+      return { open: true, closesIn: interval.end - local.minutes, closesAt: interval.end };
+    }
+    if (interval.end < interval.start && local.minutes >= interval.start) {
+      return { open: true, closesIn: 1440 - local.minutes + interval.end, closesAt: interval.end };
+    }
+  }
+  const previousDay = VENUE_DAYS[(local.dayIndex + 6) % 7];
+  for (const interval of validIntervals(hours, previousDay)) {
+    if (interval.end < interval.start && local.minutes < interval.end) {
+      return { open: true, closesIn: interval.end - local.minutes, closesAt: interval.end };
+    }
+  }
+  const nextToday = today
+    .filter(interval => interval.start > local.minutes)
+    .sort((a, b) => a.start - b.start)[0];
+  return { open: false, opensAt: nextToday?.start ?? null };
+}
+
+const VENUE_DAY_NAMES = { mon: 'Monday', tue: 'Tuesday', wed: 'Wednesday', thu: 'Thursday', fri: 'Friday', sat: 'Saturday', sun: 'Sunday' };
+
+function dayHoursLabel(hours, day) {
+  const intervals = validIntervals(hours, day);
+  if (!intervals.length) return 'Closed';
+  return intervals.map(interval => {
+    const start = `${Math.floor(interval.start / 60)}:${String(interval.start % 60).padStart(2, '0')}`;
+    const end = interval.end === 1440 ? '24:00' : `${Math.floor(interval.end / 60)}:${String(interval.end % 60).padStart(2, '0')}`;
+    return `${formatClock(start)}–${interval.end === 1440 ? end : formatClock(end)}${interval.end < interval.start ? ' next day' : ''}`;
+  }).join(', ');
+}
+
+function weeklyHoursHtml(hours) {
+  return ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
+    .map(day => `<div><span>${VENUE_DAY_NAMES[day]}</span><b>${esc(dayHoursLabel(hours, day))}</b></div>`)
+    .join('');
+}
+
+function venueTiming(pack, state, now = new Date(), position = userPos) {
+  const venue = pack.final_venue;
+  const finalStop = pack.stops[pack.stops.length - 1];
+  const continuing = Number(state.stop) > 0 && !state.completed;
+  const remainingStops = continuing ? Math.max(1, pack.stops.length - Number(state.stop)) : pack.stops.length;
+  const journeyMinutes = Math.max(1, Math.ceil(Number(pack.estimated_minutes || 60) * remainingStops / Math.max(1, pack.stops.length)));
+  const routePoint = pack.stops[continuing ? Math.min(Number(state.stop), pack.stops.length - 1) : 0];
+  const routePointLabel = continuing ? 'next stop' : 'route start';
+  const metresFromRoute = position && routePoint
+    ? distance(position, [Number(routePoint.Target_Lat), Number(routePoint.Target_Long)]) * 1000
+    : null;
+  const nearRoute = metresFromRoute !== null && metresFromRoute <= 500;
+  const timeZone = venue?.timezone || 'Europe/London';
+  const base = { venue, finalStop, journeyMinutes, routePointLabel, metresFromRoute, nearRoute };
+  if (!venue?.hours || !Object.keys(venue.hours).length) return { ...base, status: 'unknown', todayHours: 'Not available' };
+
+  const localNow = venueLocalTime(now, timeZone);
+  const currentWindow = openingWindowAt(venue.hours, localNow);
+  const finishTime = new Date(now.getTime() + journeyMinutes * 60000);
+  const finishWindow = openingWindowAt(venue.hours, venueLocalTime(finishTime, timeZone));
+  const minimumVisit = Math.max(0, Number(venue.minimum_visit_minutes) || 30);
+  const currentOpen = currentWindow.open;
+  const todayHours = dayHoursLabel(venue.hours, localNow.day);
+  const timing = { ...base, currentOpen, currentWindow, finishWindow, minimumVisit, todayHours };
+
+  if (metresFromRoute === null) return { ...timing, status: currentOpen ? 'location-needed-open' : 'location-needed-closed' };
+  if (!nearRoute) return { ...timing, status: 'far-from-route' };
+  if (finishWindow.open && finishWindow.closesIn < minimumVisit) return { ...timing, status: 'closing-soon' };
+  if (finishWindow.open) return { ...timing, status: currentOpen ? 'open-through-walk' : 'opens-during-walk' };
+  return { ...timing, status: currentOpen ? 'closes-during-walk' : 'closed-through-walk' };
+}
+
+function venueTimingCard(pack, state) {
+  const timing = venueTiming(pack, state);
+  const venueName = timing.venue?.name || timing.finalStop?.Stop_Name || 'Final venue';
+  const walkLabel = `${formatMinutes(timing.journeyMinutes)} ${Number(state.stop) > 0 && !state.completed ? 'remaining' : 'route'}`;
+  let label = 'CHECK BEFORE YOU SET OFF';
+  let title = `Check ${venueName} before leaving`;
+  let message = 'Published opening hours have not been added for this venue yet.';
+  let tone = 'unknown';
+  let gentleMessage = 'Opening information is available if you want to check the finish before setting off.';
+  let availabilityHint = 'Optional opening-hours check';
+
+  if (timing.status === 'location-needed-open') {
+    label = 'OPEN RIGHT NOW';
+    title = `${venueName} is currently open`;
+    message = `Check your location so Day Tripping Quiz can confirm you are close enough to the route to use its ${walkLabel} safely.`;
+    tone = 'good';
+    gentleMessage = 'The finishing stop is open right now. Check your location for a more useful walk-time check without revealing its identity.';
+  } else if (timing.status === 'location-needed-closed') {
+    label = 'CLOSED RIGHT NOW';
+    title = `${venueName} is currently closed`;
+    message = `Check your location to see whether it is due to open during the ${walkLabel}.`;
+    tone = 'warning';
+    gentleMessage = 'Your finishing stop is not open right now, although it may open during the walk.';
+    availabilityHint = 'Opening hours may affect this route';
+  } else if (timing.status === 'far-from-route') {
+    label = timing.currentOpen ? 'OPEN RIGHT NOW · TRAVEL TIME UNKNOWN' : 'CLOSED RIGHT NOW · TRAVEL TIME UNKNOWN';
+    title = `You are ${formatDistance(timing.metresFromRoute)} from the ${timing.routePointLabel}`;
+    message = `Day Tripping Quiz will not guess how long your journey there might take, so it cannot say whether ${venueName} will be open when you finish. Check again when you reach the ${timing.routePointLabel}.`;
+    tone = 'warning';
+    gentleMessage = `You are not close enough to the ${timing.routePointLabel} for a responsible finish check. Day Tripping Quiz will not guess your travel time.`;
+    availabilityHint = 'Travel time prevents a reliable check';
+  } else if (timing.status === 'open-through-walk') {
+    label = 'OPEN NOW · FINISH LOOKS GOOD';
+    title = `${venueName} should still be open after the walk`;
+    message = `You are close to the ${timing.routePointLabel}, and its published hours cover the full ${walkLabel}.`;
+    tone = 'good';
+    gentleMessage = 'The finishing stop should be open after the walk. You can leave the surprise hidden.';
+  } else if (timing.status === 'opens-during-walk') {
+    label = 'CLOSED NOW · OPEN BY THE FINISH';
+    title = `${venueName} is due to open during the walk`;
+    message = `You are close to the ${timing.routePointLabel}, and its published hours show it should be open by the end of the ${walkLabel}.`;
+    tone = 'good';
+    gentleMessage = 'The finishing stop is closed right now, but should open during the walk.';
+    availabilityHint = 'Currently closed, but likely open later';
+  } else if (timing.status === 'closing-soon') {
+    label = 'YOU MAY BE CUTTING IT FINE';
+    title = `${venueName} may close soon after the walk`;
+    message = `It is listed as open at the end of the ${walkLabel}, but for less than ${formatMinutes(timing.minimumVisit)} afterwards.`;
+    tone = 'warning';
+    gentleMessage = 'The finishing stop may close shortly after the walk. Consider checking the spoiler details before starting.';
+    availabilityHint = 'The finish may be cutting it fine';
+  } else if (timing.status === 'closes-during-walk') {
+    label = 'OPEN NOW · CLOSED BY THE FINISH';
+    title = `${venueName} is due to close during the walk`;
+    message = `You are close to the ${timing.routePointLabel}, but its published hours do not cover the full ${walkLabel}.`;
+    tone = 'danger';
+    gentleMessage = 'Your finishing stop may close before you complete the walk. Exact details are hidden below.';
+    availabilityHint = 'The finishing stop may be closed';
+  } else if (timing.status === 'closed-through-walk') {
+    label = 'CLOSED NOW · NOT OPEN BY THE FINISH';
+    title = `${venueName} is not due to open during the walk`;
+    message = `You are close to the ${timing.routePointLabel}, but its published hours do not show it open by the end of the ${walkLabel}.`;
+    tone = 'danger';
+    gentleMessage = 'Your finishing stop is not expected to be open by the end of the walk. Exact details are hidden below.';
+    availabilityHint = 'The finishing stop may be closed';
+  }
+
+  const verified = timing.venue?.hours_verified
+    ? `Hours checked ${new Date(`${timing.venue.hours_verified}T12:00:00`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}.`
+    : 'Published hours can change.';
+  const source = timing.venue?.hours_url
+    ? `<a href="${esc(timing.venue.hours_url)}" target="_blank" rel="noopener">Check the latest hours ↗</a>`
+    : '';
+  const hours = timing.venue?.hours
+    ? `<div class="venue-hours-today"><span>Today's published hours</span><b>${esc(timing.todayHours)}</b></div><details class="venue-hours"><summary>View weekly opening times</summary><div>${weeklyHoursHtml(timing.venue.hours)}</div></details>`
+    : '';
+  const locationButton = navigator.geolocation
+    ? `<button id="checkVenueLocation" class="venue-location-btn secondary">${userPos ? 'Recheck my location' : 'Check my location for a safer result'}</button>`
+    : '';
+  const exactDetails = `<div id="venueSpoilerDetails" class="venue-spoiler-details ${venueDetailsRevealed ? 'revealed' : 'blurred'} ${tone}" aria-hidden="${venueDetailsRevealed ? 'false' : 'true'}" ${venueDetailsRevealed ? '' : 'inert'}><span class="venue-kicker">${label}</span><h3>${esc(title)}</h3><p>${esc(message)}</p>${hours}<small>${esc(verified)} ${source}</small></div>`;
+  const spoilerShield = venueDetailsRevealed ? '' : `<div class="venue-spoiler-shield"><span>⚠ FINAL-STOP SPOILER</span><b>The details below name your finishing venue.</b><p>Only reveal them if the opening-hours warning matters more than keeping the last clue a surprise.</p><button id="revealVenueDetails" class="secondary">Reveal final venue details</button></div>`;
+  return `<section id="venueTimingCard" class="venue-disclosure ${venueHoursExpanded ? 'expanded' : ''}"><button id="venueTimingToggle" class="venue-disclosure-toggle" aria-expanded="${venueHoursExpanded}" aria-controls="venueTimingPanel"><span class="venue-disclosure-icon">◷</span><span class="venue-disclosure-label"><b>Finish availability</b><small>${esc(availabilityHint)}</small></span><span class="venue-disclosure-arrow">⌄</span></button><div id="venueTimingPanel" class="venue-disclosure-panel ${venueHoursExpanded ? '' : 'hidden'}"><div class="venue-gentle-warning"><span>WITHOUT SPOILERS</span><p>${esc(gentleMessage)}</p></div>${locationButton}<div class="venue-spoiler-wrap">${exactDetails}${spoilerShield}</div></div></section>`;
+}
+
+function bindVenueDisclosure(pack, state, isDaily) {
+  const toggle = $('#venueTimingToggle');
+  const panel = $('#venueTimingPanel');
+  const card = $('#venueTimingCard');
+  if (toggle && panel && card) {
+    toggle.onclick = () => {
+      venueHoursExpanded = !venueHoursExpanded;
+      toggle.setAttribute('aria-expanded', String(venueHoursExpanded));
+      panel.classList.toggle('hidden', !venueHoursExpanded);
+      card.classList.toggle('expanded', venueHoursExpanded);
+    };
+  }
+  const reveal = $('#revealVenueDetails');
+  if (reveal) {
+    let resetReveal = null;
+    reveal.onclick = () => {
+      if (reveal.dataset.confirming === 'true') {
+        if (resetReveal) clearTimeout(resetReveal);
+        venueDetailsRevealed = true;
+        const currentCard = $('#venueTimingCard');
+        if (currentCard) currentCard.outerHTML = venueTimingCard(pack, state);
+        bindVenueDisclosure(pack, state, isDaily);
+        return;
+      }
+      reveal.dataset.confirming = 'true';
+      reveal.classList.add('confirming');
+      reveal.textContent = 'Reveal anyway — show the final venue';
+      resetReveal = setTimeout(() => {
+        reveal.dataset.confirming = 'false';
+        reveal.classList.remove('confirming');
+        reveal.textContent = 'Reveal final venue details';
+      }, 10000);
+    };
+  }
+  if ($('#checkVenueLocation')) $('#checkVenueLocation').onclick = () => checkVenueLocation(pack, isDaily);
 }
 
 function bind() {
@@ -121,6 +511,7 @@ function bind() {
   $('#acceptSafety').onclick = () => {
     localStorage.setItem(SAFETY_KEY, 'yes');
     $('#safetyModal').classList.add('hidden');
+    maybeShowTutorial();
   };
   $('#keepSearching').onclick = closeArrival;
   $('#confirmArrival').onclick = () => {
@@ -132,6 +523,18 @@ function bind() {
   $('#mapOpen').onclick = showMap;
   $('#mapFeature').onclick = showMap;
   $('#surpriseHero').onclick = surprise;
+  $('#settingsOpen').onclick = openSettings;
+  $('#settingsClose').onclick = closeSettings;
+  $('#settingsBackdrop').onclick = event => { if (event.target.id === 'settingsBackdrop') closeSettings(); };
+  $('#soundSetting').onclick = () => setFeedbackSetting('sound', !profile.sound);
+  $('#vibrationSetting').onclick = () => setFeedbackSetting('vibration', !profile.vibration);
+  $('#replayTutorial').onclick = () => { closeSettings(); openTutorial(0); };
+  $('#exportProgress').onclick = exportProgress;
+  $('#resetProgress').onclick = resetAllProgress;
+  $$('[data-settings-unit]').forEach(button => button.onclick = () => setUnit(button.dataset.settingsUnit));
+  $('#tutorialClose').onclick = () => closeTutorial(true);
+  $('#tutorialBack').onclick = () => openTutorial(Math.max(0, tutorialStep - 1));
+  $('#tutorialNext').onclick = () => tutorialStep >= TUTORIAL_STEPS.length - 1 ? closeTutorial(true) : openTutorial(tutorialStep + 1);
   $('#locateBtn').onclick = getNearby;
   $('#searchToggle').onclick = () => {
     $('#searchWrap').classList.toggle('hidden');
@@ -139,12 +542,36 @@ function bind() {
   };
   $('#searchClose').onclick = () => $('#searchWrap').classList.add('hidden');
   $('#searchInput').oninput = event => renderBrowse(event.target.value);
-  if (!localStorage.getItem(SAFETY_KEY)) $('#safetyModal').classList.remove('hidden');
+  if (!readStoredValue(SAFETY_KEY, LEGACY_SAFETY_KEY)) $('#safetyModal').classList.remove('hidden');
+  else maybeShowTutorial();
+  renderSettings();
+}
+
+function playPageTransition() {
+  const overlay = $('#brandTransition');
+  if (!overlay || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  overlay.style.setProperty('--transition-accent', currentPack ? colour(currentPack) : '#ffb21f');
+  const cycle = ++pageTransitionCycle;
+  pageTransitionTimers.forEach(timer => clearTimeout(timer));
+  pageTransitionTimers = [];
+  overlay.classList.remove('hidden', 'active', 'leaving');
+  void overlay.offsetWidth;
+  overlay.classList.add('active');
+  pageTransitionTimers.push(setTimeout(() => {
+    if (cycle === pageTransitionCycle) overlay.classList.add('leaving');
+  }, 800));
+  pageTransitionTimers.push(setTimeout(() => {
+    if (cycle !== pageTransitionCycle) return;
+    overlay.classList.add('hidden');
+    overlay.classList.remove('active', 'leaving');
+  }, 1000));
 }
 
 function showOnly(id) {
-  ['homeView', 'mapView', 'collectionView', 'detailView', 'gameView']
-    .forEach(view => $(`#${view}`).classList.toggle('hidden', view !== id));
+  const views = ['homeView', 'mapView', 'collectionView', 'detailView', 'gameView'];
+  const currentView = views.find(view => !$(`#${view}`).classList.contains('hidden'));
+  if (navigationTransitionsReady && currentView && currentView !== id) playPageTransition();
+  views.forEach(view => $(`#${view}`).classList.toggle('hidden', view !== id));
   scrollTo(0, 0);
 }
 
@@ -159,6 +586,8 @@ function showHome() {
   closeArrival();
   renderExplorerRecord();
   restoreContinue();
+  currentPack = null;
+  applyRouteTheme(null);
   showOnly('homeView');
 }
 
@@ -170,6 +599,57 @@ function save() {
 
 function packProgress(pack) {
   return progress[pack.pack_id] || {};
+}
+
+function isActiveAdventure(pack) {
+  const state = packProgress(pack);
+  return !state.completed && (state.active === true || Number(state.stop) > 0);
+}
+
+function endAdventure(pack, isDaily) {
+  const state = packProgress(pack);
+  const keepHistory = state.everCompleted || Number(state.completions) > 0;
+  if (keepHistory) {
+    progress[pack.pack_id] = {
+      active: false,
+      stop: pack.stops.length,
+      completed: true,
+      everCompleted: true,
+      score: 0,
+      bestScore: Math.max(Number(state.bestScore) || 0, Number(state.score) || 0),
+      perfectStops: Number(state.perfectStops) || 0,
+      perfectCompletions: Number(state.perfectCompletions) || 0,
+      skipped: 0,
+      hintsUsed: 0,
+      completions: Number(state.completions) || 1
+    };
+  } else {
+    delete progress[pack.pack_id];
+  }
+  save();
+  openDetail(pack, isDaily);
+  toast('Adventure ended. Current progress deleted.');
+}
+
+function bindEndAdventure(pack, isDaily) {
+  const button = $('#endRoute');
+  if (!button) return;
+  let resetConfirmation = null;
+  button.onclick = () => {
+    if (button.dataset.confirming === 'true') {
+      if (resetConfirmation) clearTimeout(resetConfirmation);
+      endAdventure(pack, isDaily);
+      return;
+    }
+    button.dataset.confirming = 'true';
+    button.classList.add('confirming');
+    button.textContent = 'Tap again to delete progress';
+    resetConfirmation = setTimeout(() => {
+      button.dataset.confirming = 'false';
+      button.classList.remove('confirming');
+      button.textContent = 'End adventure';
+    }, 10000);
+  };
 }
 
 function hasCompleted(pack) {
@@ -209,7 +689,7 @@ function routeCard(pack, extra = '') {
     : `${pack.route_distance_km} km walk`;
   const score = displayScore(pack);
   return `<article class="route-card" style="--accent:${colour(pack)}" data-pack="${esc(pack.pack_id)}">
-    <span class="eyebrow">${esc(extra ? `${extra} · ${pack.display_name}` : pack.display_name)}</span>
+    <span class="eyebrow route-location">${esc(extra ? `${extra} · ${pack.display_name}` : pack.display_name)}</span>
     <h3>${esc(pack.route_name)}</h3>
     <p>${esc(pack.short_description || pack.description)}</p>
     <div class="card-bottom">
@@ -238,9 +718,13 @@ function daily() {
 
 function renderAll() {
   const pick = daily();
+  const streak = dailyStreak();
+  const streakLabel = streak.current
+    ? `🔥 ${streak.current}-day streak${streak.best > streak.current ? ` · Best ${streak.best}` : ''}`
+    : streak.best ? `🔥 Best streak: ${streak.best} days · Play today to begin again` : '🔥 Complete today’s pick to start a streak';
   $('#mapPackCount').textContent = `${packs.length} adventures mapped`;
   $('#dailyDate').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY PICK</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${pick.route_distance_km} km</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div></div><span class="daily-badge">Play today →</span></div>`;
+  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY PICK</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${pick.route_distance_km} km</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Play today →</span></div>`;
   renderExplorerRecord();
   renderFeatured();
   renderNearby();
@@ -435,6 +919,26 @@ function getNearby() {
   }, { enableHighAccuracy: true, timeout: 12000 });
 }
 
+function checkVenueLocation(pack, isDaily) {
+  if (!navigator.geolocation) return toast('Location is not available');
+  const button = $('#checkVenueLocation');
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Checking your location…';
+  }
+  navigator.geolocation.getCurrentPosition(position => {
+    userPos = [position.coords.latitude, position.coords.longitude];
+    openDetail(pack, isDaily);
+    setTimeout(() => $('#venueTimingCard')?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 0);
+  }, () => {
+    if (button) {
+      button.disabled = false;
+      button.textContent = userPos ? 'Recheck my location' : 'Check my location for a safer result';
+    }
+    toast('Location was not available. Check browser permission.');
+  }, { enableHighAccuracy: true, maximumAge: 30000, timeout: 12000 });
+}
+
 function numberedIcon(number, className = '') {
   return L.divIcon({
     className: '',
@@ -463,19 +967,108 @@ function showMap() {
   }, 50);
 }
 
+function applyRouteTheme(pack) {
+  const accent = pack ? colour(pack) : '#ffb21f';
+  document.documentElement.style.setProperty('--route-accent', accent);
+  const transition = $('#brandTransition');
+  if (transition) transition.style.setProperty('--transition-accent', accent);
+}
+
+function directionsUrl(pack) {
+  const start = pack.stops[0];
+  if (!start) return '';
+  const destination = `${Number(start.Target_Lat)},${Number(start.Target_Long)}`;
+  const appleDevice = /iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent);
+  return appleDevice
+    ? `https://maps.apple.com/?daddr=${encodeURIComponent(destination)}&dirflg=w`
+    : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(destination)}&travelmode=walking`;
+}
+
+function openStartDirections(pack) {
+  const url = directionsUrl(pack);
+  if (url) window.open(url, '_blank', 'noopener,noreferrer');
+}
+
+function beforeYouGoItems(pack) {
+  const info = pack.before_you_go || {};
+  return [
+    ['⌁', 'Terrain', info.terrain || pack.transport_note || 'Town-centre pavements and public paths.'],
+    ['↗', 'Hills', info.hills || 'Expect ordinary town-centre gradients.'],
+    ['▥', 'Steps', info.steps || 'No required steps are known, but diversions can change.'],
+    ['♿', 'Accessibility', info.accessibility || 'Check current path conditions if step-free access is important.'],
+    ['WC', 'Toilets', info.toilets || 'Check local public facilities before setting off.'],
+    ['◒', 'Footwear', info.footwear || 'Comfortable walking shoes are recommended.'],
+    ['♟', 'Dogs', info.dogs || 'Outdoor route; check the final venue’s current dog policy.'],
+    ['◫', 'Pushchairs', info.pushchairs || 'Check current path conditions and temporary diversions.']
+  ];
+}
+
+function beforeYouGoCard(pack) {
+  return `<section class="before-you-go"><div class="section-heading"><div><span class="eyebrow">BEFORE YOU GO</span><h2>Know the walk, keep the mystery</h2></div></div><div class="before-grid">${beforeYouGoItems(pack).map(([icon, label, text]) => `<div class="before-item"><span>${esc(icon)}</span><div><b>${esc(label)}</b><small>${esc(text)}</small></div></div>`).join('')}</div></section>`;
+}
+
+function offlineAdventureUrl(pack) {
+  return pack.source_file ? `packs/${pack.source_file}` : '';
+}
+
+async function renderOfflineControls(pack) {
+  const status = $('#offlineStatus');
+  const button = $('#saveOffline');
+  if (!status || !button) return;
+  if (!('caches' in window) || !offlineAdventureUrl(pack)) {
+    status.innerHTML = '<i></i><span>Offline saving is not supported by this browser</span>';
+    button.classList.add('hidden');
+    return;
+  }
+  const cached = await caches.match(offlineAdventureUrl(pack));
+  status.classList.toggle('saved', Boolean(cached));
+  status.innerHTML = cached
+    ? '<i></i><span>Saved on this device for offline play</span>'
+    : `<i></i><span>${navigator.onLine ? 'Available now · save this adventure for patchy signal' : 'You are offline · this adventure is not saved yet'}</span>`;
+  button.textContent = cached ? 'Saved offline ✓' : 'Save offline';
+  button.disabled = Boolean(cached) || !navigator.onLine;
+}
+
+async function saveAdventureOffline(pack) {
+  const button = $('#saveOffline');
+  const url = offlineAdventureUrl(pack);
+  if (!url || !('caches' in window)) return;
+  button.disabled = true;
+  button.textContent = 'Saving…';
+  try {
+    const response = await fetch(url, { cache: 'reload' });
+    if (!response.ok) throw Error('Pack download failed');
+    const cache = await caches.open('day-tripping-quiz-adventures-v1');
+    await cache.put(url, response.clone());
+    await renderOfflineControls(pack);
+    toast('Adventure saved for offline play.');
+  } catch {
+    button.disabled = false;
+    button.textContent = 'Try again';
+    toast('Could not save this adventure. Check your connection.');
+  }
+}
+
 window.openPack = id => openDetail(packs.find(pack => pack.pack_id === id), false);
 
 function openDetail(pack, isDaily = false) {
   if (!pack) return;
   stopWatch();
   destroyCompletionMap();
+  if (venueDisclosurePackId !== pack.pack_id) {
+    venueDisclosurePackId = pack.pack_id;
+    venueHoursExpanded = false;
+    venueDetailsRevealed = false;
+  }
   selectedAsDaily = isDaily;
   currentPack = pack;
+  applyRouteTheme(pack);
   showOnly('detailView');
   const state = packProgress(pack);
+  const activeAdventure = isActiveAdventure(pack);
   const chips = [...pack.collections, ...pack.tags].map(item => `<span class="meta">${esc(item)}</span>`).join('');
   const score = displayScore(pack);
-  $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-home>←</button><span class="eyebrow">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
+  $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-home>←</button><span class="eyebrow detail-location">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
     <div class="detail-body">
       <div class="detail-stats">
         <div class="stat"><span>Distance</span><b>${pack.route_distance_km} km</b></div>
@@ -488,12 +1081,171 @@ function openDetail(pack, isDaily = false) {
       <div class="meta-row detail-tags">${chips}</div>
       <p class="route-credit">By ${esc(pack.author)} · Route pack v${Number(pack.version) || 1}</p>
       <p class="muted">${esc(pack.transport_note || '')}</p>
+      ${beforeYouGoCard(pack)}
+      <div class="route-practical"><button id="directionsToStart" class="directions-btn"><span>↗</span><div><b>Directions to the start</b><small>Opens walking directions in your maps app</small></div></button><div class="offline-row"><div id="offlineStatus" class="offline-status"><i></i><span>Checking offline availability…</span></div><button id="saveOffline" class="text-btn">Save offline</button></div></div>
       ${score ? `<div class="personal-best"><span>Personal best</span><b>✦ ${score} points</b></div>` : ''}
       ${isDaily ? '<div class="daily-mission"><span>✦ Daily adventure</span><b>Finish this route to earn a daily achievement.</b></div>' : ''}
-      <button id="startRoute" class="primary">${state.stop > 0 && !state.completed ? 'Continue adventure' : hasCompleted(pack) ? 'Play again' : 'Start adventure'}</button>
+      ${venueTimingCard(pack, state)}
+      <button id="startRoute" class="primary">${activeAdventure ? 'Continue adventure' : hasCompleted(pack) ? 'Play again' : 'Start adventure'}</button>
+      ${activeAdventure ? '<button id="endRoute" class="end-adventure-btn">End adventure</button>' : ''}
     </div>`;
   $$('[data-home]').forEach(button => button.onclick = showHome);
   $('#startRoute').onclick = () => startGame(pack);
+  $('#directionsToStart').onclick = () => openStartDirections(pack);
+  $('#saveOffline').onclick = () => saveAdventureOffline(pack);
+  bindEndAdventure(pack, isDaily);
+  bindVenueDisclosure(pack, state, isDaily);
+  renderOfflineControls(pack);
+}
+
+function recommendationsFor(pack, count = 2) {
+  const origin = [pack.centre.lat, pack.centre.long];
+  return packs
+    .filter(candidate => candidate.pack_id !== pack.pack_id)
+    .map(candidate => ({ candidate, kilometres: distance(origin, [candidate.centre.lat, candidate.centre.long]) }))
+    .sort((a, b) => a.kilometres - b.kilometres)
+    .slice(0, count)
+    .map(item => item.candidate);
+}
+
+function wrapCanvasText(context, text, x, y, maxWidth, lineHeight, maxLines = 3) {
+  const words = String(text).split(/\s+/);
+  const lines = [];
+  let line = '';
+  words.forEach(word => {
+    const trial = line ? `${line} ${word}` : word;
+    if (context.measureText(trial).width <= maxWidth || !line) line = trial;
+    else {
+      lines.push(line);
+      line = word;
+    }
+  });
+  if (line) lines.push(line);
+  lines.slice(0, maxLines).forEach((item, index) => context.fillText(item, x, y + index * lineHeight));
+  return y + Math.min(lines.length, maxLines) * lineHeight;
+}
+
+function loadCanvasImage(src) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = reject;
+    image.src = src;
+  });
+}
+
+async function shareCompletionCard(pack, score) {
+  const button = $('#shareCompletion');
+  if (button) {
+    button.disabled = true;
+    button.textContent = 'Making your postcard…';
+  }
+  try {
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1350;
+    const context = canvas.getContext('2d');
+    const gradient = context.createLinearGradient(0, 0, 1080, 1350);
+    gradient.addColorStop(0, '#162938');
+    gradient.addColorStop(0.58, '#0c161f');
+    gradient.addColorStop(1, '#080e13');
+    context.fillStyle = gradient;
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = colour(pack);
+    context.fillRect(0, 0, 1080, 24);
+    context.globalAlpha = 0.12;
+    context.beginPath();
+    context.arc(950, 140, 380, 0, Math.PI * 2);
+    context.fill();
+    context.globalAlpha = 1;
+    try {
+      const logo = await loadCanvasImage('assets/day-tripping-quiz-icon-512.png');
+      context.drawImage(logo, 70, 60, 250, 250);
+    } catch {}
+    context.fillStyle = colour(pack);
+    context.font = '900 30px system-ui, sans-serif';
+    context.letterSpacing = '4px';
+    context.fillText('ADVENTURE COMPLETE', 76, 390);
+    context.fillStyle = '#fffaf0';
+    context.font = '950 82px system-ui, sans-serif';
+    const titleBottom = wrapCanvasText(context, pack.route_name, 72, 490, 930, 90, 3);
+    context.fillStyle = '#b7c1c9';
+    context.font = '800 36px system-ui, sans-serif';
+    context.fillText(pack.display_name.toUpperCase(), 76, titleBottom + 38);
+    const statsY = Math.max(850, titleBottom + 150);
+    context.fillStyle = '#131f28';
+    context.strokeStyle = `${colour(pack)}99`;
+    context.lineWidth = 3;
+    context.beginPath();
+    context.roundRect(65, statsY, 950, 235, 35);
+    context.fill();
+    context.stroke();
+    const stats = [
+      ['POINTS', String(score)],
+      ['DISCOVERIES', String(pack.stops.length)],
+      ['WALK', `${pack.route_distance_km} KM`]
+    ];
+    stats.forEach((item, index) => {
+      const x = 110 + index * 310;
+      context.fillStyle = '#91a0ab';
+      context.font = '800 22px system-ui, sans-serif';
+      context.fillText(item[0], x, statsY + 74);
+      context.fillStyle = '#fffaf0';
+      context.font = '950 55px system-ui, sans-serif';
+      context.fillText(item[1], x, statsY + 150);
+    });
+    context.fillStyle = '#ffb21f';
+    context.font = '900 28px system-ui, sans-serif';
+    context.fillText('DAY TRIPPING QUIZ', 72, 1250);
+    context.fillStyle = '#9daab4';
+    context.font = '500 24px system-ui, sans-serif';
+    context.fillText('I followed the clues. I found the stories.', 72, 1293);
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    if (!blob) throw Error('Postcard could not be created');
+    const file = new File([blob], `day-tripping-${pack.pack_id}.png`, { type: 'image/png' });
+    if (navigator.share && navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ title: `I completed ${pack.route_name}`, text: 'My Day Tripping Quiz adventure is complete!', files: [file] });
+    } else {
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = file.name;
+      link.click();
+      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+      toast('Completion postcard downloaded.');
+    }
+  } catch (error) {
+    if (error?.name !== 'AbortError') toast('Could not make the postcard on this browser.');
+  } finally {
+    if (button) {
+      button.disabled = false;
+      button.textContent = 'Share my completion postcard';
+    }
+  }
+}
+
+function playDiscoveryFeedback(skip) {
+  if (skip) return;
+  if (profile.vibration && navigator.vibrate) navigator.vibrate([35, 35, 75]);
+  if (!profile.sound) return;
+  try {
+    const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+    if (!AudioContextClass) return;
+    const audio = new AudioContextClass();
+    [523.25, 659.25, 783.99].forEach((frequency, index) => {
+      const oscillator = audio.createOscillator();
+      const gain = audio.createGain();
+      oscillator.type = 'sine';
+      oscillator.frequency.value = frequency;
+      const start = audio.currentTime + index * 0.1;
+      gain.gain.setValueAtTime(0.0001, start);
+      gain.gain.exponentialRampToValueAtTime(0.12, start + 0.025);
+      gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.28);
+      oscillator.connect(gain).connect(audio.destination);
+      oscillator.start(start);
+      oscillator.stop(start + 0.3);
+    });
+    setTimeout(() => audio.close(), 800);
+  } catch {}
 }
 
 function renderCompletionMap(pack) {
@@ -524,9 +1276,11 @@ function startGame(pack) {
   if (stuckTapTimer) clearTimeout(stuckTapTimer);
   stuckTapTimer = null;
   currentPack = pack;
+  applyRouteTheme(pack);
   const existing = packProgress(pack);
   if (existing.completed) {
     progress[pack.pack_id] = {
+      active: true,
       stop: 0,
       completed: false,
       everCompleted: true,
@@ -538,14 +1292,14 @@ function startGame(pack) {
       hintsUsed: 0,
       completions: Number(existing.completions) || 1
     };
-    save();
   }
   const state = packProgress(pack);
+  state.active = true;
   if (selectedAsDaily && daily().pack_id === pack.pack_id) {
     state.dailyRunDate = todayKey();
-    progress[pack.pack_id] = state;
-    save();
   }
+  progress[pack.pack_id] = state;
+  save();
   currentStop = Number(packProgress(pack).stop) || 0;
   renderGame();
 }
@@ -553,22 +1307,29 @@ function startGame(pack) {
 function renderGame() {
   showOnly('gameView');
   const pack = currentPack;
+  applyRouteTheme(pack);
   const stop = pack.stops[currentStop];
   const state = packProgress(pack);
   if (!stop) {
     const score = Number(state.score) || 0;
     const unlocked = achievements().filter(achievement => achievement.unlocked);
+    const recommendations = recommendationsFor(pack);
+    const streak = dailyStreak();
     $('#gameContent').innerHTML = `<div class="game-shell completion-screen">
       <span class="eyebrow">ROUTE COMPLETE</span><h1>${esc(pack.display_name)} conquered!</h1><p>You uncovered ${pack.stops.length} landmarks and their stories.</p>
-      ${state.lastDailyDate ? '<div class="daily-complete"><span>☀</span><div><b>Daily adventure complete</b><small>Another daily discovery added to your record.</small></div></div>' : ''}
+      ${state.lastDailyDate ? `<div class="daily-complete"><span>☀</span><div><b>Daily adventure complete</b><small>${streak.current > 1 ? `${streak.current}-day streak — keep it going tomorrow.` : 'Your daily streak has begun.'}</small></div></div>` : ''}
       <div class="finish-score"><span>Route score</span><b>✦ ${score}</b><small>Best: ${displayScore(pack)} points</small></div>
       <div class="route-map-head"><div><span class="eyebrow">YOUR ROUTE</span><h2>Stops at a glance</h2></div><span class="pill">Unlocked</span></div>
       <div id="completionMap" aria-label="Completed route map"></div>
       <ol class="route-recap-list">${pack.stops.map((item, index) => `<li><span>${index + 1}</span><b>${esc(item.Stop_Name)}</b></li>`).join('')}</ol>
       <h2>Your achievements</h2><div class="achievement-grid">${unlocked.map(badge => `<div class="achievement unlocked"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small></div></div>`).join('')}</div>
+      <button id="shareCompletion" class="postcard-btn"><span>▣</span><div><b>Share my completion postcard</b><small>Creates a spoiler-free image for friends</small></div></button>
+      ${recommendations.length ? `<section class="completion-next"><span class="eyebrow">KEEP EXPLORING</span><h2>Two adventures nearby</h2><p>Carry the momentum into another town when you are ready.</p><div class="route-grid preview-grid">${recommendations.map(candidate => routeCard(candidate)).join('')}</div></section>` : ''}
       <button class="primary" data-home>Back to adventures</button>
     </div>`;
     $$('[data-home]').forEach(button => button.onclick = showHome);
+    $('#shareCompletion').onclick = () => shareCompletionCard(pack, score);
+    wireCards();
     renderCompletionMap(pack);
     return;
   }
@@ -632,6 +1393,7 @@ function setUnit(unit) {
   else if (latestGuideReading) renderGuideReading(latestGuideReading.stop, latestGuideReading.position);
   else if (lastScanReading) renderScanResult(lastScanReading.stop, lastScanReading.position);
   if (pendingArrival) showArrivalConfirm(pendingArrival.stop, pendingArrival.distance, pendingArrival.accuracy, pendingArrival.base, pendingArrival.debug);
+  renderSettings();
 }
 
 function formatDistance(metres) {
@@ -767,7 +1529,7 @@ function showArrivalConfirm(stop, metres, accuracy, base, debug = false) {
   $('#arrivalReading').innerHTML = `<div><span>${debug ? 'Test distance' : 'Measured distance'}</span><b>${formatDistance(metres)}</b></div><div><span>${debug ? 'Test accuracy' : 'Phone accuracy'}</span><b>±${formatDistance(accuracy)}</b></div>`;
   $('#arrivalMessage').innerHTML = metres <= base
     ? `Your phone places you inside the normal ${formatDistance(base)} discovery area. <strong>Can you actually see the building or landmark described by the clue?</strong>`
-    : 'Your GPS reading is less precise, so GeoQuest is allowing a little extra room. <strong>Only submit if you can genuinely see the building or landmark in question.</strong>';
+    : 'Your GPS reading is less precise, so Day Tripping Quiz is allowing a little extra room. <strong>Only submit if you can genuinely see the building or landmark in question.</strong>';
   $('#arrivalModal').classList.remove('hidden');
 }
 
@@ -927,7 +1689,8 @@ function renderGuideReading(stop, position) {
 function completeStop(stop, skip = false, debug = false) {
   stopWatch();
   const points = skip ? 0 : Math.max(0, 100 - currentHints * 25);
-  $('#gameContent').innerHTML = `<div class="game-shell discovery-screen"><span class="eyebrow">${skip ? 'STOP SKIPPED' : debug ? 'TEST LOCATION FOUND' : 'LOCATION FOUND'}</span><h1>${esc(stop.Stop_Name)}</h1><div class="points-earned ${skip ? 'skipped' : ''}">${skip ? 'No points for this stop' : `+${points} points`}</div><div class="clue-card"><p>${esc(stop.Unlock_Fact)}</p></div><button id="nextStop" class="primary">${currentStop + 1 >= currentPack.stops.length ? 'Finish route' : 'Next stop'}</button></div>`;
+  $('#gameContent').innerHTML = `<div class="game-shell discovery-screen ${skip ? '' : 'celebrate'}"><div class="discovery-burst" aria-hidden="true">${'<i></i>'.repeat(12)}<b>✦</b></div><span class="eyebrow">${skip ? 'STOP SKIPPED' : debug ? 'TEST LOCATION FOUND' : 'LOCATION FOUND'}</span><h1>${esc(stop.Stop_Name)}</h1><div class="points-earned ${skip ? 'skipped' : ''}">${skip ? 'No points for this stop' : `+${points} points`}</div><div class="clue-card"><p>${esc(stop.Unlock_Fact)}</p></div><button id="nextStop" class="primary">${currentStop + 1 >= currentPack.stops.length ? 'Finish route' : 'Next stop'}</button></div>`;
+  playDiscoveryFeedback(skip);
   $('#nextStop').onclick = () => {
     const before = new Set(achievements().filter(item => item.unlocked).map(item => item.id));
     const state = packProgress(currentPack);
@@ -937,7 +1700,9 @@ function completeStop(stop, skip = false, debug = false) {
     state.perfectStops = (Number(state.perfectStops) || 0) + (!skip && currentHints === 0 ? 1 : 0);
     currentStop += 1;
     state.stop = currentStop;
+    state.active = currentStop < currentPack.stops.length;
     if (currentStop >= currentPack.stops.length) {
+      state.active = false;
       state.completed = true;
       state.everCompleted = true;
       state.completions = (Number(state.completions) || 0) + 1;
@@ -972,10 +1737,7 @@ function completeStop(stop, skip = false, debug = false) {
 
 function restoreContinue() {
   if (!packs.length || !$('#continueSection')) return;
-  const pack = packs.find(item => {
-    const state = packProgress(item);
-    return !state.completed && Number(state.stop) > 0;
-  });
+  const pack = packs.find(isActiveAdventure);
   $('#continueSection').classList.toggle('hidden', !pack);
   if (pack) {
     $('#continueCard').innerHTML = routeCard(pack, 'IN PROGRESS');

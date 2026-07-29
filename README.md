@@ -1,4 +1,4 @@
-# GeoQuest — Discovery Edition
+# Day Tripping Quiz
 
 A GitHub Pages-ready static GPS adventure game with modular JSON route packs.
 
@@ -26,6 +26,12 @@ Scores, achievements, daily completions, route progress, distance-unit preferenc
 On supported phones, the guidance arrow uses the device compass and points relative to the top of the phone. If compass data is unavailable, it falls back to a north-relative bearing. The in-game GPS scanner supports kilometres or miles, remembers the player's choice, and turns raw distance readings into visual comparisons.
 
 Distance comparisons are loaded from `data/distance-comparisons.json`, so new objects, animals, landmarks and journeys can be added without changing the game code. The catalogue includes both near-match and scaled comparisons, with a light-speed fact as a bonus.
+
+## Final venue opening check
+
+Before a route starts, its detail page shows a compact, spoiler-safe finish-availability check. The initial message never names the final pub or restaurant; exact venue details and weekly hours stay blurred behind a deliberate two-step reveal. It does not display or promise an arrival time. After the player checks their location, the app only compares the advertised walking duration with the venue schedule when they are within 500 metres of the route start (or the next stop on a continued route). If they are farther away, it shows the straight-line distance and refuses to guess the unknown travel time.
+
+Opening times live inside each route pack's `final_venue` object, so the feature remains fully static and works on GitHub Pages with no server or account. See `packs/README.md` and `packs/PACK_TEMPLATE.json` when adding or updating routes.
 
 ## Hidden test mode
 

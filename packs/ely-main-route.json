@@ -10,7 +10,7 @@
     "lat": 52.39785000000001,
     "long": 0.263525
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "stops": [
     {
       "Town": "Ely",
@@ -82,6 +82,16 @@
     }
   ],
   "short_description": "A compact trail through soaring architecture and Fenland stories.",
+  "before_you_go": {
+    "terrain": "Designed as a walking route.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "fenland",
   "route_distance_km": 3.0,
   "estimated_minutes": 70,
@@ -97,5 +107,56 @@
   "featured": true,
   "daily_eligible": true,
   "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route."
+  "transport_note": "Designed as a walking route.",
+  "final_venue": {
+    "name": "The Minster Tavern",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://camra.org.uk/pubs/minster-tavern-ely-156824",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "10:00",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "10:00",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "10:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }

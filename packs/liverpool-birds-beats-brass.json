@@ -1,0 +1,164 @@
+{
+  "pack_format": 2,
+  "pack_id": "liverpool-birds-beats-brass",
+  "version": 1,
+  "town": "Liverpool",
+  "display_name": "Liverpool",
+  "route_name": "Birds, Beats & Brass",
+  "description": "Walk from copper birds and bronze Beatles through a legendary cellar to Britain's most flamboyant Victorian pub.",
+  "short_description": "Meet Liver Birds, four bronze lads, 292 gigs and one outrageous pub.",
+  "centre": {
+    "lat": 53.40389,
+    "long": -2.98598
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 2.4,
+  "estimated_minutes": 85,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "music",
+    "architecture",
+    "beatles",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry",
+    "Legends & Literature"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A waterfront-to-Hope-Street walk on public pavements with busy road crossings and a sustained uphill finish.",
+  "before_you_go": {
+    "terrain": "A waterfront-to-Hope-Street walk on public pavements with busy road crossings and a sustained uphill finish.",
+    "hills": "A sustained uphill section leads away from the waterfront.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Liverpool",
+      "Route": "Birds, Beats & Brass",
+      "Stop_ID": "LIV001",
+      "Stop_Order": 1,
+      "Stop_Name": "Royal Liver Building",
+      "Target_Lat": 53.4058473,
+      "Target_Long": -2.9958431,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Begin beneath two copper guardians: one watches the city, the other the sailors on the Mersey.",
+      "Hint_1": "Go to Pier Head and find the clock-towered member of the Three Graces.",
+      "Hint_2": "Look up at the pair of Liver Birds on the Royal Liver Building.",
+      "Unlock_Fact": "Completed in 1911, the Royal Liver Building was among the world's earliest large reinforced-concrete buildings. Two 18-foot copper Liver Birds designed by Carl Bernard Bartels crown its clock towers.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Liverpool",
+      "Route": "Birds, Beats & Brass",
+      "Stop_ID": "LIV002",
+      "Stop_Order": 2,
+      "Stop_Name": "The Beatles Statue",
+      "Target_Lat": 53.4045097,
+      "Target_Long": -2.9964016,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find four lads forever striding beside the river, instruments absent but tiny personal symbols hidden.",
+      "Hint_1": "Stay on Pier Head near the Mersey ferry terminal.",
+      "Hint_2": "Look for the life-size bronze figures of John, Paul, George and Ringo.",
+      "Unlock_Fact": "Sculptor Andy Edwards's Beatles statue was unveiled in December 2015, marking 50 years since the band's final Liverpool performance. The Cavern Club donated the work to the city.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Liverpool",
+      "Route": "Birds, Beats & Brass",
+      "Stop_ID": "LIV003",
+      "Stop_Order": 3,
+      "Stop_Name": "The Cavern Club",
+      "Target_Lat": 53.4062724,
+      "Target_Long": -2.9879004,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Leave daylight for a famous cellar where jazz began and four local lads returned 292 times.",
+      "Hint_1": "Walk inland to Mathew Street in the Cavern Quarter.",
+      "Hint_2": "Find the club entrance beneath its familiar red-lettered sign.",
+      "Unlock_Fact": "The Cavern Club opened as a jazz venue on 16 January 1957. The Beatles played 292 gigs here between February 1961 and August 1963, helping turn the cellar into a landmark of popular music.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Liverpool",
+      "Route": "Birds, Beats & Brass",
+      "Stop_ID": "LIV004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Philharmonic Dining Rooms",
+      "Target_Lat": 53.4017988,
+      "Target_Long": -2.9705282,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Finish where music is carved into stone and Victorian drinking reaches a marble-and-mahogany crescendo.",
+      "Hint_1": "Climb through the city towards Hope Street and Philharmonic Hall.",
+      "Hint_2": "Find the ornate pub at number 36, opposite the concert hall.",
+      "Unlock_Fact": "Route complete! Walter W. Thomas designed the Philharmonic Dining Rooms for brewer Robert Cain in 1898-1900. This Grade I-listed pub preserves exceptional Art Nouveau gates and lavish interiors, and serves food and drink if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Philharmonic Dining Rooms",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.nicholsonspubs.co.uk/restaurants/northwest/thephilharmonicdiningroomsliverpool/",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "22:30"
+        ]
+      ]
+    }
+  }
+}

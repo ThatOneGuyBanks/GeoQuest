@@ -1,0 +1,164 @@
+{
+  "pack_format": 2,
+  "pack_id": "canterbury-gates-pilgrims-parrot",
+  "version": 1,
+  "town": "Canterbury",
+  "display_name": "Canterbury",
+  "route_name": "Gates, Pilgrims & a Parrot",
+  "description": "Follow a pilgrim's path through England's largest medieval city gate to gilded beasts and an ancient hall-house pub.",
+  "short_description": "Crack city gates, curious collections, cathedral beasts and a parrot.",
+  "centre": {
+    "lat": 51.28076,
+    "long": 1.08055
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 65,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "pilgrims",
+    "medieval",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Legends & Literature"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A level central route along busy pedestrian streets. The clues use exterior features, so no admission is required.",
+  "before_you_go": {
+    "terrain": "A level central route along busy pedestrian streets. The clues use exterior features, so no admission is required.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Canterbury",
+      "Route": "Gates, Pilgrims & a Parrot",
+      "Stop_ID": "CAN001",
+      "Stop_Order": 1,
+      "Stop_Name": "Westgate Towers",
+      "Target_Lat": 51.2821037,
+      "Target_Long": 1.0760818,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Enter as London pilgrims did, between two ragstone drums that later locked up lawbreakers.",
+      "Hint_1": "Begin at the western end of the High Street beside the River Stour.",
+      "Hint_2": "Find the twin-towered medieval gateway that traffic still passes through.",
+      "Unlock_Fact": "Built around 1377, Westgate is England's largest surviving medieval city gate and the only survivor of Canterbury's seven original gateways. It later served as the city gaol.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Canterbury",
+      "Route": "Gates, Pilgrims & a Parrot",
+      "Stop_ID": "CAN002",
+      "Stop_Order": 2,
+      "Stop_Name": "The Beaney House of Art & Knowledge",
+      "Target_Lat": 51.2796732,
+      "Target_Long": 1.0792796,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find art and knowledge in a red-and-white gift from a doctor who sailed to Australia and remembered home.",
+      "Hint_1": "Follow the High Street east to an ornate museum and library.",
+      "Hint_2": "Look for the name Beaney above the entrance at number 18.",
+      "Unlock_Fact": "The Beaney opened in 1899 after Canterbury-born physician James George Beaney left £10,000 for an institute; the city added £5,000 to house its museum and library. Architect A. H. Campbell designed the exuberant building.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Canterbury",
+      "Route": "Gates, Pilgrims & a Parrot",
+      "Stop_ID": "CAN003",
+      "Stop_Order": 3,
+      "Stop_Name": "Christ Church Gate",
+      "Target_Lat": 51.2793056,
+      "Target_Long": 1.0811447,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a painted portal where angels, shields and mythical beasts guard the road to a murdered archbishop.",
+      "Hint_1": "Continue to the Buttermarket outside Canterbury Cathedral.",
+      "Hint_2": "Face the cathedral's gilded Tudor Gothic main gate.",
+      "Unlock_Fact": "Christ Church Gate was completed around 1520 as the cathedral precinct's main entrance. Its restored decoration includes angels, heraldic shields, mythical beasts and the arms of Archbishop Thomas Becket and Cardinal Wolsey.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Canterbury",
+      "Route": "Gates, Pilgrims & a Parrot",
+      "Stop_ID": "CAN004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Parrot",
+      "Target_Lat": 51.2823322,
+      "Target_Long": 1.0826496,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish north of the bells in a bright bird that nests inside a medieval hall.",
+      "Hint_1": "Walk north through the King's Mile towards Church Lane.",
+      "Hint_2": "Find The Parrot at 1-9 Church Lane, St Radigunds.",
+      "Unlock_Fact": "Route complete! The Parrot occupies the former St Radigund's Hall, a 15th-century Wealden hall house and one of Canterbury's oldest buildings. It is now a food-serving pub where the adventure can end if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Parrot",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.parrotcanterbury.co.uk/contact-us",
+    "hours": {
+      "mon": [
+        [
+          "12:00",
+          "22:00"
+        ]
+      ],
+      "tue": [
+        [
+          "12:00",
+          "22:00"
+        ]
+      ],
+      "wed": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "22:00"
+        ]
+      ]
+    }
+  }
+}

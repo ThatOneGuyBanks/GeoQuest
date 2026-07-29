@@ -11,7 +11,7 @@
     "lat": 52.24471,
     "long": 0.71606
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 1.8,
   "estimated_minutes": 75,
   "difficulty_label": "Explorer",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
+  "before_you_go": {
+    "terrain": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
+    "hills": "Mostly gentle town-centre gradients.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "cathedral",
   "stops": [
     {
@@ -115,5 +125,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "The Nutshell",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://eastanglia.camra.org.uk/viewnode.php?id=86060",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }

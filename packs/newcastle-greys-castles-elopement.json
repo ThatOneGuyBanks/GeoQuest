@@ -1,0 +1,164 @@
+{
+  "pack_format": 2,
+  "pack_id": "newcastle-greys-castles-elopement",
+  "version": 1,
+  "town": "Newcastle upon Tyne",
+  "display_name": "Newcastle",
+  "route_name": "Greys, Castles & Elopement",
+  "description": "Descend from a reforming earl to the castle that named Newcastle, then chase a daring elopement to the Quayside.",
+  "short_description": "Meet an earl, a Norman keep, runaway lovers and a proper pub.",
+  "centre": {
+    "lat": 54.97095,
+    "long": -1.60948
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.5,
+  "estimated_minutes": 70,
+  "difficulty_label": "Challenging",
+  "tags": [
+    "castles",
+    "romance",
+    "architecture",
+    "restaurant-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Legends & Literature"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A steep downhill route using public pavements and historic lanes. Cross around the castle carefully because railway lines and busy roads divide the area.",
+  "before_you_go": {
+    "terrain": "A steep downhill route using public pavements and historic lanes. Cross around the castle carefully because railway lines and busy roads divide the area.",
+    "hills": "Includes a notable steep section; take your time and use a suitable alternative where available.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Steep gradients and historic surfaces may be difficult; check a step-free alternative before setting off.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Possible but the steep section and historic surfaces may be demanding."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Newcastle upon Tyne",
+      "Route": "Greys, Castles & Elopement",
+      "Stop_ID": "NEW001",
+      "Stop_Order": 1,
+      "Stop_Name": "Grey's Monument",
+      "Target_Lat": 54.9738324,
+      "Target_Long": -1.6131281,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin beneath a tea-named earl standing high above the city he represented.",
+      "Hint_1": "Find the tall column at the head of Grey Street.",
+      "Hint_2": "Look up at Charles Grey, the prime minister commemorated by the monument.",
+      "Unlock_Fact": "Grey's Monument was erected in 1838 for Charles Grey, 2nd Earl Grey, who led the government that passed the Great Reform Act of 1832. The statue stands above a 40-metre column.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Newcastle upon Tyne",
+      "Route": "Greys, Castles & Elopement",
+      "Stop_ID": "NEW002",
+      "Stop_Order": 2,
+      "Stop_Name": "Newcastle Castle Keep",
+      "Target_Lat": 54.968757,
+      "Target_Long": -1.6106256,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Descend to the new castle that gave an old Roman river town its lasting name.",
+      "Hint_1": "Follow Grey Street and Dean Street towards Castle Garth.",
+      "Hint_2": "Find the square Norman stone keep beside the Black Gate.",
+      "Unlock_Fact": "Robert Curthose founded the first Norman castle here in 1080 on the site of the Roman fort Pons Aelius. Henry II commissioned the surviving stone keep, built between 1168 and 1177.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Newcastle upon Tyne",
+      "Route": "Greys, Castles & Elopement",
+      "Stop_ID": "NEW003",
+      "Stop_Order": 3,
+      "Stop_Name": "Bessie Surtees House",
+      "Target_Lat": 54.9686311,
+      "Target_Long": -1.6083382,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the jettied house where Bessie slipped from a window into scandal and marriage.",
+      "Hint_1": "Continue downhill to Sandhill beside the Tyne.",
+      "Hint_2": "Look for the black-and-white five-storey merchant's house.",
+      "Unlock_Fact": "In 1772 Bessie Surtees eloped from this house with John Scott, who later became Lord Chancellor. The landmark combines two 16th- and 17th-century merchant houses with richly decorated historic interiors.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Newcastle upon Tyne",
+      "Route": "Greys, Castles & Elopement",
+      "Stop_ID": "NEW004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Broad Chare",
+      "Target_Lat": 54.9698036,
+      "Target_Long": -1.6045721,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish in a broad narrow lane, where a warehouse became a proper pub with fifty ways to raise a glass.",
+      "Hint_1": "Follow the Quayside east towards Broad Chare.",
+      "Hint_2": "Find the pub at number 25 beside Live Theatre.",
+      "Unlock_Fact": "Route complete! The Broad Chare opened in 2011 in a converted Quayside warehouse through a partnership between 21 Hospitality and Live Theatre. Its bar and dining room serve food and drink if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Broad Chare",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://thebroadchare.co.uk/contact/",
+    "hours": {
+      "mon": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "20:00"
+        ]
+      ]
+    }
+  }
+}

@@ -11,7 +11,7 @@
     "lat": 52.13634,
     "long": -0.46499
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 1.8,
   "estimated_minutes": 65,
   "difficulty_label": "Explorer",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A town-centre walking route using public squares, paths and the riverside Embankment.",
+  "before_you_go": {
+    "terrain": "A town-centre walking route using public squares, paths and the riverside Embankment.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
   "cover_theme": "river",
   "stops": [
     {
@@ -98,5 +108,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "The Embankment",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://embankmentbedford.co.uk/",
+    "hours": {
+      "mon": [
+        [
+          "07:00",
+          "22:00"
+        ]
+      ],
+      "tue": [
+        [
+          "07:00",
+          "22:00"
+        ]
+      ],
+      "wed": [
+        [
+          "07:00",
+          "22:30"
+        ]
+      ],
+      "thu": [
+        [
+          "07:00",
+          "22:30"
+        ]
+      ],
+      "fri": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "07:30",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "07:30",
+          "21:30"
+        ]
+      ]
+    }
+  }
 }

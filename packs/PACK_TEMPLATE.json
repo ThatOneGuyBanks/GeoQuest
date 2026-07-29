@@ -27,7 +27,33 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A town-centre walking route using public pavements and paths. Add useful accessibility, terrain, parking or public-transport information here.",
+  "before_you_go": {
+    "terrain": "Describe the real surfaces players will use, such as pavements, cobbles, grass or riverside paths.",
+    "hills": "Say whether the route is level, gently sloped or includes a notable climb or descent.",
+    "steps": "Say whether steps are required and give a truthful alternative where one exists.",
+    "accessibility": "Give a cautious, practical summary without promising that temporary conditions will be accessible.",
+    "toilets": "Explain where players can check for public facilities without relying on the mystery final venue.",
+    "footwear": "Recommend suitable footwear for the actual terrain.",
+    "dogs": "Explain outdoor suitability and remind players to check the final venue’s current dog policy.",
+    "pushchairs": "Explain whether gradients, cobbles, narrow paths or steps may make the route difficult."
+  },
   "cover_theme": "cathedral",
+  "final_venue": {
+    "name": "Example Final Pub or Restaurant",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://example.com/current-opening-hours",
+    "hours": {
+      "mon": [["12:00", "23:00"]],
+      "tue": [["12:00", "23:00"]],
+      "wed": [["12:00", "23:00"]],
+      "thu": [["12:00", "23:00"]],
+      "fri": [["12:00", "01:00"]],
+      "sat": [["12:00", "01:00"]],
+      "sun": []
+    }
+  },
   "stops": [
     {
       "Town": "Example Town",

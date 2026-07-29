@@ -1,0 +1,163 @@
+{
+  "pack_format": 2,
+  "pack_id": "bath-crescents-springs-buns",
+  "version": 1,
+  "town": "Bath",
+  "display_name": "Bath",
+  "route_name": "Crescents, Springs & Buns",
+  "description": "Trace a Georgian moon and sun downhill to steaming Roman water and a centuries-old eating house.",
+  "short_description": "Read Bath's giant geometry, hot springs and most famous bun.",
+  "centre": {
+    "lat": 51.38382,
+    "long": -2.36246
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "georgian",
+    "romans",
+    "architecture",
+    "restaurant-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A downhill city-centre route on public pavements. Expect Georgian paving, busy crossings and a steeper descent from the Circus towards the centre.",
+  "before_you_go": {
+    "terrain": "A downhill city-centre route on public pavements. Expect Georgian paving, busy crossings and a steeper descent from the Circus towards the centre.",
+    "hills": "Mostly downhill, including a steeper descent towards the centre.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public routes throughout; some cobbles or historic paving may be uneven.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Usually possible, though cobbles and uneven paving may be uncomfortable."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Bath",
+      "Route": "Crescents, Springs & Buns",
+      "Stop_ID": "BAT001",
+      "Stop_Order": 1,
+      "Stop_Name": "Royal Crescent",
+      "Target_Lat": 51.3872718,
+      "Target_Long": -2.3682297,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Begin at a stone moon: thirty grand houses sharing one flawless sweep but hiding untidy backs.",
+      "Hint_1": "Climb to Bath's most famous crescent overlooking Royal Victoria Park.",
+      "Hint_2": "Stand before the long curve of 114 Ionic columns.",
+      "Unlock_Fact": "John Wood the Younger designed the Royal Crescent, built between 1767 and 1774. Its 30 houses obey one uniform façade, but separate builders created the irregular rears sometimes nicknamed 'Queen Anne fronts and Mary-Anne backs'.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Crescents, Springs & Buns",
+      "Stop_ID": "BAT002",
+      "Stop_Order": 2,
+      "Stop_Name": "The Circus",
+      "Target_Lat": 51.3862004,
+      "Target_Long": -2.3637578,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Now find the sun to the Crescent's moon, ringed with stone and watched by acorns.",
+      "Hint_1": "Walk east along Brock Street to a circular Georgian space.",
+      "Hint_2": "Stand in the centre of the three-part ring designed by John Wood the Elder.",
+      "Unlock_Fact": "John Wood the Elder designed the Circus as three curved terraces forming a circle; construction began in 1754 after his death. Its diameter was inspired by Stonehenge, while carved emblems run around the frieze.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Crescents, Springs & Buns",
+      "Stop_ID": "BAT003",
+      "Stop_Order": 3,
+      "Stop_Name": "The Roman Baths",
+      "Target_Lat": 51.3810327,
+      "Target_Long": -2.3595544,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Descend to the place where green water still rises hot for a goddess the Romans called Sulis Minerva.",
+      "Hint_1": "Head downhill to Abbey Churchyard beside Bath Abbey.",
+      "Hint_2": "Find the entrance to the Roman bathing complex and Pump Room.",
+      "Unlock_Fact": "The Roman complex developed around Britain's only natural hot springs. About 1.17 million litres of water at roughly 46°C still rise here each day, feeding baths once dedicated to the goddess Sulis Minerva.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Crescents, Springs & Buns",
+      "Stop_ID": "BAT004",
+      "Stop_Order": 4,
+      "Stop_Name": "Sally Lunn's Historic Eating House",
+      "Target_Lat": 51.380759,
+      "Target_Long": -2.3582889,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Finish where a famous round bunn rises in one of Bath's oldest houses.",
+      "Hint_1": "Take the short passage south-east from the Abbey area.",
+      "Hint_2": "Find number 4 North Parade Passage and the sign for Sally Lunn's.",
+      "Unlock_Fact": "Route complete! Sally Lunn's occupies a house dating from about 1482 and has bakery remains in its basement museum. The restaurant serves its distinctive large Bath bunn with sweet and savoury toppings if it is open.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "Sally Lunn's Historic Eating House",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.sallylunns.co.uk/visit-us/",
+    "hours": {
+      "mon": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "tue": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "wed": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "thu": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "fri": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "sat": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ],
+      "sun": [
+        [
+          "10:00",
+          "21:00"
+        ]
+      ]
+    }
+  }
+}

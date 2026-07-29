@@ -1,9 +1,30 @@
 {
-  "name": "GeoQuest",
-  "short_name": "GeoQuest",
+  "name": "Day Tripping Quiz",
+  "short_name": "Day Tripping",
+  "id": "./",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#0c0f15",
-  "theme_color": "#0c0f15",
-  "description": "Real-world clue adventures"
+  "background_color": "#0c161f",
+  "theme_color": "#0c161f",
+  "description": "Real-world walking adventures, clues and local discoveries.",
+  "icons": [
+    {
+      "src": "assets/day-tripping-quiz-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/day-tripping-quiz-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/day-tripping-quiz-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
 }

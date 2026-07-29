@@ -1,0 +1,163 @@
+{
+  "pack_format": 2,
+  "pack_id": "manchester-vimto-turing-tiles",
+  "version": 1,
+  "town": "Manchester",
+  "display_name": "Manchester",
+  "route_name": "Vimto, Turing & Tiles",
+  "description": "Mix Manchester's fizziest invention with a computing pioneer, a Roman-inspired library and a glorious tiled pub.",
+  "short_description": "Solve a giant Vimto bottle, Turing's apple and a technicolour pub.",
+  "centre": {
+    "lat": 53.47634,
+    "long": -2.23995
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 65,
+  "difficulty_label": "Detective",
+  "tags": [
+    "computing",
+    "inventions",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A level city-centre walk on public pavements. Granby Row and Great Bridgewater Street can be busy, so use marked crossings.",
+  "before_you_go": {
+    "terrain": "A level city-centre walk on public pavements. Granby Row and Great Bridgewater Street can be busy, so use marked crossings.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
+  "cover_theme": "meadow",
+  "stops": [
+    {
+      "Town": "Manchester",
+      "Route": "Vimto, Turing & Tiles",
+      "Stop_ID": "MAN001",
+      "Stop_Order": 1,
+      "Stop_Name": "A Monument to Vimto",
+      "Target_Lat": 53.475527,
+      "Target_Long": -2.234457,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Begin with grapes, raspberries and blackcurrants made giant beside the birthplace of a purple tonic.",
+      "Hint_1": "Find Granby Row behind the university buildings.",
+      "Hint_2": "Look for a huge wooden Vimto bottle surrounded by carved fruit.",
+      "Unlock_Fact": "John Noel Nichols invented Vimto in Manchester in 1908. Kerry Morrison created this playful monument in 1992 close to the original factory site on Granby Row.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Vimto, Turing & Tiles",
+      "Stop_ID": "MAN002",
+      "Stop_Order": 2,
+      "Stop_Name": "Alan Turing Memorial",
+      "Target_Lat": 53.476732,
+      "Target_Long": -2.2359608,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find a codebreaker resting on a bench between science and the village, an apple held in bronze.",
+      "Hint_1": "Walk to Sackville Gardens.",
+      "Hint_2": "Look for the seated statue of Alan Turing.",
+      "Unlock_Fact": "Glyn Hughes's life-size bronze memorial was unveiled on Turing's birthday, 23 June 2001. The pioneering mathematician worked on early stored-program computers at the University of Manchester after the Second World War.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Vimto, Turing & Tiles",
+      "Stop_ID": "MAN003",
+      "Stop_Order": 3,
+      "Stop_Name": "Manchester Central Library",
+      "Target_Lat": 53.4781312,
+      "Target_Long": -2.2447096,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Seek Rome's round temple reborn for books, crowned by a hidden dome.",
+      "Hint_1": "Head west to St Peter's Square.",
+      "Hint_2": "Find the circular library fronted by a columned portico.",
+      "Unlock_Fact": "E. Vincent Harris designed Central Library with a rotunda inspired by Rome's Pantheon. King George V officially opened it on 17 July 1934, calling it the country's largest local-authority library.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Vimto, Turing & Tiles",
+      "Stop_ID": "MAN004",
+      "Stop_Order": 4,
+      "Stop_Name": "Peveril of the Peak",
+      "Target_Lat": 53.4749771,
+      "Target_Long": -2.2446285,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish at a green-tiled wedge stranded between roads, named for a hero of a Walter Scott novel.",
+      "Hint_1": "Walk south along Great Bridgewater Street.",
+      "Hint_2": "Look for the unmistakable green-and-cream tiled pub at number 127.",
+      "Unlock_Fact": "Route complete! The Grade II-listed Peveril of the Peak is celebrated for its colourful tiled exterior and remarkably intact multi-room historic interior. It remains a traditional pub where the trail can end with a drink if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "Peveril of the Peak",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://centralmanchester.camra.org.uk/viewnode.php?id=145298",
+    "hours": {
+      "mon": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "12:00",
+          "23:30"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "22:30"
+        ]
+      ]
+    }
+  }
+}

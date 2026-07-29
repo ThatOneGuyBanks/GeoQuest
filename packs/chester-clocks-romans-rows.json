@@ -1,0 +1,158 @@
+{
+  "pack_format": 2,
+  "pack_id": "chester-clocks-romans-rows",
+  "version": 1,
+  "town": "Chester",
+  "display_name": "Chester",
+  "route_name": "Clocks, Romans & Rows",
+  "description": "March from a famous clock through abbey stones and a Roman arena before finishing in a timber-framed inn.",
+  "short_description": "Decode Roman spectacle, medieval carvings and Chester's most theatrical timepiece.",
+  "centre": {
+    "lat": 53.18957,
+    "long": -2.88904
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 65,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "romans",
+    "architecture",
+    "clocks",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact city-centre route on public streets, with cobbles and short gradients near the walls. The amphitheatre can be viewed without entering a building.",
+  "before_you_go": {
+    "terrain": "A compact city-centre route on public streets, with cobbles and short gradients near the walls. The amphitheatre can be viewed without entering a building.",
+    "hills": "Mostly gentle with a few short gradients near the walls.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public routes throughout; some cobbles or historic paving may be uneven.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Usually possible, though cobbles and uneven paving may be uncomfortable."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Chester",
+      "Route": "Clocks, Romans & Rows",
+      "Stop_ID": "CHE001",
+      "Stop_Order": 1,
+      "Stop_Name": "Eastgate Clock",
+      "Target_Lat": 53.1908747,
+      "Target_Long": -2.8888169,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Begin where time balances above an ancient gateway in a riot of iron, gold and royal initials.",
+      "Hint_1": "Find the clock spanning Eastgate Street above the city-wall arch.",
+      "Hint_2": "Stand beneath the colourful clock whose face is flanked by VR monograms.",
+      "Unlock_Fact": "Eastgate Clock was installed in 1899 to commemorate Queen Victoria's 1897 Diamond Jubilee. Architect John Douglas designed its ornate iron pavilion, while the mechanism came from the Chester firm J. B. Joyce.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Clocks, Romans & Rows",
+      "Stop_ID": "CHE002",
+      "Stop_Order": 2,
+      "Stop_Name": "Chester Cathedral",
+      "Target_Lat": 53.1917872,
+      "Target_Long": -2.8907208,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Seek the red-stone house of a Saxon saint, where monks once prayed and carved creatures still hide.",
+      "Hint_1": "Walk to St Werburgh Street and look for the cathedral precinct.",
+      "Hint_2": "The great church began as the Benedictine Abbey of St Werburgh.",
+      "Unlock_Fact": "Chester Cathedral grew from the former Benedictine Abbey of St Werburgh and became a cathedral in 1541. Its medieval choir stalls preserve an exceptional collection of carved misericords beneath the monks' folding seats.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Clocks, Romans & Rows",
+      "Stop_ID": "CHE003",
+      "Stop_Order": 3,
+      "Stop_Name": "Roman Amphitheatre",
+      "Target_Lat": 53.1893383,
+      "Target_Long": -2.8869827,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find Britain's biggest known Roman arena, where half the spectacle still sleeps beneath the city.",
+      "Hint_1": "Head south-east towards Newgate and St John Street.",
+      "Hint_2": "Look for the exposed curved stone remains beside the Roman gardens.",
+      "Unlock_Fact": "Chester's amphitheatre is the largest known Roman amphitheatre in Britain. Only its northern half is exposed; the rest remains beneath later buildings, and the arena served the legionary fortress of Deva Victrix.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Clocks, Romans & Rows",
+      "Stop_ID": "CHE004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Bear & Billet",
+      "Target_Lat": 53.1862981,
+      "Target_Long": -2.8896449,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish at a black-and-white beast carrying a soldier's sleeping place, just inside the southern gate.",
+      "Hint_1": "Follow Lower Bridge Street downhill towards Bridgegate.",
+      "Hint_2": "Find number 94, a tall timber-framed pub named for a bear and a billet.",
+      "Unlock_Fact": "Route complete! The Bear & Billet was built in 1664 as the townhouse of the Earls of Shrewsbury and is now a Grade I-listed pub serving food and drink. Its towering timber frame makes a memorable finish if the venue is open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Bear & Billet",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.tripadvisor.co.uk/Restaurant_Review-g186233-d1063115-Reviews-Bear_and_Billet-Chester_Cheshire_England.html",
+    "hours": {
+      "mon": [],
+      "tue": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
+}

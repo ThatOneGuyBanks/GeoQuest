@@ -11,7 +11,7 @@
     "lat": 52.95173,
     "long": -1.14989
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 2.0,
   "estimated_minutes": 75,
   "difficulty_label": "Explorer",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A city-centre walk with a final descent towards Castle Rock. All clues can be completed outside.",
+  "before_you_go": {
+    "terrain": "A city-centre walk with a final descent towards Castle Rock. All clues can be completed outside.",
+    "hills": "Mostly gentle, with a descent towards Castle Rock.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
   "cover_theme": "meadow",
   "stops": [
     {
@@ -98,5 +108,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "Ye Olde Trip to Jerusalem",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://www.greeneking.co.uk/pubs/nottinghamshire/ye-olde-trip-to-jerusalem/find-us",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }

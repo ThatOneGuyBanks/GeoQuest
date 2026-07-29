@@ -1,0 +1,164 @@
+{
+  "pack_format": 2,
+  "pack_id": "durham-bridges-bishops-victoria",
+  "version": 1,
+  "town": "Durham",
+  "display_name": "Durham",
+  "route_name": "Bridges, Bishops & Victoria",
+  "description": "Climb from Durham's oldest bridge into the fortress world of Prince Bishops, saints and a perfectly preserved Victorian pub.",
+  "short_description": "Cross medieval arches, conquer Palace Green and finish in 1899.",
+  "centre": {
+    "lat": 54.77423,
+    "long": -1.57543
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.1,
+  "estimated_minutes": 65,
+  "difficulty_label": "Challenging",
+  "tags": [
+    "bridges",
+    "norman",
+    "saints",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "University Cities"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A short but steep route over cobbles and historic streets. Palace Green is pedestrian-friendly; Hallgarth Street has normal city traffic.",
+  "before_you_go": {
+    "terrain": "A short but steep route over cobbles and historic streets. Palace Green is pedestrian-friendly; Hallgarth Street has normal city traffic.",
+    "hills": "Includes a notable steep section; take your time and use a suitable alternative where available.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Steep gradients and historic surfaces may be difficult; check a step-free alternative before setting off.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Possible but the steep section and historic surfaces may be demanding."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Durham",
+      "Route": "Bridges, Bishops & Victoria",
+      "Stop_ID": "DUR001",
+      "Stop_Order": 1,
+      "Stop_Name": "Framwellgate Bridge",
+      "Target_Lat": 54.776073,
+      "Target_Long": -1.5780124,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin on Durham's oldest crossing, where two shallow arches replaced six lost to a furious Wear.",
+      "Hint_1": "Find the pedestrian bridge linking Silver Street and Crossgate.",
+      "Hint_2": "Stand where the castle and cathedral rise together above the River Wear.",
+      "Unlock_Fact": "Bishop Ranulf Flambard built the first bridge here in 1127. Flooding destroyed it in 1400, and today's Grade I-listed replacement has two visible stone arches; it was widened in 1859.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Durham",
+      "Route": "Bridges, Bishops & Victoria",
+      "Stop_ID": "DUR002",
+      "Stop_Order": 2,
+      "Stop_Name": "Durham Castle",
+      "Target_Lat": 54.7754999,
+      "Target_Long": -1.5768908,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Climb to a conqueror's stronghold that became a bishop's palace and then a student's home.",
+      "Hint_1": "Ascend towards Palace Green.",
+      "Hint_2": "Face the castle entrance opposite the cathedral.",
+      "Unlock_Fact": "William the Conqueror ordered Durham Castle in 1072 to secure northern England. It became the palace of Durham's powerful Prince Bishops and has housed University College since 1837.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Durham",
+      "Route": "Bridges, Bishops & Victoria",
+      "Stop_ID": "DUR003",
+      "Stop_Order": 3,
+      "Stop_Name": "Durham Cathedral",
+      "Target_Lat": 54.773262,
+      "Target_Long": -1.5763333,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Cross the green to a Norman giant sheltering a saint of Lindisfarne and England's first historian.",
+      "Hint_1": "The cathedral fills the south side of Palace Green.",
+      "Hint_2": "Approach its great north door; the resting places are those of Cuthbert and Bede.",
+      "Unlock_Fact": "Construction of Durham Cathedral began in 1093. Its innovative rib vaulting is a landmark of Norman architecture, and the church holds the shrine of St Cuthbert and the tomb of the Venerable Bede.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Durham",
+      "Route": "Bridges, Bishops & Victoria",
+      "Stop_ID": "DUR004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Victoria",
+      "Target_Lat": 54.7720739,
+      "Target_Long": -1.5704779,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish in the year 1899, where a queen's name guards snug rooms, coal fires and a wooden cash drawer.",
+      "Hint_1": "Head east from the peninsula towards Hallgarth Street.",
+      "Hint_2": "Find the Grade II-listed Victoria Inn at number 86.",
+      "Unlock_Fact": "Route complete! The Victoria was built in 1899 and retains an exceptionally intact multi-room pub interior, including snug rooms and a Victorian cash drawer. It serves drinks and simple toasties rather than full meals, if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Victoria",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://camra.org.uk/pubs/victoria-inn-durham-186939",
+    "hours": {
+      "mon": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:45",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "12:00",
+          "22:30"
+        ]
+      ]
+    }
+  }
+}

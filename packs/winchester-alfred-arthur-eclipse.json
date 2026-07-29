@@ -1,0 +1,164 @@
+{
+  "pack_format": 2,
+  "pack_id": "winchester-alfred-arthur-eclipse",
+  "version": 1,
+  "town": "Winchester",
+  "display_name": "Winchester",
+  "route_name": "Alfred, Arthur & an Eclipse",
+  "description": "Walk from Wessex's great king to Jane Austen, test an Arthurian table and finish in a Tudor-era inn.",
+  "short_description": "Untangle Saxon kings, cathedral stories, Arthurian myth and an eclipse.",
+  "centre": {
+    "lat": 51.06135,
+    "long": -1.31411
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.5,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "kings",
+    "arthurian",
+    "literature",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Legends & Literature"
+  ],
+  "featured": true,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central route on public pavements with a steady climb along the High Street. The cathedral and Great Hall clues unlock from outside.",
+  "before_you_go": {
+    "terrain": "A central route on public pavements with a steady climb along the High Street. The cathedral and Great Hall clues unlock from outside.",
+    "hills": "A steady climb follows the High Street.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Winchester",
+      "Route": "Alfred, Arthur & an Eclipse",
+      "Stop_ID": "WIN001",
+      "Stop_Order": 1,
+      "Stop_Name": "King Alfred the Great Statue",
+      "Target_Lat": 51.059896,
+      "Target_Long": -1.308206,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin with Wessex's sword held crosswise above the city he rebuilt as a royal capital.",
+      "Hint_1": "Go to The Broadway at the eastern end of the High Street.",
+      "Hint_2": "Find the towering bronze statue of King Alfred.",
+      "Unlock_Fact": "Hamo Thornycroft's statue of Alfred the Great was unveiled in 1901. Alfred, who died in 899, rebuilt Winchester and made it the centre of his Wessex kingdom.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Winchester",
+      "Route": "Alfred, Arthur & an Eclipse",
+      "Stop_ID": "WIN002",
+      "Stop_Order": 2,
+      "Stop_Name": "Winchester Cathedral",
+      "Target_Lat": 51.0607326,
+      "Target_Long": -1.3132458,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Find the long stone ship where a novelist rests and a diver once rescued sinking walls.",
+      "Hint_1": "Walk west into the Cathedral Close.",
+      "Hint_2": "Approach Winchester Cathedral, burial place of Jane Austen.",
+      "Unlock_Fact": "Winchester Cathedral has the longest nave of any Gothic cathedral in Europe. Jane Austen was buried here in 1817, and diver William Walker later worked underwater from 1906 to 1911 to underpin its flooded foundations.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Winchester",
+      "Route": "Alfred, Arthur & an Eclipse",
+      "Stop_ID": "WIN003",
+      "Stop_Order": 3,
+      "Stop_Name": "The Great Hall",
+      "Target_Lat": 51.062621,
+      "Target_Long": -1.319748,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Climb to a king's round table that is genuinely medieval but far too young for Arthur.",
+      "Hint_1": "Continue west and uphill to Castle Avenue.",
+      "Hint_2": "Find the surviving great hall of Winchester Castle.",
+      "Unlock_Fact": "The Great Hall was rebuilt for Henry III between 1222 and 1235. Its famous Round Table dates from the 13th century, while the painted Tudor design showing King Arthur was made for Henry VIII.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Winchester",
+      "Route": "Alfred, Arthur & an Eclipse",
+      "Stop_ID": "WIN004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Eclipse Inn",
+      "Target_Lat": 51.0621699,
+      "Target_Long": -1.3148421,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Finish where the sun once faced an eclipse and the last woman beheaded in England awaited her fate.",
+      "Hint_1": "Return towards the cathedral and The Square.",
+      "Hint_2": "Find the small crooked-fronted pub at number 25.",
+      "Unlock_Fact": "Route complete! The Eclipse occupies a 16th-century former rectory. Dame Alice Lisle was held here before her execution in Winchester in 1685; the historic two-room pub serves drinks and lunchtime food if open.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Eclipse Inn",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://the-eclipse-winchester.co.uk/",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
+}

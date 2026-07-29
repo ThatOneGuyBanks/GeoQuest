@@ -80,6 +80,46 @@
     {
       "file": "stratford-shakespeare-swans-spirits.json",
       "enabled": true
+    },
+    {
+      "file": "chester-clocks-romans-rows.json",
+      "enabled": true
+    },
+    {
+      "file": "bath-crescents-springs-buns.json",
+      "enabled": true
+    },
+    {
+      "file": "canterbury-gates-pilgrims-parrot.json",
+      "enabled": true
+    },
+    {
+      "file": "durham-bridges-bishops-victoria.json",
+      "enabled": true
+    },
+    {
+      "file": "liverpool-birds-beats-brass.json",
+      "enabled": true
+    },
+    {
+      "file": "manchester-vimto-turing-tiles.json",
+      "enabled": true
+    },
+    {
+      "file": "newcastle-greys-castles-elopement.json",
+      "enabled": true
+    },
+    {
+      "file": "salisbury-doom-spire-venison.json",
+      "enabled": true
+    },
+    {
+      "file": "winchester-alfred-arthur-eclipse.json",
+      "enabled": true
+    },
+    {
+      "file": "worcester-kings-battle-escape.json",
+      "enabled": true
     }
   ]
 }

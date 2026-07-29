@@ -1,0 +1,163 @@
+{
+  "pack_format": 2,
+  "pack_id": "salisbury-doom-spire-venison",
+  "version": 1,
+  "town": "Salisbury",
+  "display_name": "Salisbury",
+  "route_name": "Doom, Spire & Venison",
+  "description": "Face medieval Judgement Day, decode an old market cross and chase Britain's tallest spire to a 15th-century pub.",
+  "short_description": "Find heaven, hell, poultry, Magna Carta and a haunted-sounding finish.",
+  "centre": {
+    "lat": 51.06789,
+    "long": -1.79667
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 65,
+  "difficulty_label": "Detective",
+  "tags": [
+    "medieval",
+    "art",
+    "markets",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A mostly level central loop. The Doom painting is inside a working church and may not always be viewable; the location unlocks from the public exterior.",
+  "before_you_go": {
+    "terrain": "A mostly level central loop. The Doom painting is inside a working church and may not always be viewable; the location unlocks from the public exterior.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Salisbury",
+      "Route": "Doom, Spire & Venison",
+      "Stop_ID": "SAL001",
+      "Stop_Order": 1,
+      "Stop_Name": "St Thomas's Church",
+      "Target_Lat": 51.0690414,
+      "Target_Long": -1.7968285,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Begin where medieval souls tumble towards hell above the heads of the city guilds.",
+      "Hint_1": "Find the parish church tucked just off the Market Place.",
+      "Hint_2": "The famous Doom painting is above the chancel arch inside St Thomas's.",
+      "Unlock_Fact": "St Thomas's holds the UK's largest and most complete surviving medieval Doom painting, made between 1470 and 1500. Whitewashed in 1593, it was rediscovered in 1819 and conserved in 2019.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Salisbury",
+      "Route": "Doom, Spire & Venison",
+      "Stop_ID": "SAL002",
+      "Stop_Order": 2,
+      "Stop_Name": "Poultry Cross",
+      "Target_Lat": 51.0687377,
+      "Target_Long": -1.7961363,
+      "Win_Radius_m": 35,
+      "Cryptic_Clue": "Find the stone umbrella where feathers once changed hands beneath a market cross.",
+      "Hint_1": "Walk a few steps towards the corner of Butcher Row and Minster Street.",
+      "Hint_2": "Look for the canopied medieval Poultry Cross.",
+      "Unlock_Fact": "The Poultry Cross marked the part of Salisbury's market where poultry was sold. It is the surviving member of several specialist market crosses; its medieval core was given curving buttresses in the 1850s.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Salisbury",
+      "Route": "Doom, Spire & Venison",
+      "Stop_ID": "SAL003",
+      "Stop_Order": 3,
+      "Stop_Name": "Salisbury Cathedral",
+      "Target_Lat": 51.0649545,
+      "Target_Long": -1.7972913,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Seek Britain's tallest spire and a parchment that made even a king answer to law.",
+      "Hint_1": "Walk south into the vast Cathedral Close.",
+      "Hint_2": "Approach the west front of Salisbury Cathedral.",
+      "Unlock_Fact": "Salisbury Cathedral was largely built between 1220 and 1258; its 123-metre spire is Britain's tallest. The cathedral also safeguards the best-preserved of the four surviving original 1215 Magna Carta manuscripts.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Salisbury",
+      "Route": "Doom, Spire & Venison",
+      "Stop_ID": "SAL004",
+      "Stop_Order": 4,
+      "Stop_Name": "The Haunch of Venison",
+      "Target_Lat": 51.0688068,
+      "Target_Long": -1.796423,
+      "Win_Radius_m": 35,
+      "Cryptic_Clue": "Finish with a cut of deer in a former church house whose little bars have alarming nicknames.",
+      "Hint_1": "Return towards the Poultry Cross and Minster Street.",
+      "Hint_2": "Find the timbered Haunch of Venison at number 1.",
+      "Unlock_Fact": "Route complete! The Grade II*-listed Haunch of Venison began as a 15th-century church house for St Thomas's and became an inn by the 16th century. Its historic pub interior and restaurant make a fitting finish if open.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Haunch of Venison",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://camra.org.uk/pubs/haunch-of-venison-salisbury-191946",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "24:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ]
+    }
+  }
+}

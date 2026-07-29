@@ -11,7 +11,7 @@
     "lat": 52.75242,
     "long": 0.39508
   },
-  "author": "GeoQuest",
+  "author": "Day Tripping Quiz",
   "route_distance_km": 1.7,
   "estimated_minutes": 75,
   "difficulty_label": "Detective",
@@ -28,6 +28,16 @@
   "daily_eligible": true,
   "recommended_age": "All ages",
   "transport_note": "A flat central walk through public gardens, squares and quays. Stay on marked paths near the water.",
+  "before_you_go": {
+    "terrain": "A flat central walk through public gardens, squares and quays. Stay on marked paths near the water.",
+    "hills": "Mostly level, with ordinary kerbs and street crossings.",
+    "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
+    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
+    "footwear": "Comfortable walking shoes should be suitable.",
+    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+  },
   "cover_theme": "river",
   "stops": [
     {
@@ -115,5 +125,56 @@
       "Image": null,
       "Audio": null
     }
-  ]
+  ],
+  "final_venue": {
+    "name": "Bank House",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-29",
+    "hours_url": "https://camra.org.uk/pubs/bank-house-kings-lynn-191455",
+    "hours": {
+      "mon": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "tue": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "wed": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "thu": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "fri": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "07:00",
+          "23:00"
+        ]
+      ]
+    }
+  }
 }
