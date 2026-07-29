@@ -2,31 +2,66 @@
   "pack_format": 2,
   "pack_id": "unique-route-id",
   "version": 1,
-  "town": "Town",
-  "display_name": "Town",
-  "route_name": "Route name",
-  "description": "One-line description",
-  "short_description": "A lively card description.",
+  "town": "Example Town",
+  "display_name": "Example Town",
+  "route_name": "Landmarks, Legends & Local Ale",
+  "description": "A complete one-sentence description of the route, its story and the kind of places players will discover.",
+  "short_description": "A lively, compact description written for the adventure card.",
   "centre": {
     "lat": 52.0,
     "long": -0.1
   },
   "author": "Your name",
-  "route_distance_km": 3.2,
+  "route_distance_km": 2.4,
   "estimated_minutes": 75,
-  "difficulty_label": "Relaxed",
+  "difficulty_label": "Explorer",
   "tags": [
     "history",
-    "family"
+    "architecture",
+    "pub-finish"
   ],
   "collections": [
-    "Historic Towns",
-    "Family Friendly"
+    "Historic Places"
   ],
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
-  "cover_theme": "heritage",
-  "stops": []
+  "transport_note": "A town-centre walking route using public pavements and paths. Add useful accessibility, terrain, parking or public-transport information here.",
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Example Town",
+      "Route": "Landmarks, Legends & Local Ale",
+      "Stop_ID": "EXT001",
+      "Stop_Order": 1,
+      "Stop_Name": "Example Landmark",
+      "Target_Lat": 52.0001,
+      "Target_Long": -0.1001,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Write a playful clue that identifies the landmark without simply naming it.",
+      "Hint_1": "Give a useful direction or describe the area where the player should look.",
+      "Hint_2": "Give a clearer visual description that should help a stuck player find the exact landmark.",
+      "Unlock_Fact": "Reveal the landmark and tell a specific, interesting and accurately checked story about it.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Example Town",
+      "Route": "Landmarks, Legends & Local Ale",
+      "Stop_ID": "EXT002",
+      "Stop_Order": 2,
+      "Stop_Name": "Example Final Pub or Restaurant",
+      "Target_Lat": 52.0005,
+      "Target_Long": -0.0995,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "End with a clue leading to a real pub, restaurant or café where players can finish their day.",
+      "Hint_1": "Guide players towards the final venue without giving its name away immediately.",
+      "Hint_2": "Describe the venue, its sign or its location clearly enough to finish the route.",
+      "Unlock_Fact": "Begin with ‘Route complete!’ and share a checked fact about the venue or building, then invite players to finish with food or a drink if it is open.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ]
 }
