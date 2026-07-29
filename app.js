@@ -36,6 +36,7 @@ let resetProgressTimer = null;
 let guideSession = 0;
 let currentCollection = null;
 let pendingDiscovery = null;
+let postcardEditorState = null;
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -135,8 +136,14 @@ function restoreView() {
   }
   if (state.view === 'gameView' && pack) {
     currentPack = pack;
-    selectedAsDaily = Boolean(state.isDaily) || Boolean(packProgress(pack).dailyRunDate);
-    currentStop = Math.max(0, Math.min(pack.stops.length, Number(packProgress(pack).stop) || 0));
+    const routeState = packProgress(pack);
+    if (!routeState.completed && !Number(routeState.startedAt)) {
+      routeState.startedAt = Date.now();
+      progress[pack.pack_id] = routeState;
+      save();
+    }
+    selectedAsDaily = Boolean(state.isDaily) || Boolean(routeState.dailyRunDate);
+    currentStop = Math.max(0, Math.min(pack.stops.length, Number(routeState.stop) || 0));
     const discovery = state.discovery;
     if (discovery && Number(discovery.stopIndex) === currentStop && pack.stops[currentStop]) {
       currentHints = Math.max(0, Math.min(2, Number(discovery.hints) || 0));
@@ -356,6 +363,17 @@ function formatMinutes(minutes) {
   const hours = Math.floor(minutes / 60);
   const remainder = minutes % 60;
   return remainder ? `${hours} hr ${remainder} min` : `${hours} hr`;
+}
+
+function formatAdventureTime(seconds, compact = false) {
+  seconds = Number(seconds) || 0;
+  if (seconds <= 0) return '';
+  const totalMinutes = Math.max(1, Math.round(seconds / 60));
+  if (totalMinutes < 60) return `${totalMinutes} min`;
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (compact) return `${hours}h${minutes ? ` ${minutes}m` : ''}`;
+  return `${hours} hr${hours === 1 ? '' : 's'}${minutes ? ` ${minutes} min` : ''}`;
 }
 
 function venueLocalTime(date, timeZone) {
@@ -606,6 +624,9 @@ function bind() {
   };
   $('#searchClose').onclick = () => $('#searchWrap').classList.add('hidden');
   $('#searchInput').oninput = event => renderBrowse(event.target.value);
+  document.addEventListener('keydown', event => {
+    if (event.key === 'Escape' && !$('#postcardModal').classList.contains('hidden')) closePostcardEditor();
+  });
   if (!readStoredValue(SAFETY_KEY, LEGACY_SAFETY_KEY)) $('#safetyModal').classList.remove('hidden');
   else maybeShowTutorial();
   renderSettings();
@@ -642,6 +663,7 @@ function showOnly(id) {
 
 function showHome() {
   stopWatch();
+  closePostcardEditor();
   destroyCompletionMap();
   debugMode = false;
   debugStop = null;
@@ -686,6 +708,9 @@ function endAdventure(pack, isDaily) {
       bestScore: Math.max(Number(state.bestScore) || 0, Number(state.score) || 0),
       perfectStops: Number(state.perfectStops) || 0,
       perfectCompletions: Number(state.perfectCompletions) || 0,
+      elapsedSeconds: Number(state.lastElapsedSeconds) || Number(state.elapsedSeconds) || 0,
+      lastElapsedSeconds: Number(state.lastElapsedSeconds) || Number(state.elapsedSeconds) || 0,
+      bestElapsedSeconds: Number(state.bestElapsedSeconds) || Number(state.elapsedSeconds) || 0,
       skipped: 0,
       hintsUsed: 0,
       completions: Number(state.completions) || 1
@@ -1209,92 +1234,248 @@ function loadCanvasImage(src) {
   });
 }
 
-async function shareCompletionCard(pack, score) {
-  const button = $('#shareCompletion');
-  if (button) {
-    button.disabled = true;
-    button.textContent = 'Making your postcard…';
-  }
-  try {
-    const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1350;
-    const context = canvas.getContext('2d');
-    const gradient = context.createLinearGradient(0, 0, 1080, 1350);
-    gradient.addColorStop(0, '#162938');
-    gradient.addColorStop(0.58, '#0c161f');
-    gradient.addColorStop(1, '#080e13');
-    context.fillStyle = gradient;
-    context.fillRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = colour(pack);
-    context.fillRect(0, 0, 1080, 24);
-    context.globalAlpha = 0.12;
-    context.beginPath();
-    context.arc(950, 140, 380, 0, Math.PI * 2);
-    context.fill();
-    context.globalAlpha = 1;
+function closePostcardEditor() {
+  if (postcardEditorState?.renderTimer) clearTimeout(postcardEditorState.renderTimer);
+  if (postcardEditorState?.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
+  postcardEditorState = null;
+  $('#postcardModal')?.classList.add('hidden');
+}
+
+function schedulePostcardRender() {
+  if (!postcardEditorState) return;
+  const editor = postcardEditorState;
+  if (editor.renderTimer) clearTimeout(editor.renderTimer);
+  editor.rendered = null;
+  const token = ++editor.renderToken;
+  const shareButton = $('#sharePostcard');
+  const downloadButton = $('#downloadPostcard');
+  shareButton.disabled = true;
+  downloadButton.disabled = true;
+  shareButton.textContent = 'Preparing postcard…';
+  editor.renderTimer = setTimeout(async () => {
     try {
-      const logo = await loadCanvasImage('assets/day-tripping-quiz-icon-512.png');
-      context.drawImage(logo, 70, 60, 250, 250);
-    } catch {}
-    context.fillStyle = colour(pack);
-    context.font = '900 30px system-ui, sans-serif';
-    context.letterSpacing = '4px';
-    context.fillText('ADVENTURE COMPLETE', 76, 390);
+      const rendered = await buildCompletionPostcard(editor.pack, editor.score, { message: editor.message, photoUrl: editor.photoUrl });
+      if (postcardEditorState !== editor || editor.renderToken !== token) return;
+      editor.rendered = rendered;
+      shareButton.disabled = false;
+      downloadButton.disabled = false;
+      shareButton.textContent = 'Share postcard';
+    } catch {
+      if (postcardEditorState !== editor || editor.renderToken !== token) return;
+      shareButton.textContent = 'Could not prepare postcard';
+      toast('Could not prepare that postcard. Try a different photo.');
+    }
+  }, 160);
+}
+
+function updatePostcardPreview() {
+  if (!postcardEditorState) return;
+  const { pack, score, message, photoUrl } = postcardEditorState;
+  const state = packProgress(pack);
+  const preview = $('#postcardPreview');
+  preview.style.setProperty('--postcard-accent', colour(pack));
+  preview.classList.toggle('has-photo', Boolean(photoUrl));
+  $('#postcardPreviewTitle').textContent = pack.route_name;
+  $('#postcardPreviewPlace').textContent = pack.display_name.toUpperCase();
+  $('#postcardPreviewScore').textContent = `${score} pts`;
+  $('#postcardPreviewStops').textContent = `${pack.stops.length} stops`;
+  $('#postcardPreviewTime').textContent = formatAdventureTime(state.elapsedSeconds, true) || 'Time not recorded';
+  $('#postcardPreviewMessage').textContent = message.trim() || 'I followed the clues. I found the stories.';
+  $('#postcardMessageCount').textContent = `${message.length}/120`;
+  const photo = $('#postcardPreviewPhoto');
+  if (photoUrl) photo.src = photoUrl;
+  else photo.removeAttribute('src');
+  $('#removePostcardPhoto').classList.toggle('hidden', !photoUrl);
+  $('#postcardPhotoLabel').textContent = photoUrl ? 'Change photo' : 'Add a photo';
+  schedulePostcardRender();
+}
+
+function openPostcardEditor(pack, score) {
+  closePostcardEditor();
+  postcardEditorState = { pack, score, message: '', photoFile: null, photoUrl: null, rendered: null, renderTimer: null, renderToken: 0 };
+  $('#postcardMessage').value = '';
+  $('#postcardPhoto').value = '';
+  $('#postcardModal').classList.remove('hidden');
+  updatePostcardPreview();
+  $('#postcardClose').onclick = closePostcardEditor;
+  $('#postcardModal').onclick = event => {
+    if (event.target === $('#postcardModal')) closePostcardEditor();
+  };
+  $('#postcardMessage').oninput = event => {
+    postcardEditorState.message = event.target.value.slice(0, 120);
+    updatePostcardPreview();
+  };
+  $('#postcardPhoto').onchange = event => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      event.target.value = '';
+      return toast('Choose an image file for your postcard.');
+    }
+    if (file.size > 20 * 1024 * 1024) {
+      event.target.value = '';
+      return toast('That photo is over 20 MB. Choose a smaller image.');
+    }
+    if (postcardEditorState.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
+    postcardEditorState.photoFile = file;
+    postcardEditorState.photoUrl = URL.createObjectURL(file);
+    updatePostcardPreview();
+  };
+  $('#removePostcardPhoto').onclick = () => {
+    if (postcardEditorState.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
+    postcardEditorState.photoFile = null;
+    postcardEditorState.photoUrl = null;
+    $('#postcardPhoto').value = '';
+    updatePostcardPreview();
+  };
+  $('#sharePostcard').onclick = () => exportCompletionPostcard('share');
+  $('#downloadPostcard').onclick = () => exportCompletionPostcard('download');
+}
+
+function drawCanvasCover(context, image, x, y, width, height, accent, radius = 28) {
+  const imageWidth = image.naturalWidth || image.width;
+  const imageHeight = image.naturalHeight || image.height;
+  const scale = Math.max(width / imageWidth, height / imageHeight);
+  const drawWidth = imageWidth * scale;
+  const drawHeight = imageHeight * scale;
+  context.save();
+  context.beginPath();
+  context.roundRect(x, y, width, height, radius);
+  context.clip();
+  context.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+  const shade = context.createLinearGradient(x, y, x, y + height);
+  shade.addColorStop(0, '#00000000');
+  shade.addColorStop(1, '#06101888');
+  context.fillStyle = shade;
+  context.fillRect(x, y, width, height);
+  context.restore();
+  context.strokeStyle = `${accent}aa`;
+  context.lineWidth = 4;
+  context.beginPath();
+  context.roundRect(x, y, width, height, radius);
+  context.stroke();
+}
+
+async function buildCompletionPostcard(pack, score, options = {}) {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1080;
+  canvas.height = 1350;
+  const context = canvas.getContext('2d');
+  const gradient = context.createLinearGradient(0, 0, 1080, 1350);
+  gradient.addColorStop(0, '#162938');
+  gradient.addColorStop(0.58, '#0c161f');
+  gradient.addColorStop(1, '#080e13');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  context.fillStyle = colour(pack);
+  context.fillRect(0, 0, 1080, 24);
+  context.globalAlpha = 0.12;
+  context.beginPath();
+  context.arc(950, 140, 380, 0, Math.PI * 2);
+  context.fill();
+  context.globalAlpha = 1;
+  try {
+    const logo = await loadCanvasImage('assets/day-tripping-quiz-icon-512.png');
+    context.drawImage(logo, 70, 60, 250, 250);
+  } catch {}
+  if (options.photoUrl) {
+    const photo = await loadCanvasImage(options.photoUrl);
+    drawCanvasCover(context, photo, 630, 62, 380, 275, colour(pack));
+  }
+  context.fillStyle = colour(pack);
+  context.font = '900 30px system-ui, sans-serif';
+  context.letterSpacing = '4px';
+  context.fillText('ADVENTURE COMPLETE', 76, 390);
+  context.fillStyle = '#fffaf0';
+  context.font = '950 76px system-ui, sans-serif';
+  const titleBottom = wrapCanvasText(context, pack.route_name, 72, 475, 930, 82, 3);
+  context.fillStyle = '#b7c1c9';
+  context.font = '800 36px system-ui, sans-serif';
+  context.fillText(pack.display_name.toUpperCase(), 76, titleBottom + 38);
+  const statsY = Math.max(820, titleBottom + 95);
+  context.fillStyle = '#131f28';
+  context.strokeStyle = `${colour(pack)}99`;
+  context.lineWidth = 3;
+  context.beginPath();
+  context.roundRect(65, statsY, 950, 220, 35);
+  context.fill();
+  context.stroke();
+  const elapsed = formatAdventureTime(packProgress(pack).elapsedSeconds, true) || '—';
+  const stats = [
+    ['POINTS', String(score)],
+    ['STOPS', String(pack.stops.length)],
+    ['WALK', `${pack.route_distance_km} KM`],
+    ['TIME', elapsed.toUpperCase()]
+  ];
+  stats.forEach((item, index) => {
+    const x = 100 + index * 232;
+    context.fillStyle = '#91a0ab';
+    context.font = '800 20px system-ui, sans-serif';
+    context.fillText(item[0], x, statsY + 68);
     context.fillStyle = '#fffaf0';
-    context.font = '950 82px system-ui, sans-serif';
-    const titleBottom = wrapCanvasText(context, pack.route_name, 72, 490, 930, 90, 3);
-    context.fillStyle = '#b7c1c9';
-    context.font = '800 36px system-ui, sans-serif';
-    context.fillText(pack.display_name.toUpperCase(), 76, titleBottom + 38);
-    const statsY = Math.max(850, titleBottom + 150);
-    context.fillStyle = '#131f28';
-    context.strokeStyle = `${colour(pack)}99`;
-    context.lineWidth = 3;
-    context.beginPath();
-    context.roundRect(65, statsY, 950, 235, 35);
-    context.fill();
-    context.stroke();
-    const stats = [
-      ['POINTS', String(score)],
-      ['DISCOVERIES', String(pack.stops.length)],
-      ['WALK', `${pack.route_distance_km} KM`]
-    ];
-    stats.forEach((item, index) => {
-      const x = 110 + index * 310;
-      context.fillStyle = '#91a0ab';
-      context.font = '800 22px system-ui, sans-serif';
-      context.fillText(item[0], x, statsY + 74);
-      context.fillStyle = '#fffaf0';
-      context.font = '950 55px system-ui, sans-serif';
-      context.fillText(item[1], x, statsY + 150);
-    });
-    context.fillStyle = '#ffb21f';
-    context.font = '900 28px system-ui, sans-serif';
-    context.fillText('DAY TRIPPING QUIZ', 72, 1250);
-    context.fillStyle = '#9daab4';
-    context.font = '500 24px system-ui, sans-serif';
-    context.fillText('I followed the clues. I found the stories.', 72, 1293);
-    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
-    if (!blob) throw Error('Postcard could not be created');
-    const file = new File([blob], `day-tripping-${pack.pack_id}.png`, { type: 'image/png' });
-    if (navigator.share && navigator.canShare?.({ files: [file] })) {
-      await navigator.share({ title: `I completed ${pack.route_name}`, text: 'My Day Tripping Quiz adventure is complete!', files: [file] });
+    context.font = `950 ${item[1].length > 8 ? 32 : 44}px system-ui, sans-serif`;
+    context.fillText(item[1], x, statsY + 145);
+  });
+  const message = String(options.message || '').trim();
+  if (message) {
+    context.fillStyle = '#fffaf0';
+    context.font = '700 28px system-ui, sans-serif';
+    wrapCanvasText(context, `“${message}”`, 72, statsY + 275, 930, 36, 3);
+  }
+  context.fillStyle = '#ffb21f';
+  context.font = '900 28px system-ui, sans-serif';
+  context.fillText('DAY TRIPPING QUIZ', 72, 1272);
+  context.fillStyle = '#9daab4';
+  context.font = '500 22px system-ui, sans-serif';
+  context.fillText('I followed the clues. I found the stories.', 72, 1310);
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  if (!blob) throw Error('Postcard could not be created');
+  const fileName = `day-tripping-${pack.pack_id}.png`;
+  const file = typeof File === 'function' ? new File([blob], fileName, { type: 'image/png' }) : null;
+  return { blob, file, fileName };
+}
+
+function downloadCompletionPostcard(blob, fileName) {
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = fileName;
+  document.body.append(link);
+  link.click();
+  link.remove();
+  setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+}
+
+async function exportCompletionPostcard(mode) {
+  if (!postcardEditorState) return;
+  const { pack, message, rendered } = postcardEditorState;
+  if (!rendered) return toast('Your postcard is still being prepared.');
+  const shareButton = $('#sharePostcard');
+  const downloadButton = $('#downloadPostcard');
+  shareButton.disabled = true;
+  downloadButton.disabled = true;
+  const originalShareText = shareButton.textContent;
+  const originalDownloadText = downloadButton.textContent;
+  if (mode === 'share') shareButton.textContent = 'Making postcard…';
+  else downloadButton.textContent = 'Making postcard…';
+  try {
+    if (mode === 'share' && rendered.file && navigator.share && navigator.canShare?.({ files: [rendered.file] })) {
+      await navigator.share({
+        title: `I completed ${pack.route_name}`,
+        text: message.trim() || 'My Day Tripping Quiz adventure is complete!',
+        files: [rendered.file]
+      });
+      closePostcardEditor();
     } else {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(blob);
-      link.download = file.name;
-      link.click();
-      setTimeout(() => URL.revokeObjectURL(link.href), 1000);
-      toast('Completion postcard downloaded.');
+      downloadCompletionPostcard(rendered.blob, rendered.fileName);
+      toast(mode === 'share' ? 'Sharing is not available here, so your postcard was downloaded.' : 'Completion postcard downloaded.');
     }
   } catch (error) {
     if (error?.name !== 'AbortError') toast('Could not make the postcard on this browser.');
   } finally {
-    if (button) {
-      button.disabled = false;
-      button.textContent = 'Share my completion postcard';
-    }
+    shareButton.disabled = false;
+    downloadButton.disabled = false;
+    shareButton.textContent = originalShareText;
+    downloadButton.textContent = originalDownloadText;
   }
 }
 
@@ -1353,6 +1534,7 @@ function startGame(pack) {
   currentPack = pack;
   applyRouteTheme(pack);
   const existing = packProgress(pack);
+  const continuingAdventure = isActiveAdventure(pack);
   if (existing.completed) {
     progress[pack.pack_id] = {
       active: true,
@@ -1363,12 +1545,19 @@ function startGame(pack) {
       bestScore: Math.max(Number(existing.bestScore) || 0, Number(existing.score) || 0),
       perfectStops: Number(existing.perfectStops) || 0,
       perfectCompletions: Number(existing.perfectCompletions) || 0,
+      lastElapsedSeconds: Number(existing.lastElapsedSeconds) || Number(existing.elapsedSeconds) || 0,
+      bestElapsedSeconds: Number(existing.bestElapsedSeconds) || Number(existing.elapsedSeconds) || 0,
       skipped: 0,
       hintsUsed: 0,
       completions: Number(existing.completions) || 1
     };
   }
   const state = packProgress(pack);
+  if (!continuingAdventure || !Number(state.startedAt)) {
+    state.startedAt = Date.now();
+    delete state.completedAt;
+    delete state.elapsedSeconds;
+  }
   state.active = true;
   if (selectedAsDaily && daily().pack_id === pack.pack_id) {
     state.dailyRunDate = todayKey();
@@ -1390,23 +1579,24 @@ function renderGame(options = {}) {
   const state = packProgress(pack);
   if (!stop) {
     const score = Number(state.score) || 0;
+    const elapsedTime = formatAdventureTime(state.elapsedSeconds);
     const unlocked = achievements().filter(achievement => achievement.unlocked);
     const recommendations = recommendationsFor(pack);
     const streak = dailyStreak();
     $('#gameContent').innerHTML = `<div class="game-shell completion-screen">
       <span class="eyebrow">ROUTE COMPLETE</span><h1>${esc(pack.display_name)} conquered!</h1><p>You uncovered ${pack.stops.length} landmarks and their stories.</p>
       ${state.lastDailyDate ? `<div class="daily-complete"><span>☀</span><div><b>Daily adventure complete</b><small>${streak.current > 1 ? `${streak.current}-day streak — keep it going tomorrow.` : 'Your daily streak has begun.'}</small></div></div>` : ''}
-      <div class="finish-score"><span>Route score</span><b>✦ ${score}</b><small>Best: ${displayScore(pack)} points</small></div>
+      <div class="finish-score"><span>Route score</span><b>✦ ${score}</b><small>Best: ${displayScore(pack)} points</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${pack.route_distance_km} km</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
       <div class="route-map-head"><div><span class="eyebrow">YOUR ROUTE</span><h2>Stops at a glance</h2></div><span class="pill">Unlocked</span></div>
       <div id="completionMap" aria-label="Completed route map"></div>
       <ol class="route-recap-list">${pack.stops.map((item, index) => `<li><span>${index + 1}</span><b>${esc(item.Stop_Name)}</b></li>`).join('')}</ol>
       <h2>Your achievements</h2><div class="achievement-grid">${unlocked.map(badge => `<div class="achievement unlocked"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small></div></div>`).join('')}</div>
-      <button id="shareCompletion" class="postcard-btn"><span>▣</span><div><b>Share my completion postcard</b><small>Creates a spoiler-free image for friends</small></div></button>
+      <button id="shareCompletion" class="postcard-btn"><span>▣</span><div><b>Personalise my completion postcard</b><small>Add an optional photo and message before sharing</small></div></button>
       ${recommendations.length ? `<section class="completion-next"><span class="eyebrow">KEEP EXPLORING</span><h2>Two adventures nearby</h2><p>Carry the momentum into another town when you are ready.</p><div class="route-grid preview-grid">${recommendations.map(candidate => routeCard(candidate)).join('')}</div></section>` : ''}
       <button class="primary" data-home>Back to adventures</button>
     </div>`;
     $$('[data-home]').forEach(button => button.onclick = showHome);
-    $('#shareCompletion').onclick = () => shareCompletionCard(pack, score);
+    $('#shareCompletion').onclick = () => openPostcardEditor(pack, score);
     wireCards();
     renderCompletionMap(pack);
     return;
@@ -1820,6 +2010,14 @@ function renderDiscoveryScreen(stop, skip = false, debug = false, restored = fal
     state.stop = currentStop;
     state.active = currentStop < currentPack.stops.length;
     if (currentStop >= currentPack.stops.length) {
+      const completedAt = Date.now();
+      const startedAt = Number(state.startedAt) || completedAt;
+      state.completedAt = completedAt;
+      state.elapsedSeconds = Math.max(1, Math.round((completedAt - startedAt) / 1000));
+      state.lastElapsedSeconds = state.elapsedSeconds;
+      state.bestElapsedSeconds = Number(state.bestElapsedSeconds) > 0
+        ? Math.min(Number(state.bestElapsedSeconds), state.elapsedSeconds)
+        : state.elapsedSeconds;
       state.active = false;
       state.completed = true;
       state.everCompleted = true;
@@ -1903,5 +2101,24 @@ function toast(message) {
 
 init();
 if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(() => {}));
+  window.addEventListener('load', async () => {
+    const controlledAtLoad = Boolean(navigator.serviceWorker.controller);
+    let reloadingForUpdate = false;
+    if (controlledAtLoad) {
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (reloadingForUpdate) return;
+        reloadingForUpdate = true;
+        location.reload();
+      });
+    }
+    try {
+      const registration = await navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'none' });
+      const checkForUpdate = () => registration.update().catch(() => {});
+      checkForUpdate();
+      window.addEventListener('focus', checkForUpdate);
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') checkForUpdate();
+      });
+    } catch {}
+  });
 }

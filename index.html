@@ -57,6 +57,29 @@
     </div>
   </div>
 </div>
+<div id="postcardModal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="postcardTitle">
+  <div class="modal-card postcard-editor-card">
+    <button id="postcardClose" class="modal-close" aria-label="Close postcard editor">×</button>
+    <span class="eyebrow">YOUR POSTCARD</span>
+    <h2 id="postcardTitle">Make it yours.</h2>
+    <p>Add a favourite photo, write a short note, or keep the clean original design.</p>
+    <div id="postcardPreview" class="postcard-preview">
+      <div class="postcard-preview-top"><img src="assets/day-tripping-quiz-icon-192.png" alt=""><div class="postcard-photo-preview"><img id="postcardPreviewPhoto" alt="Your selected postcard photo"><span>Optional photo</span></div></div>
+      <span class="postcard-preview-eyebrow">ADVENTURE COMPLETE</span>
+      <h3 id="postcardPreviewTitle"></h3>
+      <b id="postcardPreviewPlace"></b>
+      <div class="postcard-preview-stats"><span id="postcardPreviewScore"></span><span id="postcardPreviewStops"></span><span id="postcardPreviewTime"></span></div>
+      <p id="postcardPreviewMessage"></p>
+      <small>DAY TRIPPING QUIZ</small>
+    </div>
+    <div class="postcard-editor-controls">
+      <div class="postcard-photo-actions"><label class="secondary postcard-photo-button"><span id="postcardPhotoLabel">Add a photo</span><input id="postcardPhoto" type="file" accept="image/*"></label><button id="removePostcardPhoto" class="text-btn hidden">Remove photo</button></div>
+      <label class="postcard-message-label" for="postcardMessage"><span>Your message <small id="postcardMessageCount">0/120</small></span><textarea id="postcardMessage" maxlength="120" rows="3" placeholder="A brilliant day out, a favourite moment, or an inside joke…"></textarea></label>
+      <p class="postcard-privacy">Your photo and message stay on this device and are only used to make the postcard you share or download.</p>
+    </div>
+    <div class="postcard-actions"><button id="sharePostcard" class="primary">Share postcard</button><button id="downloadPostcard" class="secondary">Download image</button></div>
+  </div>
+</div>
 <div id="settingsBackdrop" class="settings-backdrop hidden">
   <aside class="settings-drawer" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
     <div class="settings-head"><div><span class="eyebrow">MAKE IT YOURS</span><h2 id="settingsTitle">Help & settings</h2></div><button id="settingsClose" class="modal-close" aria-label="Close settings">×</button></div>
@@ -64,7 +87,7 @@
     <section class="settings-section"><h3>Discovery feedback</h3><button id="soundSetting" class="setting-row" role="switch"><span><b>Discovery sound</b><small>A short celebratory chime.</small></span><i></i></button><button id="vibrationSetting" class="setting-row" role="switch"><span><b>Vibration</b><small>A gentle pulse when you find a stop.</small></span><i></i></button></section>
     <section class="settings-section"><h3>Need a refresher?</h3><button id="replayTutorial" class="settings-action"><span>◎</span><div><b>Replay the quick tutorial</b><small>Clues, distance scans and discoveries in three steps.</small></div></button><div class="test-mode-note"><span>TEST MODE</span><p>For route testing, tap <b>I’m stuck</b> five times quickly during a game to unlock the hidden distance simulator.</p></div></section>
     <section class="settings-section"><h3>Your progress</h3><button id="exportProgress" class="settings-action"><span>⇩</span><div><b>Export progress</b><small>Download a private backup to this device.</small></div></button><button id="resetProgress" class="settings-action danger"><span>↺</span><div><b>Reset all progress</b><small>Achievements, scores and active adventures.</small></div></button></section>
-    <p class="settings-footnote">Everything stays on this device. Day Tripping Quiz does not need an account or server.</p>
+    <p class="settings-footnote">Everything stays on this device. Day Tripping Quiz does not need an account or server.<small>App build 10</small></p>
   </aside>
 </div>
 </div><script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script><script src="app.js"></script></body></html>
