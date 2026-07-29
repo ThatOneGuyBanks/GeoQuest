@@ -33,6 +33,9 @@ let pageTransitionCycle = 0;
 let pageTransitionTimers = [];
 let tutorialStep = 0;
 let resetProgressTimer = null;
+let guideSession = 0;
+let currentCollection = null;
+let pendingDiscovery = null;
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -40,6 +43,7 @@ const PROFILE_KEY = 'day-tripping-quiz-profile-v1';
 const LEGACY_KEY = 'geoquest-progress-v3';
 const LEGACY_SAFETY_KEY = 'geoquest-safety-accepted-v1';
 const LEGACY_PROFILE_KEY = 'geoquest-profile-v1';
+const VIEW_KEY = 'day-tripping-quiz-view-v1';
 const progress = readProgress();
 const profile = readProfile();
 const TUTORIAL_STEPS = [
@@ -86,6 +90,65 @@ function saveProfile() {
 
 function todayKey(date = new Date()) {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+}
+
+function readViewState() {
+  try {
+    const state = JSON.parse(sessionStorage.getItem(VIEW_KEY) || '{}');
+    return state && typeof state === 'object' ? state : {};
+  } catch {
+    return {};
+  }
+}
+
+function rememberView(view) {
+  try {
+    const state = { view, savedAt: Date.now() };
+    if (currentPack) {
+      state.packId = currentPack.pack_id;
+      state.isDaily = selectedAsDaily;
+    }
+    if (view === 'collectionView' && currentCollection) state.collection = currentCollection;
+    if (view === 'gameView') {
+      state.stopIndex = currentStop;
+      state.hints = currentHints;
+      if (pendingDiscovery) state.discovery = pendingDiscovery;
+    }
+    sessionStorage.setItem(VIEW_KEY, JSON.stringify(state));
+  } catch {}
+}
+
+function restoreView() {
+  const state = readViewState();
+  if (state.view === 'mapView') {
+    showMap();
+    return;
+  }
+  if (state.view === 'collectionView' && state.collection) {
+    openCollection(state.collection);
+    return;
+  }
+  const pack = state.packId ? packs.find(item => item.pack_id === state.packId) : null;
+  if (state.view === 'detailView' && pack) {
+    openDetail(pack, Boolean(state.isDaily));
+    return;
+  }
+  if (state.view === 'gameView' && pack) {
+    currentPack = pack;
+    selectedAsDaily = Boolean(state.isDaily) || Boolean(packProgress(pack).dailyRunDate);
+    currentStop = Math.max(0, Math.min(pack.stops.length, Number(packProgress(pack).stop) || 0));
+    const discovery = state.discovery;
+    if (discovery && Number(discovery.stopIndex) === currentStop && pack.stops[currentStop]) {
+      currentHints = Math.max(0, Math.min(2, Number(discovery.hints) || 0));
+      applyRouteTheme(pack);
+      showOnly('gameView');
+      renderDiscoveryScreen(pack.stops[currentStop], Boolean(discovery.skip), Boolean(discovery.debug), true);
+    } else {
+      renderGame({ hints: Math.max(0, Math.min(2, Number(state.hints) || 0)) });
+    }
+    return;
+  }
+  showHome();
 }
 
 function dateFromKey(key) {
@@ -243,6 +306,7 @@ async function init() {
     renderAll();
     bind();
     restoreContinue();
+    restoreView();
     navigationTransitionsReady = true;
   } catch (error) {
     document.body.innerHTML = `<main class="detail-body"><h1>Could not load game data</h1><p>${esc(error.message)}</p><p>Serve the project through GitHub Pages or the included local server.</p></main>`;
@@ -573,6 +637,7 @@ function showOnly(id) {
   if (navigationTransitionsReady && currentView && currentView !== id) playPageTransition();
   views.forEach(view => $(`#${view}`).classList.toggle('hidden', view !== id));
   scrollTo(0, 0);
+  rememberView(id);
 }
 
 function showHome() {
@@ -586,6 +651,8 @@ function showHome() {
   closeArrival();
   renderExplorerRecord();
   restoreContinue();
+  currentCollection = null;
+  pendingDiscovery = null;
   currentPack = null;
   applyRouteTheme(null);
   showOnly('homeView');
@@ -760,14 +827,14 @@ function configureDisclosure(toggleId, panelId, expanded, hiddenCount, noun, act
 }
 
 function achievements() {
-  const discoveries = packs.reduce((total, pack) => total + discoveryCount(pack), 0);
+  const points = packs.reduce((total, pack) => total + displayScore(pack), 0);
   const completedRoutes = packs.filter(hasCompleted).length;
   const routeCompletions = packs.reduce((total, pack) => total + (Number(packProgress(pack).completions) || 0), 0);
   const perfectStops = packs.reduce((total, pack) => total + (Number(packProgress(pack).perfectStops) || 0), 0);
   const perfectRoutes = packs.reduce((total, pack) => total + (Number(packProgress(pack).perfectCompletions) || 0), 0);
   const dailyCompletions = profile.dailyDates.length;
   return [
-    { id: 'first-find', icon: '✦', name: 'First Discovery', description: 'Find your first landmark.', unlocked: discoveries >= 1 },
+    { id: 'first-find', icon: '✦', name: 'First Points', description: 'Earn points from your first landmark.', unlocked: points > 0 },
     { id: 'sharp-eyes', icon: '◇', name: 'Sharp Eyes', description: 'Find a stop without using a hint.', unlocked: perfectStops >= 1 },
     { id: 'trailblazer', icon: '⚑', name: 'Trailblazer', description: 'Complete your first route.', unlocked: completedRoutes >= 1 },
     { id: 'daily-detective', icon: '☀', name: 'Daily Detective', description: 'Complete a daily adventure.', unlocked: dailyCompletions >= 1 },
@@ -892,6 +959,9 @@ function renderBrowse(query = '') {
 }
 
 function openCollection(name) {
+  currentCollection = name;
+  currentPack = null;
+  pendingDiscovery = null;
   showOnly('collectionView');
   $('#collectionTitle').textContent = name;
   $('#collectionRoutes').innerHTML = packs.filter(pack => pack.collections.includes(name)).map(pack => routeCard(pack)).join('');
@@ -949,6 +1019,9 @@ function numberedIcon(number, className = '') {
 }
 
 function showMap() {
+  currentCollection = null;
+  currentPack = null;
+  pendingDiscovery = null;
   showOnly('mapView');
   setTimeout(() => {
     if (!mapReady) {
@@ -1061,6 +1134,8 @@ function openDetail(pack, isDaily = false) {
     venueDetailsRevealed = false;
   }
   selectedAsDaily = isDaily;
+  currentCollection = null;
+  pendingDiscovery = null;
   currentPack = pack;
   applyRouteTheme(pack);
   showOnly('detailView');
@@ -1304,7 +1379,10 @@ function startGame(pack) {
   renderGame();
 }
 
-function renderGame() {
+function renderGame(options = {}) {
+  pendingDiscovery = null;
+  currentCollection = null;
+  currentHints = Math.max(0, Math.min(2, Number(options.hints) || 0));
   showOnly('gameView');
   const pack = currentPack;
   applyRouteTheme(pack);
@@ -1333,15 +1411,18 @@ function renderGame() {
     renderCompletionMap(pack);
     return;
   }
-  currentHints = 0;
-  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${Number(state.score) || 0}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div><div class="game-meta-row">${state.dailyRunDate ? '<span class="daily-run-badge">☀ Daily adventure</span>' : '<span></span>'}${unitToggle()}</div><span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−25 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary">I’m stuck</button></div></div>`;
+  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${Number(state.score) || 0}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${state.dailyRunDate ? '<div class="game-meta-row"><span class="daily-run-badge">☀ Daily adventure</span></div>' : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−25 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
   $$('[data-home]').forEach(button => button.onclick = showHome);
-  wireUnitToggle();
   if (debugMode) renderDebugPanel(stop, debugDistance);
-  $('#hintBtn').onclick = () => {
-    currentHints += 1;
+  if (currentHints > 0) {
     $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
     if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
+  }
+  $('#hintBtn').onclick = () => {
+    currentHints = Math.min(2, currentHints + 1);
+    $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
+    if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
+    rememberView('gameView');
   };
   $('#checkBtn').onclick = () => checkLocation(stop);
   $('#stuckBtn').onclick = () => handleStuckTap(stop);
@@ -1350,6 +1431,9 @@ function renderGame() {
 function checkLocation(stop) {
   if (!isSecureContext) return toast('Location needs HTTPS. Open the GitHub Pages address.');
   if (!navigator.geolocation) return toast('Location is not available on this device.');
+  stopWatch();
+  debugMode = false;
+  debugStop = null;
   lastScanReading = null;
   $('#guide').innerHTML = scannerPanel('scanning');
   navigator.geolocation.getCurrentPosition(position => evaluateArrival(stop, position), () => {
@@ -1366,19 +1450,6 @@ function qualityFor(accuracy) {
   if (accuracy <= 20) return ['good', 'Good'];
   if (accuracy <= 45) return ['fair', 'Fair'];
   return ['poor', 'Uncertain'];
-}
-
-function unitToggle() {
-  return `<div class="unit-toggle" role="group" aria-label="Distance units">
-    <button type="button" data-unit="km" class="${profile.unit === 'km' ? 'active' : ''}" aria-label="Kilometres" aria-pressed="${profile.unit === 'km'}">KM</button>
-    <button type="button" data-unit="mi" class="${profile.unit === 'mi' ? 'active' : ''}" aria-label="Miles" aria-pressed="${profile.unit === 'mi'}">MI</button>
-  </div>`;
-}
-
-function wireUnitToggle() {
-  $$('[data-unit]').forEach(button => {
-    button.onclick = () => setUnit(button.dataset.unit);
-  });
 }
 
 function setUnit(unit) {
@@ -1484,11 +1555,12 @@ function formatComparisonCount(count) {
   return `${Number((count / 1000000).toFixed(1)).toLocaleString('en-GB')} million`;
 }
 
-function scannerPanel(state = 'idle') {
+function scannerPanel(state = 'idle', closeable = false) {
   const copy = state === 'scanning'
     ? ['LOCKING ON', 'Finding your best GPS signal…']
     : ['READY TO SCAN', 'Step outside, look around, then scan when you think you have solved the clue.'];
-  return `<section class="gps-scanner ${state}">
+  return `<section class="gps-scanner ${state} ${closeable ? 'guidance' : ''}">
+    ${closeable ? '<button id="closeGuidePanel" class="guide-close" aria-label="Close live guidance">×</button>' : ''}
     <div class="scanner-visual"><i></i><i></i><i></i><span>⌖</span></div>
     <div class="scanner-copy"><span class="eyebrow">${copy[0]}</span><b>${copy[1]}</b></div>
   </section>`;
@@ -1539,6 +1611,11 @@ function closeArrival() {
 }
 
 function handleStuckTap(stop) {
+  animateStuckButton();
+  if ($('#guide .guide-panel, #guide .gps-scanner.guidance, #guide .debug-panel')) {
+    closeGuidePanel();
+    return;
+  }
   const now = Date.now();
   stuckTapTimes = stuckTapTimes.filter(time => now - time <= 2200);
   stuckTapTimes.push(now);
@@ -1561,6 +1638,31 @@ function handleStuckTap(stop) {
   }, 850);
 }
 
+function animateStuckButton() {
+  const button = $('#stuckBtn');
+  if (!button) return;
+  button.classList.remove('tap-feedback');
+  void button.offsetWidth;
+  button.classList.add('tap-feedback');
+  setTimeout(() => button.classList.remove('tap-feedback'), 260);
+}
+
+function closeGuidePanel() {
+  stopWatch();
+  debugMode = false;
+  debugStop = null;
+  stuckTapTimes = [];
+  if (stuckTapTimer) clearTimeout(stuckTapTimer);
+  stuckTapTimer = null;
+  const panel = $('#guide');
+  if (panel) panel.innerHTML = scannerPanel();
+}
+
+function bindGuideClose() {
+  const button = $('#closeGuidePanel');
+  if (button) button.onclick = closeGuidePanel;
+}
+
 function sliderToMetres(value) {
   value = Math.max(0, Math.min(1000, Number(value) || 0));
   if (value === 0) return 0;
@@ -1578,6 +1680,7 @@ function renderDebugPanel(stop, metres = debugDistance, scanned = false) {
   debugStop = stop;
   debugDistance = Math.max(0, Math.min(5000000, Number(metres) || 0));
   $('#guide').innerHTML = `<section class="debug-panel">
+    <button id="closeGuidePanel" class="guide-close" aria-label="Close test panel">×</button>
     <div class="debug-head"><span class="debug-badge">TEST MODE</span><span>Hidden location simulator</span></div>
     <h3>Fake your distance</h3>
     <p>Drag from directly on the landmark to 5,000 km away, then run a simulated GPS scan.</p>
@@ -1598,6 +1701,7 @@ function renderDebugPanel(stop, metres = debugDistance, scanned = false) {
     <small class="debug-warning">Testing advances local progress exactly like a real location check.</small>
   </section>`;
   const slider = $('#debugDistanceSlider');
+  bindGuideClose();
   slider.oninput = () => {
     debugDistance = sliderToMetres(slider.value);
     $('#debugDistanceValue').textContent = formatDistance(debugDistance);
@@ -1623,7 +1727,8 @@ function renderDebugPanel(stop, metres = debugDistance, scanned = false) {
 }
 
 function stuck(stop) {
-  $('#guide').innerHTML = '<div class="guide-panel"><h3>Need a hand?</h3><div class="game-actions"><button id="guideBtn" class="primary">Guide me in</button><button id="skipBtn" class="secondary">Skip this stop · 0 points</button></div></div>';
+  $('#guide').innerHTML = '<div class="guide-panel"><button id="closeGuidePanel" class="guide-close" aria-label="Close help panel">×</button><h3>Need a hand?</h3><div class="game-actions"><button id="guideBtn" class="primary">Guide me in</button><button id="skipBtn" class="secondary">Skip this stop · 0 points</button></div></div>';
+  bindGuideClose();
   $('#guideBtn').onclick = () => guide(stop);
   $('#skipBtn').onclick = () => completeStop(stop, true);
 }
@@ -1654,9 +1759,13 @@ async function startCompass() {
 async function guide(stop) {
   if (!navigator.geolocation) return toast('Guidance is not available on this device.');
   stopWatch();
+  const session = guideSession;
   await startCompass();
-  $('#guide').innerHTML = scannerPanel('scanning');
+  if (session !== guideSession) return;
+  $('#guide').innerHTML = scannerPanel('scanning', true);
+  bindGuideClose();
   watchId = navigator.geolocation.watchPosition(position => {
+    if (session !== guideSession) return;
     latestGuideReading = { stop, position };
     renderGuideReading(stop, position);
   }, () => toast('Guidance needs location permission.'), { enableHighAccuracy: true, maximumAge: 1000, timeout: 18000 });
@@ -1673,12 +1782,14 @@ function renderGuideReading(stop, position) {
   const accuracy = Math.max(0, Number(position.coords.accuracy) || 0);
   const [qualityClass, qualityLabel] = qualityFor(accuracy);
   $('#guide').innerHTML = `<section class="gps-scanner guidance">
+    <button id="closeGuidePanel" class="guide-close" aria-label="Close live guidance">×</button>
     <div class="scanner-result-top"><span class="gps-quality ${qualityClass}">${qualityLabel} GPS · ±${formatDistance(accuracy)}</span><span>Live guidance</span></div>
     <div class="guidance-orbit"><i></i><i></i><div class="guide-arrow" style="transform:rotate(${arrow}deg)">↑</div></div>
     <div class="distance-display"><b>${formatDistance(metres)}</b><span>to the discovery zone</span></div>
     <p class="direction-note">${heading === null ? 'Compass unavailable — the arrow is relative to north.' : 'Hold your phone flat. The arrow turns relative to its top edge.'}</p>
     <div class="distance-facts">${comparisonFact(metres)}</div>
   </section>`;
+  bindGuideClose();
   const base = Number(stop.Win_Radius_m) || 35;
   if (metres <= effectiveRadius(base, accuracy)) {
     stopWatch();
@@ -1687,13 +1798,20 @@ function renderGuideReading(stop, position) {
 }
 
 function completeStop(stop, skip = false, debug = false) {
+  renderDiscoveryScreen(stop, skip, debug);
+}
+
+function renderDiscoveryScreen(stop, skip = false, debug = false, restored = false) {
   stopWatch();
   const points = skip ? 0 : Math.max(0, 100 - currentHints * 25);
+  pendingDiscovery = { stopIndex: currentStop, skip, debug, hints: currentHints };
   $('#gameContent').innerHTML = `<div class="game-shell discovery-screen ${skip ? '' : 'celebrate'}"><div class="discovery-burst" aria-hidden="true">${'<i></i>'.repeat(12)}<b>✦</b></div><span class="eyebrow">${skip ? 'STOP SKIPPED' : debug ? 'TEST LOCATION FOUND' : 'LOCATION FOUND'}</span><h1>${esc(stop.Stop_Name)}</h1><div class="points-earned ${skip ? 'skipped' : ''}">${skip ? 'No points for this stop' : `+${points} points`}</div><div class="clue-card"><p>${esc(stop.Unlock_Fact)}</p></div><button id="nextStop" class="primary">${currentStop + 1 >= currentPack.stops.length ? 'Finish route' : 'Next stop'}</button></div>`;
-  playDiscoveryFeedback(skip);
+  rememberView('gameView');
+  if (!restored) playDiscoveryFeedback(skip);
   $('#nextStop').onclick = () => {
     const before = new Set(achievements().filter(item => item.unlocked).map(item => item.id));
     const state = packProgress(currentPack);
+    pendingDiscovery = null;
     state.score = (Number(state.score) || 0) + points;
     state.hintsUsed = (Number(state.hintsUsed) || 0) + currentHints;
     state.skipped = (Number(state.skipped) || 0) + (skip ? 1 : 0);
@@ -1746,6 +1864,7 @@ function restoreContinue() {
 }
 
 function stopWatch() {
+  guideSession += 1;
   if (watchId !== null) {
     navigator.geolocation.clearWatch(watchId);
     watchId = null;
