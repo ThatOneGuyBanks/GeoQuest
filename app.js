@@ -1241,7 +1241,7 @@ function closePostcardEditor() {
   $('#postcardModal')?.classList.add('hidden');
 }
 
-function schedulePostcardRender() {
+function schedulePostcardRender(delay = 160) {
   if (!postcardEditorState) return;
   const editor = postcardEditorState;
   if (editor.renderTimer) clearTimeout(editor.renderTimer);
@@ -1254,9 +1254,20 @@ function schedulePostcardRender() {
   shareButton.textContent = 'Preparing postcard…';
   editor.renderTimer = setTimeout(async () => {
     try {
-      const rendered = await buildCompletionPostcard(editor.pack, editor.score, { message: editor.message, photoUrl: editor.photoUrl });
+      const rendered = await buildCompletionPostcard(editor.pack, editor.score, {
+        message: editor.message,
+        photoUrl: editor.photoUrl,
+        photoImage: editor.photoImage,
+        photoX: editor.photoX,
+        photoY: editor.photoY,
+        photoZoom: editor.photoZoom
+      });
       if (postcardEditorState !== editor || editor.renderToken !== token) return;
       editor.rendered = rendered;
+      const preview = $('#postcardPreviewCanvas');
+      const previewContext = preview.getContext('2d');
+      previewContext.clearRect(0, 0, preview.width, preview.height);
+      previewContext.drawImage(rendered.canvas, 0, 0, preview.width, preview.height);
       shareButton.disabled = false;
       downloadButton.disabled = false;
       shareButton.textContent = 'Share postcard';
@@ -1265,38 +1276,121 @@ function schedulePostcardRender() {
       shareButton.textContent = 'Could not prepare postcard';
       toast('Could not prepare that postcard. Try a different photo.');
     }
-  }, 160);
+  }, delay);
 }
 
-function updatePostcardPreview() {
+function updatePostcardPreview(renderDelay = 160) {
   if (!postcardEditorState) return;
-  const { pack, score, message, photoUrl } = postcardEditorState;
-  const state = packProgress(pack);
-  const preview = $('#postcardPreview');
-  preview.style.setProperty('--postcard-accent', colour(pack));
-  preview.classList.toggle('has-photo', Boolean(photoUrl));
-  $('#postcardPreviewTitle').textContent = pack.route_name;
-  $('#postcardPreviewPlace').textContent = pack.display_name.toUpperCase();
-  $('#postcardPreviewScore').textContent = `${score} pts`;
-  $('#postcardPreviewStops').textContent = `${pack.stops.length} stops`;
-  $('#postcardPreviewTime').textContent = formatAdventureTime(state.elapsedSeconds, true) || 'Time not recorded';
-  $('#postcardPreviewMessage').textContent = message.trim() || 'I followed the clues. I found the stories.';
+  const { message, photoUrl, photoX, photoY, photoZoom } = postcardEditorState;
   $('#postcardMessageCount').textContent = `${message.length}/120`;
-  const photo = $('#postcardPreviewPhoto');
-  if (photoUrl) photo.src = photoUrl;
-  else photo.removeAttribute('src');
+  $('#postcardPreviewCanvas').classList.toggle('photo-adjustable', Boolean(photoUrl));
+  $('#postcardDragHint').classList.toggle('hidden', !photoUrl);
   $('#removePostcardPhoto').classList.toggle('hidden', !photoUrl);
-  $('#postcardPhotoLabel').textContent = photoUrl ? 'Change photo' : 'Add a photo';
-  schedulePostcardRender();
+  $('#postcardPhotoAdjustments').classList.toggle('hidden', !photoUrl);
+  $('#postcardPhotoLabel').textContent = photoUrl ? 'Choose another' : 'Choose a photo';
+  $('#postcardCameraLabel').textContent = photoUrl ? 'Take another' : 'Take a photo';
+  $('#postcardPhotoX').value = Math.round(photoX * 100);
+  $('#postcardPhotoY').value = Math.round(photoY * 100);
+  $('#postcardPhotoZoom').value = Math.round(photoZoom * 100);
+  schedulePostcardRender(renderDelay);
+}
+
+function selectPostcardPhoto(file, sourceInput) {
+  if (!file || !postcardEditorState) return;
+  if (!file.type.startsWith('image/')) {
+    sourceInput.value = '';
+    return toast('Choose an image file for your postcard.');
+  }
+  if (file.size > 20 * 1024 * 1024) {
+    sourceInput.value = '';
+    return toast('That photo is over 20 MB. Choose a smaller image.');
+  }
+  if (postcardEditorState.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
+  postcardEditorState.photoFile = file;
+  postcardEditorState.photoUrl = URL.createObjectURL(file);
+  postcardEditorState.photoImage = null;
+  postcardEditorState.photoX = 0.5;
+  postcardEditorState.photoY = 0.5;
+  postcardEditorState.photoZoom = 1;
+  const otherInput = sourceInput.id === 'postcardPhoto' ? $('#postcardCamera') : $('#postcardPhoto');
+  otherInput.value = '';
+  updatePostcardPreview(30);
+  const editor = postcardEditorState;
+  const selectedUrl = editor.photoUrl;
+  loadCanvasImage(selectedUrl).then(image => {
+    if (postcardEditorState !== editor || editor.photoUrl !== selectedUrl) return;
+    editor.photoImage = image;
+  }).catch(() => {});
+}
+
+function bindPostcardPhotoDragging() {
+  const canvas = $('#postcardPreviewCanvas');
+  canvas.onpointerdown = event => {
+    if (!postcardEditorState?.photoUrl) return;
+    const rect = canvas.getBoundingClientRect();
+    const canvasX = (event.clientX - rect.left) * (canvas.width / rect.width);
+    const canvasY = (event.clientY - rect.top) * (canvas.height / rect.height);
+    if (canvasX < 630 || canvasX > 1010 || canvasY < 62 || canvasY > 337) return;
+    event.preventDefault();
+    postcardEditorState.drag = {
+      pointerId: event.pointerId,
+      clientX: event.clientX,
+      clientY: event.clientY,
+      photoX: postcardEditorState.photoX,
+      photoY: postcardEditorState.photoY,
+      lastRender: 0
+    };
+    canvas.setPointerCapture?.(event.pointerId);
+    canvas.classList.add('dragging');
+  };
+  canvas.onpointermove = event => {
+    const drag = postcardEditorState?.drag;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    const rect = canvas.getBoundingClientRect();
+    const photoWidth = rect.width * (380 / 1080);
+    const photoHeight = rect.height * (275 / 1350);
+    postcardEditorState.photoX = Math.max(0, Math.min(1, drag.photoX - (event.clientX - drag.clientX) / photoWidth));
+    postcardEditorState.photoY = Math.max(0, Math.min(1, drag.photoY - (event.clientY - drag.clientY) / photoHeight));
+    const now = performance.now();
+    if (now - drag.lastRender > 50) {
+      drag.lastRender = now;
+      updatePostcardPreview(35);
+    }
+  };
+  const finishDrag = event => {
+    const drag = postcardEditorState?.drag;
+    if (!drag || (event.pointerId !== undefined && drag.pointerId !== event.pointerId)) return;
+    postcardEditorState.drag = null;
+    canvas.classList.remove('dragging');
+    updatePostcardPreview(40);
+  };
+  canvas.onpointerup = finishDrag;
+  canvas.onpointercancel = finishDrag;
 }
 
 function openPostcardEditor(pack, score) {
   closePostcardEditor();
-  postcardEditorState = { pack, score, message: '', photoFile: null, photoUrl: null, rendered: null, renderTimer: null, renderToken: 0 };
+  postcardEditorState = {
+    pack,
+    score,
+    message: '',
+    photoFile: null,
+    photoUrl: null,
+    photoImage: null,
+    photoX: 0.5,
+    photoY: 0.5,
+    photoZoom: 1,
+    drag: null,
+    rendered: null,
+    renderTimer: null,
+    renderToken: 0
+  };
   $('#postcardMessage').value = '';
   $('#postcardPhoto').value = '';
+  $('#postcardCamera').value = '';
   $('#postcardModal').classList.remove('hidden');
   updatePostcardPreview();
+  bindPostcardPhotoDragging();
   $('#postcardClose').onclick = closePostcardEditor;
   $('#postcardModal').onclick = event => {
     if (event.target === $('#postcardModal')) closePostcardEditor();
@@ -1305,44 +1399,60 @@ function openPostcardEditor(pack, score) {
     postcardEditorState.message = event.target.value.slice(0, 120);
     updatePostcardPreview();
   };
-  $('#postcardPhoto').onchange = event => {
-    const file = event.target.files?.[0];
-    if (!file) return;
-    if (!file.type.startsWith('image/')) {
-      event.target.value = '';
-      return toast('Choose an image file for your postcard.');
-    }
-    if (file.size > 20 * 1024 * 1024) {
-      event.target.value = '';
-      return toast('That photo is over 20 MB. Choose a smaller image.');
-    }
-    if (postcardEditorState.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
-    postcardEditorState.photoFile = file;
-    postcardEditorState.photoUrl = URL.createObjectURL(file);
-    updatePostcardPreview();
+  $('#postcardPhoto').onchange = event => selectPostcardPhoto(event.target.files?.[0], event.target);
+  $('#postcardCamera').onchange = event => selectPostcardPhoto(event.target.files?.[0], event.target);
+  $('#postcardPhotoX').oninput = event => {
+    postcardEditorState.photoX = Number(event.target.value) / 100;
+    updatePostcardPreview(45);
+  };
+  $('#postcardPhotoY').oninput = event => {
+    postcardEditorState.photoY = Number(event.target.value) / 100;
+    updatePostcardPreview(45);
+  };
+  $('#postcardPhotoZoom').oninput = event => {
+    postcardEditorState.photoZoom = Number(event.target.value) / 100;
+    updatePostcardPreview(45);
+  };
+  $('#resetPostcardPhoto').onclick = () => {
+    postcardEditorState.photoX = 0.5;
+    postcardEditorState.photoY = 0.5;
+    postcardEditorState.photoZoom = 1;
+    updatePostcardPreview(30);
   };
   $('#removePostcardPhoto').onclick = () => {
     if (postcardEditorState.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
     postcardEditorState.photoFile = null;
     postcardEditorState.photoUrl = null;
+    postcardEditorState.photoImage = null;
+    postcardEditorState.photoX = 0.5;
+    postcardEditorState.photoY = 0.5;
+    postcardEditorState.photoZoom = 1;
     $('#postcardPhoto').value = '';
-    updatePostcardPreview();
+    $('#postcardCamera').value = '';
+    updatePostcardPreview(30);
   };
   $('#sharePostcard').onclick = () => exportCompletionPostcard('share');
   $('#downloadPostcard').onclick = () => exportCompletionPostcard('download');
 }
 
-function drawCanvasCover(context, image, x, y, width, height, accent, radius = 28) {
+function drawCanvasCover(context, image, x, y, width, height, accent, options = {}, radius = 28) {
   const imageWidth = image.naturalWidth || image.width;
   const imageHeight = image.naturalHeight || image.height;
-  const scale = Math.max(width / imageWidth, height / imageHeight);
+  const requestedX = Number(options.x);
+  const requestedY = Number(options.y);
+  const zoom = Math.max(1, Math.min(2.5, Number(options.zoom) || 1));
+  const focusX = Math.max(0, Math.min(1, Number.isFinite(requestedX) ? requestedX : 0.5));
+  const focusY = Math.max(0, Math.min(1, Number.isFinite(requestedY) ? requestedY : 0.5));
+  const scale = Math.max(width / imageWidth, height / imageHeight) * zoom;
   const drawWidth = imageWidth * scale;
   const drawHeight = imageHeight * scale;
+  const drawX = x - (drawWidth - width) * focusX;
+  const drawY = y - (drawHeight - height) * focusY;
   context.save();
   context.beginPath();
   context.roundRect(x, y, width, height, radius);
   context.clip();
-  context.drawImage(image, x + (width - drawWidth) / 2, y + (height - drawHeight) / 2, drawWidth, drawHeight);
+  context.drawImage(image, drawX, drawY, drawWidth, drawHeight);
   const shade = context.createLinearGradient(x, y, x, y + height);
   shade.addColorStop(0, '#00000000');
   shade.addColorStop(1, '#06101888');
@@ -1379,8 +1489,12 @@ async function buildCompletionPostcard(pack, score, options = {}) {
     context.drawImage(logo, 70, 60, 250, 250);
   } catch {}
   if (options.photoUrl) {
-    const photo = await loadCanvasImage(options.photoUrl);
-    drawCanvasCover(context, photo, 630, 62, 380, 275, colour(pack));
+    const photo = options.photoImage || await loadCanvasImage(options.photoUrl);
+    drawCanvasCover(context, photo, 630, 62, 380, 275, colour(pack), {
+      x: options.photoX,
+      y: options.photoY,
+      zoom: options.photoZoom
+    });
   }
   context.fillStyle = colour(pack);
   context.font = '900 30px system-ui, sans-serif';
@@ -1432,7 +1546,7 @@ async function buildCompletionPostcard(pack, score, options = {}) {
   if (!blob) throw Error('Postcard could not be created');
   const fileName = `day-tripping-${pack.pack_id}.png`;
   const file = typeof File === 'function' ? new File([blob], fileName, { type: 'image/png' }) : null;
-  return { blob, file, fileName };
+  return { canvas, blob, file, fileName };
 }
 
 function downloadCompletionPostcard(blob, fileName) {
