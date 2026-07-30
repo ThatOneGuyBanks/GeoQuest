@@ -53,6 +53,8 @@ const LEGACY_KEY = 'geoquest-progress-v3';
 const LEGACY_SAFETY_KEY = 'geoquest-safety-accepted-v1';
 const LEGACY_PROFILE_KEY = 'geoquest-profile-v1';
 const VIEW_KEY = 'day-tripping-quiz-view-v1';
+const BACKUP_FORMAT = 'day-tripping-quiz-backup';
+const BACKUP_VERSION = 1;
 const SCORE_VERSION = 2;
 const SCORING = Object.freeze({
   discovery: 1000,
@@ -100,18 +102,29 @@ function readProgress() {
 function readProfile() {
   try {
     const saved = JSON.parse(readStoredValue(PROFILE_KEY, LEGACY_PROFILE_KEY) || '{}');
-    return {
-      unit: saved.unit === 'mi' ? 'mi' : 'km',
-      dailyDates: Array.isArray(saved.dailyDates) ? saved.dailyDates : [],
-      achievementDates: saved.achievementDates && typeof saved.achievementDates === 'object' ? saved.achievementDates : {},
-      sound: saved.sound !== false,
-      vibration: saved.vibration !== false,
-      tutorialSeen: saved.tutorialSeen === true,
-      surpriseCompletions: Math.max(0, Number(saved.surpriseCompletions) || 0)
-    };
+    return normalizeProfile(saved);
   } catch {
-    return { unit: 'km', dailyDates: [], achievementDates: {}, sound: true, vibration: true, tutorialSeen: false, surpriseCompletions: 0 };
+    return normalizeProfile();
   }
+}
+
+function isRecord(value) {
+  return value !== null && typeof value === 'object' && !Array.isArray(value);
+}
+
+function normalizeProfile(saved = {}) {
+  const achievementDates = isRecord(saved.achievementDates)
+    ? Object.fromEntries(Object.entries(saved.achievementDates).filter(([key, value]) => !['__proto__', 'constructor', 'prototype'].includes(key) && typeof value === 'string'))
+    : {};
+  return {
+    unit: saved.unit === 'mi' ? 'mi' : 'km',
+    dailyDates: Array.isArray(saved.dailyDates) ? saved.dailyDates.filter(value => typeof value === 'string') : [],
+    achievementDates,
+    sound: saved.sound !== false,
+    vibration: saved.vibration !== false,
+    tutorialSeen: saved.tutorialSeen === true,
+    surpriseCompletions: Math.max(0, Number(saved.surpriseCompletions) || 0)
+  };
 }
 
 function saveProfile() {
@@ -275,6 +288,8 @@ function setFeedbackSetting(key, value) {
 function exportProgress() {
   const backup = {
     app: 'Day Tripping Quiz',
+    format: BACKUP_FORMAT,
+    version: BACKUP_VERSION,
     exported_at: new Date().toISOString(),
     progress,
     profile
@@ -286,6 +301,60 @@ function exportProgress() {
   link.click();
   setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   toast('Progress backup downloaded.');
+}
+
+function readBackupFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || ''));
+    reader.onerror = () => reject(new Error('That file could not be read.'));
+    reader.readAsText(file);
+  });
+}
+
+function validateBackup(backup) {
+  if (!isRecord(backup) || (backup.format !== BACKUP_FORMAT && backup.app !== 'Day Tripping Quiz')) {
+    throw new Error('That is not a Day Tripping Quiz backup.');
+  }
+  if (!isRecord(backup.progress) || !isRecord(backup.profile)) {
+    throw new Error('That backup is missing progress or profile data.');
+  }
+  const importedProgress = {};
+  Object.entries(backup.progress).forEach(([packId, state]) => {
+    if (['__proto__', 'constructor', 'prototype'].includes(packId) || !isRecord(state)) {
+      throw new Error('That backup contains invalid adventure progress.');
+    }
+    importedProgress[packId] = state;
+  });
+  return { progress: importedProgress, profile: normalizeProfile(backup.profile) };
+}
+
+async function importProgressFile(file) {
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.json')) {
+    toast('Please choose a Day Tripping Quiz JSON backup.');
+    return;
+  }
+  if (file.size > 5 * 1024 * 1024) {
+    toast('That file is too large to be a progress backup.');
+    return;
+  }
+  try {
+    const imported = validateBackup(JSON.parse(await readBackupFile(file)));
+    localStorage.setItem(KEY, JSON.stringify(imported.progress));
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(imported.profile));
+    Object.keys(progress).forEach(key => delete progress[key]);
+    Object.assign(progress, imported.progress);
+    Object.keys(profile).forEach(key => delete profile[key]);
+    Object.assign(profile, imported.profile);
+    sessionStorage.removeItem(VIEW_KEY);
+    closeSettings();
+    renderAll();
+    showHome();
+    toast('Progress imported — welcome back.');
+  } catch (error) {
+    toast(error instanceof SyntaxError ? 'That file is not valid JSON.' : error.message || 'That backup could not be imported.');
+  }
 }
 
 function resetAllProgress() {
@@ -698,6 +767,32 @@ function bindVenueDisclosure(pack, state, isDaily, isSurprise = false) {
   if ($('#checkVenueLocation')) $('#checkVenueLocation').onclick = () => checkVenueLocation(pack, isDaily, isSurprise);
 }
 
+function scrollToSearchResults(behavior = 'smooth') {
+  const target = $('.browse-results-head') || $('#browseGrid');
+  if (!target) return;
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  target.scrollIntoView({ behavior: reducedMotion ? 'auto' : behavior, block: 'start' });
+}
+
+function closeSearch() {
+  $('#searchWrap').classList.add('hidden');
+  $('#searchToggle').setAttribute('aria-expanded', 'false');
+}
+
+function openSearch() {
+  if ($('#homeView').classList.contains('hidden')) showHome();
+  $('#searchWrap').classList.remove('hidden');
+  $('#searchToggle').setAttribute('aria-expanded', 'true');
+  requestAnimationFrame(() => {
+    try {
+      $('#searchInput').focus({ preventScroll: true });
+    } catch {
+      $('#searchInput').focus();
+    }
+    scrollToSearchResults();
+  });
+}
+
 function bind() {
   $$('[data-home]').forEach(button => button.onclick = showHome);
   $('#acceptSafety').onclick = () => {
@@ -723,18 +818,26 @@ function bind() {
   $('#vibrationSetting').onclick = () => setFeedbackSetting('vibration', !profile.vibration);
   $('#replayTutorial').onclick = () => { closeSettings(); openTutorial(0); };
   $('#exportProgress').onclick = exportProgress;
+  $('#importProgress').onchange = async event => {
+    const input = event.currentTarget;
+    await importProgressFile(input.files?.[0]);
+    input.value = '';
+  };
   $('#resetProgress').onclick = resetAllProgress;
   $$('[data-settings-unit]').forEach(button => button.onclick = () => setUnit(button.dataset.settingsUnit));
   $('#tutorialClose').onclick = () => closeTutorial(true);
   $('#tutorialBack').onclick = () => openTutorial(Math.max(0, tutorialStep - 1));
   $('#tutorialNext').onclick = () => tutorialStep >= TUTORIAL_STEPS.length - 1 ? closeTutorial(true) : openTutorial(tutorialStep + 1);
   $('#locateBtn').onclick = getNearby;
-  $('#searchToggle').onclick = () => {
-    $('#searchWrap').classList.toggle('hidden');
-    $('#searchInput').focus();
-  };
-  $('#searchClose').onclick = () => $('#searchWrap').classList.add('hidden');
+  $('#searchToggle').onclick = () => $('#searchWrap').classList.contains('hidden') ? openSearch() : closeSearch();
+  $('#searchClose').onclick = closeSearch;
   $('#searchInput').oninput = event => renderBrowse(event.target.value);
+  $('#searchInput').onkeydown = event => {
+    if (event.key !== 'Enter') return;
+    event.preventDefault();
+    event.currentTarget.blur();
+    scrollToSearchResults();
+  };
   document.addEventListener('keydown', event => {
     if (event.key === 'Escape' && !$('#postcardModal').classList.contains('hidden')) closePostcardEditor();
   });
@@ -2871,7 +2974,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=19', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);

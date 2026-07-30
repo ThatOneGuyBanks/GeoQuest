@@ -1,10 +1,10 @@
-const CACHE = 'day-tripping-quiz-v18';
+const CACHE = 'day-tripping-quiz-v19';
 const ADVENTURES = 'day-tripping-quiz-adventures-v1';
 const CORE = [
   './',
   './index.html',
-  './styles.css',
-  './app.js',
+  './styles.css?v=19',
+  './app.js?v=19',
   './manifest.webmanifest',
   './assets/day-tripping-quiz-icon-32.png',
   './assets/day-tripping-quiz-apple-180-dark.png',
