@@ -2175,6 +2175,27 @@ function truncateCanvasText(context, text, maxWidth) {
   return `${shortened}…`;
 }
 
+function drawPassportPhotoGuide(context) {
+  context.save();
+  context.fillStyle = '#132632';
+  context.strokeStyle = '#61e7ff88';
+  context.lineWidth = 4;
+  context.setLineDash([14, 12]);
+  context.beginPath();
+  context.roundRect(630, 62, 380, 275, 30);
+  context.fill();
+  context.stroke();
+  context.setLineDash([]);
+  context.fillStyle = '#61e7ff1f';
+  context.beginPath();
+  context.arc(910, 120, 130, 0, Math.PI * 2);
+  context.fill();
+  context.fillStyle = '#91a4af';
+  context.font = '850 17px system-ui, sans-serif';
+  context.fillText('OPTIONAL PHOTO · PREVIEW ONLY', 676, 284);
+  context.restore();
+}
+
 function completionTimestamp(pack) {
   const value = packProgress(pack).completedAt;
   const numeric = Number(value);
@@ -2236,20 +2257,6 @@ async function buildPassportPoster(options = {}) {
   context.fillStyle = '#101820';
   context.font = '950 19px system-ui, sans-serif';
   context.fillText('EXPLORER PASSPORT', 372, 122);
-  context.fillStyle = '#132632';
-  context.strokeStyle = '#61e7ff88';
-  context.lineWidth = 4;
-  context.beginPath();
-  context.roundRect(630, 62, 380, 275, 30);
-  context.fill();
-  context.stroke();
-  context.fillStyle = '#61e7ff1f';
-  context.beginPath();
-  context.arc(910, 120, 130, 0, Math.PI * 2);
-  context.fill();
-  context.fillStyle = '#91a4af';
-  context.font = '850 17px system-ui, sans-serif';
-  context.fillText('OPTIONAL ADVENTURE PHOTO', 688, 284);
   context.fillStyle = '#61e7ff';
   context.font = '950 22px system-ui, sans-serif';
   context.fillText('MY DAY TRIPPING RECORD', 72, 398);
@@ -2385,6 +2392,7 @@ async function buildPassportPoster(options = {}) {
   context.fillStyle = '#91a0ab';
   context.font = '800 18px system-ui, sans-serif';
   context.fillText(`${towns.size} TOWNS · ${completedPacks.length} ROUTES · ${unlockedBadges.length} BADGES`, 744, 1310);
+  const cleanCanvas = copyPostcardCanvas(canvas);
   const staticCanvas = copyPostcardCanvas(canvas);
   let photoImage = options.photoImage || null;
   if (options.photoUrl) {
@@ -2394,8 +2402,12 @@ async function buildPassportPoster(options = {}) {
       y: options.photoY,
       zoom: options.photoZoom
     });
+  } else {
+    // This guide helps in the editor, but never becomes part of the exported image.
+    drawPassportPhotoGuide(context);
   }
-  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  const exportCanvas = options.photoUrl ? canvas : cleanCanvas;
+  const blob = await new Promise(resolve => exportCanvas.toBlob(resolve, 'image/png'));
   if (!blob) throw Error('Passport poster could not be created');
   const fileName = 'day-tripping-explorer-passport.png';
   const file = typeof File === 'function' ? new File([blob], fileName, { type: 'image/png' }) : null;
@@ -2407,7 +2419,7 @@ async function buildPassportPoster(options = {}) {
     file,
     fileName,
     shareTitle: 'My Day Tripping Quiz passport',
-    shareText: message || `My explorer passport: ${formatPoints(points)} points across ${towns.size} towns.`
+    shareText: message || `My explorer passport: ${formatPoints(points)} points across ${towns.size} ${towns.size === 1 ? 'town' : 'towns'}.`
   };
 }
 
@@ -2435,12 +2447,20 @@ async function exportCompletionPostcard(mode) {
   if (mode === 'share') shareButton.textContent = `Making ${noun}…`;
   else downloadButton.textContent = `Making ${kind === 'passport' ? 'poster' : 'postcard'}…`;
   try {
-    if (mode === 'share' && rendered.file && navigator.share && navigator.canShare?.({ files: [rendered.file] })) {
-      await navigator.share({
+    if (mode === 'share' && navigator.share) {
+      const shareData = {
         title: rendered.shareTitle || `I completed ${pack.route_name}`,
-        text: rendered.shareText || message.trim() || 'My Day Tripping Quiz adventure is complete!',
-        files: [rendered.file]
-      });
+        text: rendered.shareText || message.trim() || 'My Day Tripping Quiz adventure is complete!'
+      };
+      const canShareFile = Boolean(rendered.file) && (
+        typeof navigator.canShare !== 'function' || navigator.canShare({ files: [rendered.file] })
+      );
+      if (canShareFile) shareData.files = [rendered.file];
+      await navigator.share(shareData);
+      if (rendered.file && !canShareFile) {
+        downloadCompletionPostcard(rendered.blob, rendered.fileName);
+        toast(`This browser opened sharing without image support, so the ${noun} was downloaded for you to attach.`);
+      }
       closePostcardEditor();
     } else {
       downloadCompletionPostcard(rendered.blob, rendered.fileName);
@@ -3263,7 +3283,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=20', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=21', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
