@@ -810,6 +810,7 @@ function bind() {
   $('#mapOpen').onclick = showMap;
   $('#mapFeature').onclick = showMap;
   $('#passportOpen').onclick = showPassport;
+  $('#sharePassport').onclick = openPassportPoster;
   $('#surpriseHero').onclick = surprise;
   $('#settingsOpen').onclick = openSettings;
   $('#settingsClose').onclick = closeSettings;
@@ -1555,6 +1556,14 @@ function closePostcardEditor() {
   $('#postcardModal')?.classList.add('hidden');
 }
 
+function postcardEditorAccent(editor = postcardEditorState) {
+  return editor?.kind === 'passport' || !editor?.pack ? '#61e7ff' : colour(editor.pack);
+}
+
+function postcardEditorNoun(editor = postcardEditorState) {
+  return editor?.kind === 'passport' ? 'passport' : 'postcard';
+}
+
 function schedulePostcardRender(delay = 160) {
   if (!postcardEditorState) return;
   const editor = postcardEditorState;
@@ -1565,10 +1574,10 @@ function schedulePostcardRender(delay = 160) {
   const downloadButton = $('#downloadPostcard');
   shareButton.disabled = true;
   downloadButton.disabled = true;
-  shareButton.textContent = 'Preparing postcard…';
+  shareButton.textContent = `Preparing ${postcardEditorNoun(editor)}…`;
   editor.renderTimer = setTimeout(async () => {
     try {
-      const rendered = await buildCompletionPostcard(editor.pack, editor.score, {
+      const options = {
         message: editor.message,
         photoUrl: editor.photoUrl,
         photoImage: editor.photoImage,
@@ -1576,7 +1585,10 @@ function schedulePostcardRender(delay = 160) {
         photoY: editor.photoY,
         photoZoom: editor.photoZoom,
         memoryItems: editor.memoryItems.filter(item => item.enabled)
-      });
+      };
+      const rendered = editor.kind === 'passport'
+        ? await buildPassportPoster(options)
+        : await buildCompletionPostcard(editor.pack, editor.score, options);
       if (postcardEditorState !== editor || editor.renderToken !== token) return;
       editor.rendered = rendered;
       const preview = $('#postcardPreviewCanvas');
@@ -1587,11 +1599,11 @@ function schedulePostcardRender(delay = 160) {
       previewContext.drawImage(rendered.canvas, 0, 0, preview.width, preview.height);
       shareButton.disabled = false;
       downloadButton.disabled = false;
-      shareButton.textContent = 'Share postcard';
+      shareButton.textContent = editor.kind === 'passport' ? 'Share passport' : 'Share postcard';
     } catch {
       if (postcardEditorState !== editor || editor.renderToken !== token) return;
-      shareButton.textContent = 'Could not prepare postcard';
-      toast('Could not prepare that postcard. Try a different photo.');
+      shareButton.textContent = `Could not prepare ${postcardEditorNoun(editor)}`;
+      toast(`Could not prepare that ${postcardEditorNoun(editor)}. Try a different photo.`);
     }
   }, delay);
 }
@@ -1622,7 +1634,7 @@ function selectPostcardPhoto(file, sourceInput) {
   if (!file || !postcardEditorState) return;
   if (!file.type.startsWith('image/')) {
     sourceInput.value = '';
-    return toast('Choose an image file for your postcard.');
+    return toast(`Choose an image file for your ${postcardEditorNoun()}.`);
   }
   if (file.size > 20 * 1024 * 1024) {
     sourceInput.value = '';
@@ -1754,7 +1766,7 @@ function bindPostcardDragging() {
     canvas.classList.add('dragging');
     $('#sharePostcard').disabled = true;
     $('#downloadPostcard').disabled = true;
-    $('#sharePostcard').textContent = 'Release to update postcard';
+    $('#sharePostcard').textContent = `Release to update ${postcardEditorNoun()}`;
     queuePostcardLivePreview();
   };
   canvas.onpointermove = event => {
@@ -1792,11 +1804,13 @@ function bindPostcardDragging() {
   canvas.onpointercancel = finishDrag;
 }
 
-function openPostcardEditor(pack, score) {
+function openPostcardEditor(pack, score, kind = 'completion') {
   closePostcardEditor();
-  const editorPhotos = adventurePhotos.filter(photo => photo.packId === pack.pack_id).slice(0, 6);
-  const editorNotes = adventureNotes.filter(note => note.packId === pack.pack_id).slice(0, 6);
+  const passportMode = kind === 'passport';
+  const editorPhotos = passportMode ? [] : adventurePhotos.filter(photo => photo.packId === pack.pack_id).slice(0, 6);
+  const editorNotes = passportMode ? [] : adventureNotes.filter(note => note.packId === pack.pack_id).slice(0, 6);
   postcardEditorState = {
+    kind,
     pack,
     score,
     message: '',
@@ -1817,6 +1831,20 @@ function openPostcardEditor(pack, score) {
   $('#postcardPhoto').value = '';
   $('#postcardCamera').value = '';
   $('#postcardExtras').open = false;
+  $('#postcardEyebrow').textContent = passportMode ? 'YOUR PASSPORT POSTER' : 'YOUR POSTCARD';
+  $('#postcardTitle').textContent = passportMode ? 'Share your explorer story.' : 'Make it yours.';
+  $('#postcardIntro').textContent = passportMode
+    ? 'Turn your points, achievements, collections and latest stamps into a poster. Add a photo and message if you like.'
+    : 'Choose your extras, drag them into place, add a message, or keep the clean original design.';
+  $('#postcardPreviewCanvas').setAttribute('aria-label', passportMode ? 'Preview of your explorer passport poster' : 'Preview of your finished postcard');
+  $('#postcardMessage').placeholder = passportMode
+    ? 'Your explorer motto, favourite moment, or where you are heading next…'
+    : 'A brilliant day out, a favourite moment, or an inside joke…';
+  $('#postcardPrivacy').textContent = passportMode
+    ? 'Your photo and message stay on this device and are only used to make the passport poster you share or download.'
+    : 'Your photos, field notes and message stay on this device and are only used to make the postcard you share or download.';
+  $('#sharePostcard').textContent = passportMode ? 'Share passport' : 'Share postcard';
+  $('#downloadPostcard').textContent = passportMode ? 'Download poster' : 'Download image';
   const photoCount = editorPhotos.length;
   const noteCount = editorNotes.length;
   const collageCount = photoCount + noteCount;
@@ -1878,6 +1906,10 @@ function openPostcardEditor(pack, score) {
   };
   $('#sharePostcard').onclick = () => exportCompletionPostcard('share');
   $('#downloadPostcard').onclick = () => exportCompletionPostcard('download');
+}
+
+function openPassportPoster() {
+  openPostcardEditor(null, 0, 'passport');
 }
 
 function drawCanvasCover(context, image, x, y, width, height, accent, options = {}, radius = 28) {
@@ -1998,14 +2030,14 @@ function drawPostcardLivePreview() {
   context.scale(preview.width / POSTCARD_WIDTH, preview.height / POSTCARD_HEIGHT);
   const chosenPhoto = editor.photoImage || editor.rendered.photoImage;
   if (editor.photoUrl && chosenPhoto) {
-    drawCanvasCover(context, chosenPhoto, 630, 62, 380, 275, colour(editor.pack), {
+    drawCanvasCover(context, chosenPhoto, 630, 62, 380, 275, postcardEditorAccent(editor), {
       x: editor.photoX,
       y: editor.photoY,
       zoom: editor.photoZoom
     });
   }
   const selectedExtras = editor.memoryItems.filter(item => item.enabled);
-  if (selectedExtras.length) drawAdventureMemories(context, selectedExtras, colour(editor.pack));
+  if (selectedExtras.length) drawAdventureMemories(context, selectedExtras, postcardEditorAccent(editor));
   context.restore();
 }
 
@@ -2125,6 +2157,260 @@ async function buildCompletionPostcard(pack, score, options = {}) {
   return { canvas, staticCanvas, photoImage, blob, file, fileName };
 }
 
+function setFittedCanvasFont(context, text, maxWidth, startSize, minSize, weight = 950) {
+  let size = startSize;
+  do {
+    context.font = `${weight} ${size}px system-ui, sans-serif`;
+    if (context.measureText(String(text)).width <= maxWidth) break;
+    size -= 2;
+  } while (size > minSize);
+  return size;
+}
+
+function truncateCanvasText(context, text, maxWidth) {
+  const value = String(text || '');
+  if (context.measureText(value).width <= maxWidth) return value;
+  let shortened = value;
+  while (shortened.length > 1 && context.measureText(`${shortened}…`).width > maxWidth) shortened = shortened.slice(0, -1);
+  return `${shortened}…`;
+}
+
+function completionTimestamp(pack) {
+  const value = packProgress(pack).completedAt;
+  const numeric = Number(value);
+  if (Number.isFinite(numeric) && numeric > 0) return numeric;
+  const parsed = Date.parse(String(value || ''));
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+async function buildPassportPoster(options = {}) {
+  const badges = achievements();
+  const unlockedBadges = badges.filter(badge => badge.unlocked);
+  const completedPacks = packs.filter(hasCompleted).sort((a, b) => completionTimestamp(b) - completionTimestamp(a));
+  const towns = new Set(completedPacks.map(pack => pack.town));
+  const discoveries = packs.reduce((total, pack) => total + discoveryCount(pack), 0);
+  const collections = [...new Set(packs.flatMap(pack => pack.collections))].slice(0, 5);
+  const points = explorerPointsTotal(badges);
+  const message = String(options.message || '').trim();
+  const datedBadge = badge => {
+    const savedDate = Date.parse(profile.achievementDates[badge.id] || '');
+    return Number.isFinite(savedDate) ? savedDate : badges.indexOf(badge) + 1;
+  };
+  const featuredBadge = unlockedBadges.length
+    ? [...unlockedBadges].sort((a, b) => datedBadge(b) - datedBadge(a))[0]
+    : badges[0];
+  const canvas = document.createElement('canvas');
+  canvas.width = POSTCARD_WIDTH;
+  canvas.height = POSTCARD_HEIGHT;
+  const context = canvas.getContext('2d');
+  const gradient = context.createLinearGradient(0, 0, canvas.width, canvas.height);
+  gradient.addColorStop(0, '#162c3c');
+  gradient.addColorStop(0.52, '#0b1821');
+  gradient.addColorStop(1, '#071016');
+  context.fillStyle = gradient;
+  context.fillRect(0, 0, canvas.width, canvas.height);
+  const topStripe = context.createLinearGradient(0, 0, canvas.width, 0);
+  topStripe.addColorStop(0, '#61e7ff');
+  topStripe.addColorStop(0.52, '#c8ff5a');
+  topStripe.addColorStop(1, '#ffb21f');
+  context.fillStyle = topStripe;
+  context.fillRect(0, 0, canvas.width, 24);
+  context.globalAlpha = 0.09;
+  context.fillStyle = '#61e7ff';
+  context.beginPath();
+  context.arc(960, 510, 380, 0, Math.PI * 2);
+  context.fill();
+  context.fillStyle = '#c8ff5a';
+  context.beginPath();
+  context.arc(100, 1140, 320, 0, Math.PI * 2);
+  context.fill();
+  context.globalAlpha = 1;
+  try {
+    const logo = await loadCanvasImage('assets/day-tripping-quiz-icon-512.png');
+    context.drawImage(logo, 64, 54, 248, 248);
+  } catch {}
+  context.fillStyle = '#c8ff5a';
+  context.beginPath();
+  context.roundRect(348, 84, 240, 60, 30);
+  context.fill();
+  context.fillStyle = '#101820';
+  context.font = '950 19px system-ui, sans-serif';
+  context.fillText('EXPLORER PASSPORT', 372, 122);
+  context.fillStyle = '#132632';
+  context.strokeStyle = '#61e7ff88';
+  context.lineWidth = 4;
+  context.beginPath();
+  context.roundRect(630, 62, 380, 275, 30);
+  context.fill();
+  context.stroke();
+  context.fillStyle = '#61e7ff1f';
+  context.beginPath();
+  context.arc(910, 120, 130, 0, Math.PI * 2);
+  context.fill();
+  context.fillStyle = '#91a4af';
+  context.font = '850 17px system-ui, sans-serif';
+  context.fillText('OPTIONAL ADVENTURE PHOTO', 688, 284);
+  context.fillStyle = '#61e7ff';
+  context.font = '950 22px system-ui, sans-serif';
+  context.fillText('MY DAY TRIPPING RECORD', 72, 398);
+  context.fillStyle = '#fffaf0';
+  context.font = '950 67px system-ui, sans-serif';
+  context.fillText('ADVENTURE PASSPORT', 68, 475);
+  context.fillStyle = '#91a0ab';
+  context.font = '850 19px system-ui, sans-serif';
+  context.fillText('EXPLORER POINTS', 72, 526);
+  context.fillStyle = '#c8ff5a';
+  const pointsText = formatPoints(points);
+  setFittedCanvasFont(context, pointsText, 510, 76, 44);
+  context.fillText(pointsText, 68, 608);
+  context.save();
+  context.translate(828, 557);
+  context.rotate(0.025);
+  context.fillStyle = featuredBadge?.unlocked ? '#ffb21f' : '#61e7ff';
+  context.beginPath();
+  context.roundRect(-178, -56, 356, 112, 29);
+  context.fill();
+  context.fillStyle = '#111820';
+  context.font = '950 34px system-ui, sans-serif';
+  context.fillText(featuredBadge?.icon || '◇', -150, 10);
+  context.font = '950 12px system-ui, sans-serif';
+  context.fillText(featuredBadge?.unlocked ? 'LATEST ACHIEVEMENT' : 'NEXT ACHIEVEMENT', -100, -16);
+  context.font = '950 22px system-ui, sans-serif';
+  context.fillText(truncateCanvasText(context, featuredBadge?.name || 'First Points', 238), -100, 18);
+  context.restore();
+  context.fillStyle = '#111f29';
+  context.strokeStyle = '#ffffff22';
+  context.lineWidth = 3;
+  context.beginPath();
+  context.roundRect(64, 654, 952, 174, 36);
+  context.fill();
+  context.stroke();
+  const stats = [
+    ['DISCOVERIES', discoveries, '#61e7ff'],
+    ['ROUTES', completedPacks.length, '#c8ff5a'],
+    ['TOWNS', towns.size, '#ffb21f'],
+    ['BADGES', unlockedBadges.length, '#f4a8d4']
+  ];
+  stats.forEach(([label, value, accent], index) => {
+    const x = 98 + index * 232;
+    context.fillStyle = accent;
+    context.font = '900 17px system-ui, sans-serif';
+    context.fillText(label, x, 710);
+    context.fillStyle = '#fffaf0';
+    setFittedCanvasFont(context, formatPoints(value), 175, 52, 34);
+    context.fillText(formatPoints(value), x, 784);
+  });
+  context.fillStyle = '#61e7ff';
+  context.font = '950 18px system-ui, sans-serif';
+  context.fillText('COLLECTION PROGRESS', 72, 875);
+  const collectionGap = 12;
+  const collectionWidth = (936 - collectionGap * Math.max(0, collections.length - 1)) / Math.max(1, collections.length);
+  collections.forEach((collection, index) => {
+    const total = packs.filter(pack => pack.collections.includes(collection)).length;
+    const found = completedPacks.filter(pack => pack.collections.includes(collection)).length;
+    const x = 72 + index * (collectionWidth + collectionGap);
+    context.fillStyle = found === total && total ? '#294326' : found ? '#173846' : '#13202a';
+    context.strokeStyle = found === total && total ? '#c8ff5a88' : found ? '#61e7ff66' : '#ffffff18';
+    context.lineWidth = 2;
+    context.beginPath();
+    context.roundRect(x, 898, collectionWidth, 82, 22);
+    context.fill();
+    context.stroke();
+    context.fillStyle = '#fffaf0';
+    setFittedCanvasFont(context, collection, collectionWidth - 24, 16, 11, 850);
+    context.fillText(truncateCanvasText(context, collection, collectionWidth - 24), x + 12, 932);
+    context.fillStyle = found === total && total ? '#c8ff5a' : '#91a0ab';
+    context.font = '900 17px system-ui, sans-serif';
+    context.fillText(`${found}/${total}`, x + 12, 963);
+  });
+  context.fillStyle = '#ffb21f';
+  context.font = '950 18px system-ui, sans-serif';
+  context.fillText('RECENT PASSPORT STAMPS', 72, 1030);
+  const recentPacks = completedPacks.slice(0, 3);
+  if (recentPacks.length) {
+    recentPacks.forEach((pack, index) => {
+      const x = 70 + index * 320;
+      const accent = colour(pack);
+      const state = packProgress(pack);
+      const initials = String(pack.display_name || pack.town || '?').split(/[\s-]+/).map(word => word[0]).join('').slice(0, 3).toUpperCase();
+      context.fillStyle = '#111e27';
+      context.strokeStyle = `${accent}88`;
+      context.lineWidth = 3;
+      context.beginPath();
+      context.roundRect(x, 1052, 300, 118, 28);
+      context.fill();
+      context.stroke();
+      context.fillStyle = `${accent}22`;
+      context.strokeStyle = accent;
+      context.beginPath();
+      context.roundRect(x + 16, 1069, 78, 82, 24);
+      context.fill();
+      context.stroke();
+      context.fillStyle = accent;
+      context.font = '950 28px system-ui, sans-serif';
+      context.fillText(initials, x + 31, 1119);
+      context.fillStyle = '#fffaf0';
+      context.font = '950 19px system-ui, sans-serif';
+      context.fillText(truncateCanvasText(context, pack.display_name, 177), x + 108, 1093);
+      context.fillStyle = '#91a0ab';
+      context.font = '750 13px system-ui, sans-serif';
+      context.fillText(truncateCanvasText(context, pack.route_name, 177), x + 108, 1120);
+      context.fillStyle = accent;
+      context.font = '900 14px system-ui, sans-serif';
+      context.fillText(`${formatPoints(Math.max(Number(state.bestScore) || 0, displayScore(pack)))} PTS`, x + 108, 1147);
+    });
+  } else {
+    context.fillStyle = '#111e27';
+    context.strokeStyle = '#ffffff22';
+    context.beginPath();
+    context.roundRect(70, 1052, 940, 118, 28);
+    context.fill();
+    context.stroke();
+    context.fillStyle = '#61e7ff';
+    context.font = '950 28px system-ui, sans-serif';
+    context.fillText('◇ YOUR FIRST STAMP IS WAITING', 105, 1125);
+  }
+  if (message) {
+    context.fillStyle = '#fffaf0';
+    context.font = '750 25px system-ui, sans-serif';
+    wrapCanvasText(context, `“${message}”`, 72, 1222, 930, 31, 2);
+  } else {
+    context.fillStyle = '#a8b6bf';
+    context.font = '900 20px system-ui, sans-serif';
+    context.fillText('GO SOMEWHERE · NOTICE EVERYTHING · ✦', 72, 1235);
+  }
+  context.fillStyle = '#ffb21f';
+  context.font = '950 27px system-ui, sans-serif';
+  context.fillText('DAY TRIPPING QUIZ', 72, 1310);
+  context.fillStyle = '#91a0ab';
+  context.font = '800 18px system-ui, sans-serif';
+  context.fillText(`${towns.size} TOWNS · ${completedPacks.length} ROUTES · ${unlockedBadges.length} BADGES`, 744, 1310);
+  const staticCanvas = copyPostcardCanvas(canvas);
+  let photoImage = options.photoImage || null;
+  if (options.photoUrl) {
+    photoImage ||= await loadCanvasImage(options.photoUrl);
+    drawCanvasCover(context, photoImage, 630, 62, 380, 275, '#61e7ff', {
+      x: options.photoX,
+      y: options.photoY,
+      zoom: options.photoZoom
+    });
+  }
+  const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+  if (!blob) throw Error('Passport poster could not be created');
+  const fileName = 'day-tripping-explorer-passport.png';
+  const file = typeof File === 'function' ? new File([blob], fileName, { type: 'image/png' }) : null;
+  return {
+    canvas,
+    staticCanvas,
+    photoImage,
+    blob,
+    file,
+    fileName,
+    shareTitle: 'My Day Tripping Quiz passport',
+    shareText: message || `My explorer passport: ${formatPoints(points)} points across ${towns.size} towns.`
+  };
+}
+
 function downloadCompletionPostcard(blob, fileName) {
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);
@@ -2137,30 +2423,33 @@ function downloadCompletionPostcard(blob, fileName) {
 
 async function exportCompletionPostcard(mode) {
   if (!postcardEditorState) return;
-  const { pack, message, rendered } = postcardEditorState;
-  if (!rendered) return toast('Your postcard is still being prepared.');
+  const { pack, message, rendered, kind } = postcardEditorState;
+  const noun = kind === 'passport' ? 'passport' : 'postcard';
+  if (!rendered) return toast(`Your ${noun} is still being prepared.`);
   const shareButton = $('#sharePostcard');
   const downloadButton = $('#downloadPostcard');
   shareButton.disabled = true;
   downloadButton.disabled = true;
   const originalShareText = shareButton.textContent;
   const originalDownloadText = downloadButton.textContent;
-  if (mode === 'share') shareButton.textContent = 'Making postcard…';
-  else downloadButton.textContent = 'Making postcard…';
+  if (mode === 'share') shareButton.textContent = `Making ${noun}…`;
+  else downloadButton.textContent = `Making ${kind === 'passport' ? 'poster' : 'postcard'}…`;
   try {
     if (mode === 'share' && rendered.file && navigator.share && navigator.canShare?.({ files: [rendered.file] })) {
       await navigator.share({
-        title: `I completed ${pack.route_name}`,
-        text: message.trim() || 'My Day Tripping Quiz adventure is complete!',
+        title: rendered.shareTitle || `I completed ${pack.route_name}`,
+        text: rendered.shareText || message.trim() || 'My Day Tripping Quiz adventure is complete!',
         files: [rendered.file]
       });
       closePostcardEditor();
     } else {
       downloadCompletionPostcard(rendered.blob, rendered.fileName);
-      toast(mode === 'share' ? 'Sharing is not available here, so your postcard was downloaded.' : 'Completion postcard downloaded.');
+      toast(mode === 'share'
+        ? `Sharing is not available here, so your ${noun} was downloaded.`
+        : kind === 'passport' ? 'Passport poster downloaded.' : 'Completion postcard downloaded.');
     }
   } catch (error) {
-    if (error?.name !== 'AbortError') toast('Could not make the postcard on this browser.');
+    if (error?.name !== 'AbortError') toast(`Could not make the ${noun} on this browser.`);
   } finally {
     shareButton.disabled = false;
     downloadButton.disabled = false;
@@ -2974,7 +3263,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=19', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=20', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
