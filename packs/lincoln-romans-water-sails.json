@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "lincoln-romans-water-sails",
+  "version": 1,
+  "town": "Lincoln",
+  "display_name": "Lincoln",
+  "route_name": "Roman Roads, Clean Water & Square Sails",
+  "description": "Descend from a Roman gateway through Lincoln's public-health and military stories to the former inland port of Brayford Pool.",
+  "short_description": "A gate still carrying traffic, a water tower, barracks and a waterside meal.",
+  "centre": {
+    "lat": 53.235145,
+    "long": -0.542072
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 2.2,
+  "estimated_minutes": 85,
+  "difficulty_label": "Challenging",
+  "tags": [
+    "roman",
+    "public-health",
+    "industrial-history",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Makers & Industry",
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A mostly downhill route from uphill Lincoln to Brayford Pool; reaching the start from the station requires a substantial climb.",
+  "before_you_go": {
+    "terrain": "City pavements with old stone, uneven sections and busy crossings.",
+    "hills": "A pronounced downhill walk from Newport to Brayford Pool; the reverse journey is steep.",
+    "steps": "The intended street route avoids required steps, but some optional shortcuts are stepped.",
+    "accessibility": "Use signed pavements and allow extra time for Lincoln's steep gradients and uneven historic surfaces.",
+    "toilets": "Check current museum, council and Brayford visitor-facility listings before setting off.",
+    "footwear": "Supportive, grippy walking shoes are recommended.",
+    "dogs": "The outdoor route can suit controlled dogs; take care beside traffic and check the final venue's current dog policy.",
+    "pushchairs": "Possible on the street route, but the long downhill gradient requires care."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Lincoln",
+      "Route": "Roman Roads, Clean Water & Square Sails",
+      "Stop_ID": "LNC201",
+      "Stop_Order": 1,
+      "Stop_Name": "Newport Arch",
+      "Target_Lat": 53.2372106,
+      "Target_Long": -0.5380697,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin at a Roman gate that has watched road traffic pass for roughly seventeen centuries.",
+      "Hint_1": "Head to Bailgate north of the cathedral quarter.",
+      "Hint_2": "Find the stone arch spanning the modern road.",
+      "Unlock_Fact": "Newport Arch formed the north gate of the Roman colonia of Lindum. Its surviving masonry dates largely from the third century, and road traffic still passes beneath it.",
+      "Explorer_Prompt": "From the pavement, distinguish the large road arch from the smaller pedestrian opening.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Roman Roads, Clean Water & Square Sails",
+      "Stop_ID": "LNC202",
+      "Stop_Order": 2,
+      "Stop_Name": "Westgate Water Tower",
+      "Target_Lat": 53.2366196,
+      "Target_Long": -0.5410582,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a modern waterworks dressed like a medieval fortress after disease exposed the city's need for clean supply.",
+      "Hint_1": "Walk west along Westgate towards Chapel Lane.",
+      "Hint_2": "Look for the tall stone water tower with castle-like details.",
+      "Unlock_Fact": "Westgate Water Tower was completed in 1911 as part of improvements to Lincoln's water supply following the severe typhoid epidemic of 1904–05.",
+      "Explorer_Prompt": "Find one feature designed to make this utility structure resemble an old defensive tower.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Roman Roads, Clean Water & Square Sails",
+      "Stop_ID": "LNC203",
+      "Stop_Order": 3,
+      "Stop_Name": "Museum of Lincolnshire Life",
+      "Target_Lat": 53.2378876,
+      "Target_Long": -0.545426,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Seek a county collection housed where Victorian soldiers once drilled.",
+      "Hint_1": "Continue west to Burton Road.",
+      "Hint_2": "Find the museum entrance in the former barracks complex.",
+      "Unlock_Fact": "The museum occupies former military barracks built in 1857. Its collections tell Lincolnshire's social and industrial story, including farming, engineering and military life.",
+      "Explorer_Prompt": "From outside, spot one detail that reveals the building's barracks origin.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Lincoln",
+      "Route": "Roman Roads, Clean Water & Square Sails",
+      "Stop_ID": "LNC204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Square Sail",
+      "Target_Lat": 53.2288638,
+      "Target_Long": -0.5437345,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Finish beside an ancient pool where flat-bottomed keels once raised the shape named over the door.",
+      "Hint_1": "Descend south through the city towards Brayford Wharf North.",
+      "Hint_2": "Find the food-serving waterside pub on the north bank of Brayford Pool.",
+      "Unlock_Fact": "Route complete! Brayford Pool was once an inland port lined with Humber keels, flat-bottomed cargo boats known for their square sails. The pub's name remembers them. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "Look across the water and find one modern craft or waterside feature that continues the harbour story.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Square Sail",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-square-sail-lincoln",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

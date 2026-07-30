@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "chester-arches-towers-bottles",
+  "version": 1,
+  "town": "Chester",
+  "display_name": "Chester",
+  "route_name": "Great Arches, Water Towers & Glass",
+  "description": "Cross Chester's record-breaking stone arch, follow the old port wall to a Civil War lookout and finish where Roman glass inspired a pub name.",
+  "short_description": "A giant arch, a vanished harbour, a king's lookout and archaeological glass.",
+  "centre": {
+    "lat": 53.190428,
+    "long": -2.892648
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 3,
+  "estimated_minutes": 100,
+  "difficulty_label": "Challenging",
+  "tags": [
+    "city-walls",
+    "river",
+    "roman",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A longer route from the River Dee to the north and east walls; use street-level alternatives where wall access is unsuitable.",
+  "before_you_go": {
+    "terrain": "Riverside and city pavements with old stone near the walls; wall-top paving can be uneven.",
+    "hills": "Several climbs and descents connect the river, walls and city streets.",
+    "steps": "The wall-top route includes steps. A longer street-level alternative can reach every checkpoint without using the wall walk.",
+    "accessibility": "Use the street-level route if steps or narrow wall sections are unsuitable; temporary closures may alter access.",
+    "toilets": "Check current city-centre and visitor-attraction facility listings before setting off.",
+    "footwear": "Supportive walking shoes are recommended for stone, slopes and the longer distance.",
+    "dogs": "Suitable outdoors for controlled dogs, but wall sections can be narrow; check the final venue's current dog policy.",
+    "pushchairs": "Prefer street-level pavements rather than the stepped wall walk and allow extra time."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Chester",
+      "Route": "Great Arches, Water Towers & Glass",
+      "Stop_ID": "CHR201",
+      "Stop_Order": 1,
+      "Stop_Name": "Grosvenor Bridge",
+      "Target_Lat": 53.1835684,
+      "Target_Long": -2.8961829,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Begin at the single stone arch that once spanned farther than any other of its kind.",
+      "Hint_1": "Head to Grosvenor Road on the south side of the city centre.",
+      "Hint_2": "Use the pavement viewpoint on or beside the bridge over the Dee.",
+      "Unlock_Fact": "Grosvenor Bridge opened in 1832 to a design by Thomas Harrison. Its 200-foot single stone arch was the longest of its type in the world when completed.",
+      "Explorer_Prompt": "From the pavement, find the single great curve and note what lies beneath it today.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Great Arches, Water Towers & Glass",
+      "Stop_ID": "CHR202",
+      "Stop_Order": 2,
+      "Stop_Name": "Chester Water Tower",
+      "Target_Lat": 53.1925932,
+      "Target_Long": -2.8995502,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Follow the walls to the tower that once projected into the river so ships could be defended.",
+      "Hint_1": "Walk north beside the river and use signed public routes towards Tower Road.",
+      "Hint_2": "Find the round medieval tower linked to the north-west city wall.",
+      "Unlock_Fact": "The Water Tower was added in the fourteenth century when the River Dee still reached this part of the walls. It projected into the water to help defend Chester's busy port.",
+      "Explorer_Prompt": "Look at the surrounding land and imagine where the medieval river edge once lay.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Great Arches, Water Towers & Glass",
+      "Stop_ID": "CHR203",
+      "Stop_Order": 3,
+      "Stop_Name": "King Charles Tower",
+      "Target_Lat": 53.1941743,
+      "Target_Long": -2.8904048,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the wall tower where tradition places a king watching his army lose beyond the city.",
+      "Hint_1": "Continue east along the wall or use the parallel street-level route.",
+      "Hint_2": "Look for the tower also known as Phoenix Tower.",
+      "Unlock_Fact": "King Charles Tower is also called Phoenix Tower. Tradition says Charles I watched the Battle of Rowton Moor from here in 1645, though the exact viewpoint cannot be proved.",
+      "Explorer_Prompt": "From the public path, find the phoenix emblem or another sign naming the tower.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Chester",
+      "Route": "Great Arches, Water Towers & Glass",
+      "Stop_ID": "CHR204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Square Bottle",
+      "Target_Lat": 53.1913781,
+      "Target_Long": -2.8844536,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Finish where two handled Roman vessels unearthed beneath Foregate Street supplied the name.",
+      "Hint_1": "Continue south-east towards Foregate Street.",
+      "Hint_2": "Find the food-serving pub in the modern frontage between the walls and the station direction.",
+      "Unlock_Fact": "Route complete! Archaeology on this site uncovered a rare blue glass bowl, two square bottles with reeded handles and other Roman finds that inspired the pub's name. Check today's hours before choosing food or a drink.",
+      "Explorer_Prompt": "Find the bottle motif on the exterior and note its shape.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Square Bottle",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-square-bottle-chester/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

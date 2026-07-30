@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "manchester-castlefield-books-moonlight",
+  "version": 1,
+  "town": "Manchester",
+  "display_name": "Manchester",
+  "route_name": "Viaducts, First Trains & Moonlight",
+  "description": "Climb through Castlefield's railway layers, visit the birthplace of inter-city travel and a neo-Gothic library, then finish inside a former picture house.",
+  "short_description": "A sky garden, railway firsts, Gothic books and a cinematic pub.",
+  "centre": {
+    "lat": 53.478833,
+    "long": -2.252313
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.8,
+  "estimated_minutes": 70,
+  "difficulty_label": "Detective",
+  "tags": [
+    "railways",
+    "industrial-history",
+    "libraries",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central route from Castlefield to Deansgate, using public pavements and crossings.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly level, with only gentle street gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Manchester",
+      "Route": "Viaducts, First Trains & Moonlight",
+      "Stop_ID": "MCR201",
+      "Stop_Order": 1,
+      "Stop_Name": "Castlefield Viaduct",
+      "Target_Lat": 53.474827,
+      "Target_Long": -2.258513,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Begin where a railway in the sky has traded smoke and sleepers for flowers.",
+      "Hint_1": "Head to Castlefield near Deansgate-Castlefield tram stop.",
+      "Hint_2": "Find the disused iron viaduct now planted as an elevated garden; the checkpoint is at street level.",
+      "Unlock_Fact": "The Great Northern Railway built Castlefield Viaduct in 1892. The National Trust opened a garden on part of the disused structure in 2022.",
+      "Explorer_Prompt": "From street level, compare one industrial iron detail with the planting above.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Viaducts, First Trains & Moonlight",
+      "Stop_ID": "MCR202",
+      "Stop_Order": 2,
+      "Stop_Name": "Science and Industry Museum",
+      "Target_Lat": 53.4772588,
+      "Target_Long": -2.2547008,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Find the station where scheduled inter-city passenger rail travel began.",
+      "Hint_1": "Walk through Castlefield towards Liverpool Road.",
+      "Hint_2": "Look for the museum entrance and the surviving station buildings.",
+      "Unlock_Fact": "The museum occupies part of Liverpool Road station, the Manchester terminus of the Liverpool and Manchester Railway, which opened in 1830 as the first inter-city railway built for steam-powered passenger and goods services.",
+      "Explorer_Prompt": "From the public street, identify one old railway material: brick, iron, stone or track.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Viaducts, First Trains & Moonlight",
+      "Stop_ID": "MCR203",
+      "Stop_Order": 3,
+      "Stop_Name": "John Rylands Library",
+      "Target_Lat": 53.4804204,
+      "Target_Long": -2.2491397,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Seek a library that looks like a cathedral, raised by Enriqueta in memory of John.",
+      "Hint_1": "Continue north-east towards Deansgate.",
+      "Hint_2": "Find the red sandstone neo-Gothic building with a grand arched entrance.",
+      "Unlock_Fact": "Enriqueta Rylands founded the library in memory of her husband, the industrialist John Rylands. It opened to readers in 1900 and was designed by Basil Champneys.",
+      "Explorer_Prompt": "From the pavement, choose one detail that makes the library resemble a medieval church.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Manchester",
+      "Route": "Viaducts, First Trains & Moonlight",
+      "Stop_ID": "MCR204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Moon Under Water",
+      "Target_Lat": 53.4828248,
+      "Target_Long": -2.2468981,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish beneath Orwell's ideal pub name inside a building where stars once twinkled above cinema seats.",
+      "Hint_1": "Continue north along Deansgate.",
+      "Hint_2": "Find the large food-serving pub whose lunar name stretches across a former picture house.",
+      "Unlock_Fact": "Route complete! The building opened as a cinema in 1914 and was redesigned as the Deansgate Picture House in 1930, complete with star-shaped lights. It later became a pub named after George Orwell's imagined ideal. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "Look for one exterior clue to the building's entertainment past.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Moon Under Water",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-moon-under-water-manchester/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

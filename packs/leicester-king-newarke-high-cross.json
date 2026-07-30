@@ -1,0 +1,167 @@
+{
+  "pack_format": 2,
+  "pack_id": "leicester-king-newarke-high-cross",
+  "version": 1,
+  "town": "Leicester",
+  "display_name": "Leicester",
+  "route_name": "Newarke Houses, a Lost King & High Cross",
+  "description": "Link Leicester's surviving domestic history with Richard III's modern memorial and cathedral resting place before finding the medieval centre underfoot.",
+  "short_description": "Old houses, a rediscovered king, a cathedral and a cross hidden in the road.",
+  "centre": {
+    "lat": 52.633921,
+    "long": -1.137596
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 60,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "richard-iii",
+    "medieval",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central walking route from The Newarke to High Street, close to the bus stations.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly level, with only gentle street gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Leicester",
+      "Route": "Newarke Houses, a Lost King & High Cross",
+      "Stop_ID": "LCR201",
+      "Stop_Order": 1,
+      "Stop_Name": "Newarke Houses Museum",
+      "Target_Lat": 52.6316502,
+      "Target_Long": -1.1391757,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Begin where two old houses preserve stories of Leicester at home and at war.",
+      "Hint_1": "Head to The Newarke, south of the cathedral quarter.",
+      "Hint_2": "Find the museum formed from timber-framed and brick historic houses.",
+      "Unlock_Fact": "Newarke Houses Museum combines Wygston's Chantry House, dating from around 1511, with the later Skeffington House. Together they preserve rare domestic buildings in the city centre.",
+      "Explorer_Prompt": "From outside, identify two contrasting building materials or ages.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Newarke Houses, a Lost King & High Cross",
+      "Stop_ID": "LCR202",
+      "Stop_Order": 2,
+      "Stop_Name": "King Richard III Statue",
+      "Target_Lat": 52.6343331,
+      "Target_Long": -1.1364388,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find the king with sword lowered, standing close to the grave he gained more than five centuries late.",
+      "Hint_1": "Walk north-east towards the cathedral gardens.",
+      "Hint_2": "Look for the bronze king beside Saint Martin's.",
+      "Unlock_Fact": "James Butler's bronze statue of Richard III was unveiled in 1980, decades before the king's remains were found beneath a Leicester car park in 2012.",
+      "Explorer_Prompt": "Observe the pose and note whether the sword appears raised for battle or lowered.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Newarke Houses, a Lost King & High Cross",
+      "Stop_ID": "LCR203",
+      "Stop_Order": 3,
+      "Stop_Name": "Leicester Cathedral",
+      "Target_Lat": 52.6343237,
+      "Target_Long": -1.1363494,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the parish church that became a cathedral and finally received a king in 2015.",
+      "Hint_1": "The next checkpoint is beside the statue.",
+      "Hint_2": "Look for Saint Martin's cathedral and its spire.",
+      "Unlock_Fact": "The medieval church of Saint Martin became Leicester Cathedral in 1927. Richard III's remains were reinterred here in March 2015.",
+      "Explorer_Prompt": "From the public precinct, find one rose, crown or other royal symbol.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Leicester",
+      "Route": "Newarke Houses, a Lost King & High Cross",
+      "Stop_ID": "LCR204",
+      "Stop_Order": 4,
+      "Stop_Name": "The High Cross",
+      "Target_Lat": 52.6353764,
+      "Target_Long": -1.1384198,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish where granite setts mark a vanished medieval landmark at the heart of the market town.",
+      "Hint_1": "Walk north-west to the meeting of High Street and Highcross Street.",
+      "Hint_2": "Find the food-serving pub beside a cross pattern laid into the roadway.",
+      "Unlock_Fact": "Route complete! Granite setts outside mark the site of Leicester's medieval High Cross, once the last surviving pillar of the old Market House. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "Find the cross shape in the paving from a safe pedestrian position.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The High Cross",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-high-cross-leicester/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

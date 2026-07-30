@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "bath-canals-bridges-wessex",
+  "version": 1,
+  "town": "Bath",
+  "display_name": "Bath",
+  "route_name": "Canals, Bridges & a Saxon Crown",
+  "description": "Walk from a collector's Georgian museum past a house balanced over the canal and a shop-lined bridge to a finale named for a crowned Saxon king.",
+  "short_description": "Art, canal engineering, bridge-top shops and a royal food stop.",
+  "centre": {
+    "lat": 51.383788,
+    "long": -2.355314
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 2,
+  "estimated_minutes": 75,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "georgian",
+    "canal",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "An east-to-west route starting in Sydney Gardens and finishing near Bath Spa station.",
+  "before_you_go": {
+    "terrain": "Pavements, park paths and canal-side approaches, with some uneven stone and busy crossings.",
+    "hills": "Gentle gradients; the canal and river approaches include short slopes.",
+    "steps": "The intended route can be completed without required steps by staying on signed street approaches.",
+    "accessibility": "All checkpoints are outdoors, but gradients, old paving and temporary canal works may affect access.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Possible on the intended street route; use care on slopes and narrow approaches near the canal."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Bath",
+      "Route": "Canals, Bridges & a Saxon Crown",
+      "Stop_ID": "BTH201",
+      "Stop_Order": 1,
+      "Stop_Name": "Holburne Museum",
+      "Target_Lat": 51.3857511,
+      "Target_Long": -2.350823,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Begin at a collector's house of treasures, framed by a long Georgian avenue.",
+      "Hint_1": "Head to the eastern end of Great Pulteney Street.",
+      "Hint_2": "Find the museum facing the avenue from Sydney Gardens.",
+      "Unlock_Fact": "Bath's first public art gallery opened here in 1893 to display the collection of Sir William Holburne. The building began life as the eighteenth-century Sydney Hotel.",
+      "Explorer_Prompt": "From outside, find one feature that belongs to the older classical building and one that looks modern.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Canals, Bridges & a Saxon Crown",
+      "Stop_ID": "BTH202",
+      "Stop_Order": 2,
+      "Stop_Name": "Cleveland House",
+      "Target_Lat": 51.3855309,
+      "Target_Long": -2.3479479,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find the grand house that sits astride the canal it once commanded.",
+      "Hint_1": "Enter the public canal area east of Sydney Gardens using the signed street approach.",
+      "Hint_2": "Look for the pale building directly over the Kennet and Avon Canal.",
+      "Unlock_Fact": "Cleveland House was built around 1820 above the canal and served as the headquarters of the Kennet and Avon Canal Company.",
+      "Explorer_Prompt": "From the public path or bridge, notice how the canal passes beneath the building.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Canals, Bridges & a Saxon Crown",
+      "Stop_ID": "BTH203",
+      "Stop_Order": 3,
+      "Stop_Name": "Pulteney Bridge",
+      "Target_Lat": 51.3830427,
+      "Target_Long": -2.3579221,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Follow the water to a crossing disguised by shops from one bank to the other.",
+      "Hint_1": "Return west along Great Pulteney Street towards the River Avon.",
+      "Hint_2": "Find the bridge carrying Bridge Street across the river.",
+      "Unlock_Fact": "Robert Adam designed Pulteney Bridge, completed in 1774. It is one of the rare bridges with shops built across its full span.",
+      "Explorer_Prompt": "From a safe riverside or street viewpoint, spot the rows of shop windows over the water.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Bath",
+      "Route": "Canals, Bridges & a Saxon Crown",
+      "Stop_ID": "BTH204",
+      "Stop_Order": 4,
+      "Stop_Name": "The King of Wessex",
+      "Target_Lat": 51.3808259,
+      "Target_Long": -2.3645624,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish with the Saxon ruler crowned in Bath, now lending his title to a place serving dinner.",
+      "Hint_1": "Walk west through the centre towards James Street West.",
+      "Hint_2": "Find the food-serving pub beside the Kingsmead leisure complex.",
+      "Unlock_Fact": "Route complete! The name recalls Edgar, King of Wessex, whose coronation took place at Bath in 973 on the site of the present abbey. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "Look for the royal imagery on the exterior sign.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The King of Wessex",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-king-of-wessex-bath/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

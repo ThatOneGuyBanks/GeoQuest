@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "cambridge-poles-conduits-cinema",
+  "version": 1,
+  "town": "Cambridge",
+  "display_name": "Cambridge",
+  "route_name": "Poles, Conduits & Picture Palaces",
+  "description": "Follow an Antarctic institute, a water-giving monument and Cambridge's most philosophical lamp post before a former picture palace supplies the finale.",
+  "short_description": "Polar explorers, fresh water, reality checks and a cinema-shaped finish.",
+  "centre": {
+    "lat": 52.200347,
+    "long": 0.125096
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 60,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "science",
+    "local-history",
+    "public-art",
+    "pub-finish"
+  ],
+  "collections": [
+    "University Cities",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact route south and east of the historic centre, starting on Lensfield Road and crossing Parker's Piece.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly level, with only gentle street gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "meadow",
+  "stops": [
+    {
+      "Town": "Cambridge",
+      "Route": "Poles, Conduits & Picture Palaces",
+      "Stop_ID": "CBR201",
+      "Stop_Order": 1,
+      "Stop_Name": "The Polar Museum",
+      "Target_Lat": 52.1984473,
+      "Target_Long": 0.1262691,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Begin where frozen journeys are remembered beneath a warmer university sky.",
+      "Hint_1": "Head for Lensfield Road, south-east of the city centre.",
+      "Hint_2": "Look for the public entrance to the Scott Polar Research Institute.",
+      "Unlock_Fact": "The museum belongs to the Scott Polar Research Institute, founded in 1920 as a memorial to Captain Robert Falcon Scott and his companions and as a centre for polar research.",
+      "Explorer_Prompt": "From the pavement, note one polar symbol, animal or explorer's name visible on the building.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Poles, Conduits & Picture Palaces",
+      "Stop_ID": "CBR202",
+      "Stop_Order": 2,
+      "Stop_Name": "Hobson's Conduit Monument",
+      "Target_Lat": 52.1979012,
+      "Target_Long": 0.1223672,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find a stone guardian of the stream that once carried clean water towards thirsty townspeople.",
+      "Hint_1": "Walk west along Lensfield Road.",
+      "Hint_2": "Look for a freestanding classical monument beside the narrow watercourse.",
+      "Unlock_Fact": "Hobson's Conduit was completed in 1614 to bring fresh water from Nine Wells into Cambridge. Thomas Hobson, the carrier associated with 'Hobson's choice', helped fund the scheme.",
+      "Explorer_Prompt": "Count the visible faces or openings on the monument without stepping into the road.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Poles, Conduits & Picture Palaces",
+      "Stop_ID": "CBR203",
+      "Stop_Order": 3,
+      "Stop_Name": "Reality Checkpoint",
+      "Target_Lat": 52.202195,
+      "Target_Long": 0.1282028,
+      "Win_Radius_m": 35,
+      "Cryptic_Clue": "Cross the grass to the lone lamp where dreamers are advised to check the world is still there.",
+      "Hint_1": "Enter Parker's Piece and aim for its central crossing of paths.",
+      "Hint_2": "Find the ornate cast-iron lamp post known by a philosophical nickname.",
+      "Unlock_Fact": "Reality Checkpoint is the unofficial name of the lamp post at the centre of Parker's Piece. Several explanations for the nickname circulate, but no single origin has been proved.",
+      "Explorer_Prompt": "Look for the words or markings that turn an ordinary lamp post into a local landmark.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Cambridge",
+      "Route": "Poles, Conduits & Picture Palaces",
+      "Stop_ID": "CBR204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Regal",
+      "Target_Lat": 52.2028442,
+      "Target_Long": 0.1235447,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "For the finale, trade the common for a royal name in a building once filled with flickering stars.",
+      "Hint_1": "Leave Parker's Piece towards St Andrew's Street.",
+      "Hint_2": "Look for the large pub opposite Emmanuel College whose name still sounds like a cinema.",
+      "Unlock_Fact": "Route complete! This food-serving pub occupies the former Regal cinema, purpose-built in 1937 for the ABC chain. Its opening programme included the Fred Astaire and Ginger Rogers film Swing Time. Check today's hours, then stop for food or a drink if it is open.",
+      "Explorer_Prompt": "From outside, spot one architectural clue that this broad building was designed for crowds.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Regal",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-regal-cambridge/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "nottingham-castle-mirrors-roebuck",
+  "version": 1,
+  "town": "Nottingham",
+  "display_name": "Nottingham",
+  "route_name": "Castle Fire, Sky Mirrors & Roebucks",
+  "description": "Move from a castle rebuilt and burned to a giant sky-catching mirror and a subscription library, finishing beside the memory of an eighteenth-century inn.",
+  "short_description": "A rebellious castle, a polished sky, hidden books and a historic food pub.",
+  "centre": {
+    "lat": 52.952745,
+    "long": -1.15372
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 55,
+  "difficulty_label": "Detective",
+  "tags": [
+    "castle",
+    "public-art",
+    "libraries",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Legends & Literature"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact western city-centre circuit with a mild climb around the castle.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "A short but noticeable climb leads to the castle area; the remainder is gentler.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "All checkpoints are outdoors, but castle-area gradients and old paving may require extra time.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Possible on public pavements, though the castle climb and busy crossings can be tiring."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Nottingham",
+      "Route": "Castle Fire, Sky Mirrors & Roebucks",
+      "Stop_ID": "NTG201",
+      "Stop_Order": 1,
+      "Stop_Name": "Nottingham Castle Gatehouse",
+      "Target_Lat": 52.9506172,
+      "Target_Long": -1.1537874,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin at the fortified entrance to a castle that became a palace, burned in protest and rose as a museum.",
+      "Hint_1": "Climb Castle Road from the city centre.",
+      "Hint_2": "Find the twin-towered gatehouse at the entrance to the castle grounds.",
+      "Unlock_Fact": "Nottingham Castle's medieval stronghold was replaced by a seventeenth-century ducal palace. The palace was burned during Reform riots in 1831 and later reopened as a museum in 1878.",
+      "Explorer_Prompt": "From the public approach, find one defensive-looking feature on the gatehouse.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Castle Fire, Sky Mirrors & Roebucks",
+      "Stop_ID": "NTG202",
+      "Stop_Order": 2,
+      "Stop_Name": "Sky Mirror",
+      "Target_Lat": 52.9538354,
+      "Target_Long": -1.1565285,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a giant silver dish that turns the clouds upside down.",
+      "Hint_1": "Walk north-west towards Wellington Circus and Nottingham Playhouse.",
+      "Hint_2": "Look for the large polished concave sculpture outside the theatre.",
+      "Unlock_Fact": "Anish Kapoor's Sky Mirror was installed outside Nottingham Playhouse in 2001. The six-metre-wide polished stainless-steel dish reflects and reverses the sky.",
+      "Explorer_Prompt": "Without touching it, note one building or cloud transformed in the reflection.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Castle Fire, Sky Mirrors & Roebucks",
+      "Stop_ID": "NTG203",
+      "Stop_Order": 3,
+      "Stop_Name": "Bromley House Library",
+      "Target_Lat": 52.9535443,
+      "Target_Long": -1.1523033,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Seek a private library hiding behind a city shopfront, with books gathered here since Georgian days.",
+      "Hint_1": "Head east to Angel Row.",
+      "Hint_2": "Find the signed historic library entrance among the modern shopfronts.",
+      "Unlock_Fact": "Bromley House Library is an independent subscription library founded in 1816. It has occupied Bromley House on Angel Row since 1822.",
+      "Explorer_Prompt": "From the pavement, spot one feature that suggests an older house survives behind the street frontage.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Nottingham",
+      "Route": "Castle Fire, Sky Mirrors & Roebucks",
+      "Stop_ID": "NTG204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Roebuck Inn",
+      "Target_Lat": 52.9529812,
+      "Target_Long": -1.1522602,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Finish with a small deer whose name crossed the street from an alehouse recorded in 1760.",
+      "Hint_1": "Walk a short distance south into St James's Street.",
+      "Hint_2": "Find the food-serving pub opposite the Malt Cross.",
+      "Unlock_Fact": "Route complete! The pub takes its name from an alehouse opposite that was first recorded in 1760 and later became the Malt Cross music hall. Check today's hours before ordering food or a drink.",
+      "Explorer_Prompt": "Find the animal on the sign and compare it with the building opposite.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Roebuck Inn",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-roebuck-inn-nottingham/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

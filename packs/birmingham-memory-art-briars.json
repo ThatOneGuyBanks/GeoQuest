@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "birmingham-memory-art-briars",
+  "version": 1,
+  "town": "Birmingham",
+  "display_name": "Birmingham",
+  "route_name": "Memory, Masters & Briar Roses",
+  "description": "Read Birmingham's civic centre through a war memorial, Pre-Raphaelite art and Burne-Jones glass before Sleeping Beauty supplies the final table.",
+  "short_description": "Civic memory, bold art, stained glass and a fairy-tale pub finish.",
+  "centre": {
+    "lat": 52.480326,
+    "long": -1.902596
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 55,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "public-art",
+    "pre-raphaelites",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Makers & Industry"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact central route between Centenary Square, Victoria Square and Colmore Row.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly level, with only gentle street gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Birmingham",
+      "Route": "Memory, Masters & Briar Roses",
+      "Stop_ID": "BHM201",
+      "Stop_Order": 1,
+      "Stop_Name": "Hall of Memory",
+      "Target_Lat": 52.4794266,
+      "Target_Long": -1.9070741,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Begin at the small domed hall built so a city's lost names would not fade.",
+      "Hint_1": "Head to Centenary Square beside the Library of Birmingham.",
+      "Hint_2": "Find the Portland-stone memorial hall with bronze figures outside.",
+      "Unlock_Fact": "The Hall of Memory opened in 1925 to commemorate Birmingham citizens killed in the First World War. It was designed by S. N. Cooke and W. N. Twist.",
+      "Explorer_Prompt": "From the surrounding square, choose one exterior figure or inscription and note what it represents.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Memory, Masters & Briar Roses",
+      "Stop_ID": "BHM202",
+      "Stop_Order": 2,
+      "Stop_Name": "Birmingham Museum and Art Gallery",
+      "Target_Lat": 52.4807969,
+      "Target_Long": -1.9042018,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Seek the civic palace where industry paid for pictures and Pre-Raphaelite colours glow.",
+      "Hint_1": "Walk east through Victoria Square towards Chamberlain Square.",
+      "Hint_2": "Find the grand museum entrance beneath its clock-tower complex.",
+      "Unlock_Fact": "Birmingham Museum and Art Gallery opened in 1885. Its collection is especially noted for Pre-Raphaelite art, reflecting the city's links with artists and makers.",
+      "Explorer_Prompt": "Without entering, identify one sculpture, mosaic or carved material on the exterior.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Memory, Masters & Briar Roses",
+      "Stop_ID": "BHM203",
+      "Stop_Order": 3,
+      "Stop_Name": "Birmingham Cathedral",
+      "Target_Lat": 52.4811803,
+      "Target_Long": -1.8989078,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find a Baroque church whose windows bloom with work by a local master of colour.",
+      "Hint_1": "Continue east to the green space of Cathedral Square.",
+      "Hint_2": "Look for the compact cathedral dedicated to Saint Philip.",
+      "Unlock_Fact": "The church was completed in 1715 to designs by Thomas Archer and became Birmingham Cathedral in 1905. Its stained-glass windows include work by Birmingham-born Edward Burne-Jones.",
+      "Explorer_Prompt": "From outside, find one round-headed window and compare it with the square's modern buildings.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Birmingham",
+      "Route": "Memory, Masters & Briar Roses",
+      "Stop_ID": "BHM204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Briar Rose",
+      "Target_Lat": 52.4799005,
+      "Target_Long": -1.9001993,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Finish where Sleeping Beauty's thorny hedge remembers the artist born on this very hill.",
+      "Hint_1": "Walk south-west towards Bennetts Hill.",
+      "Hint_2": "Find the food-serving pub and hotel with a fairy-tale flower in its name.",
+      "Unlock_Fact": "Route complete! The pub is named for Edward Burne-Jones's Briar Rose paintings on the Sleeping Beauty theme. Burne-Jones was born on Bennetts Hill in 1833. Check today's hours, then stop for food or a drink if it is open.",
+      "Explorer_Prompt": "Find the flower or fairy-tale reference used on the frontage.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Briar Rose",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-briar-rose-birmingham/",
+    "hours": {
+      "mon": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "07:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "07:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

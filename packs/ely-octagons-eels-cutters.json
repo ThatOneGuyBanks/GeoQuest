@@ -1,0 +1,168 @@
+{
+  "pack_format": 2,
+  "pack_id": "ely-octagons-eels-cutters",
+  "version": 1,
+  "town": "Ely",
+  "display_name": "Ely",
+  "route_name": "Octagons, Gaols & Silver Eels",
+  "description": "Unpick Ely's famous octagon, a museum in the bishop's old gaol and the city's slippery namesake before finishing beside the Great Ouse.",
+  "short_description": "A fallen tower reborn, an old gaol, an eel hunt and riverside food.",
+  "centre": {
+    "lat": 52.397121,
+    "long": 0.265631
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.6,
+  "estimated_minutes": 65,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "cathedral",
+    "local-history",
+    "river",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Rivers & Harbours"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact route from the cathedral and market area downhill to Ely's riverside, ending close to the railway station.",
+  "before_you_go": {
+    "terrain": "Historic pavements, market-area paving, park paths and riverside surfaces that may be damp.",
+    "hills": "A gentle but sustained descent leads from the cathedral area to the river.",
+    "steps": "No steps are required on the intended street and park route.",
+    "accessibility": "Outdoor checkpoints are on public routes, but gradients, riverside conditions and temporary works can vary.",
+    "toilets": "Check current cathedral-area, market and station facility listings before setting off.",
+    "footwear": "Comfortable shoes with grip are useful after wet weather near the river.",
+    "dogs": "The outdoor route is dog-friendly when animals are controlled; check the final venue's current dog policy.",
+    "pushchairs": "Generally suitable, with care on the downhill park paths and any damp riverside paving."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Ely",
+      "Route": "Octagons, Gaols & Silver Eels",
+      "Stop_ID": "ELY201",
+      "Stop_Order": 1,
+      "Stop_Name": "Ely Cathedral",
+      "Target_Lat": 52.3986555,
+      "Target_Long": 0.2637479,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Begin at the Ship of the Fens and find the wooden lantern born after a tower fell.",
+      "Hint_1": "Head to the public cathedral precinct.",
+      "Hint_2": "Look up for the vast central octagon rather than the western tower.",
+      "Unlock_Fact": "Construction of the present cathedral began in 1083. After the central tower collapsed in 1322, Alan of Walsingham created the extraordinary octagon and timber lantern that replaced it.",
+      "Explorer_Prompt": "From the precinct, count the broad sides you can see on the central octagon.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ely",
+      "Route": "Octagons, Gaols & Silver Eels",
+      "Stop_ID": "ELY202",
+      "Stop_Order": 2,
+      "Stop_Name": "Ely Museum",
+      "Target_Lat": 52.4005019,
+      "Target_Long": 0.2630308,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find local treasures kept in the bishop's former lock-up.",
+      "Hint_1": "Walk north towards Market Street.",
+      "Hint_2": "Look for the museum sign on the old gaol building.",
+      "Unlock_Fact": "Ely Museum occupies the city's former gaol, a building long associated with the Bishop of Ely's local jurisdiction. Its displays tell the story of the Isle of Ely from prehistory onward.",
+      "Explorer_Prompt": "From outside, spot one window, door or grille that suits the building's former use.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ely",
+      "Route": "Octagons, Gaols & Silver Eels",
+      "Stop_ID": "ELY203",
+      "Stop_Order": 3,
+      "Stop_Name": "Jubilee Gardens",
+      "Target_Lat": 52.395146,
+      "Target_Long": 0.2678451,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Descend towards the river and hunt the slippery creature that gave this island city its traditional name.",
+      "Hint_1": "Walk south-east through the cathedral area towards Jubilee Gardens.",
+      "Hint_2": "Find the public gardens between the city and the riverside and look for eel-themed art.",
+      "Unlock_Fact": "Ely's name is traditionally linked with the eels that thrived in the surrounding fen waters. Public artworks on the Ely Eel Trail celebrate that connection across the city.",
+      "Explorer_Prompt": "Find an eel shape or other piece of public art in the gardens without leaving the path.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ely",
+      "Route": "Octagons, Gaols & Silver Eels",
+      "Stop_ID": "ELY204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Cutter Inn",
+      "Target_Lat": 52.39418,
+      "Target_Long": 0.2678994,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Finish where a working boat's name rests beside the Great Ouse and the kitchen faces the water.",
+      "Hint_1": "Continue through the gardens to Annesdale by the river.",
+      "Hint_2": "Find the riverside pub and restaurant named for a fast sailing vessel.",
+      "Unlock_Fact": "Route complete! The Cutter Inn has welcomed diners on Ely's riverside since 2006, beside the River Great Ouse and close to the railway. Check today's hours before settling in for food or a drink.",
+      "Explorer_Prompt": "From the public riverside, find one boat, mooring or waterside detail that fits the name.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Cutter Inn",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.thecutterinn.co.uk/",
+    "hours": {
+      "mon": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ],
+      "tue": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ],
+      "wed": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ],
+      "thu": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ],
+      "fri": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sat": [
+        [
+          "11:00",
+          "23:00"
+        ]
+      ],
+      "sun": [
+        [
+          "11:00",
+          "22:00"
+        ]
+      ]
+    }
+  }
+}

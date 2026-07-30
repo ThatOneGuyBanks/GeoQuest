@@ -1,0 +1,167 @@
+{
+  "pack_format": 2,
+  "pack_id": "york-rails-bars-punch",
+  "version": 1,
+  "town": "York",
+  "display_name": "York",
+  "route_name": "Rails, Bars & a Bowl of Punch",
+  "description": "A station-age sprint through York's railway confidence, royal gateway and secretive convent history, ending at a centuries-old food pub.",
+  "short_description": "Railway grandeur, a royal gate, hidden faith and a historic punch bowl.",
+  "centre": {
+    "lat": 53.956111,
+    "long": -1.091696
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 0.8,
+  "estimated_minutes": 45,
+  "difficulty_label": "Relaxed",
+  "tags": [
+    "railways",
+    "city-walls",
+    "religious-history",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "An especially compact route beginning at York railway station and ending on Blossom Street.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly level, with only gentle street gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "York",
+      "Route": "Rails, Bars & a Bowl of Punch",
+      "Stop_ID": "YRA201",
+      "Stop_Order": 1,
+      "Stop_Name": "York Railway Station",
+      "Target_Lat": 53.9577037,
+      "Target_Long": -1.0937301,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Begin beneath great curving iron ribs where Victorian travellers arrived outside the walls.",
+      "Hint_1": "Start on the city-facing side of York's main station.",
+      "Hint_2": "Look for the long curved trainshed and the station name.",
+      "Unlock_Fact": "The present station opened in 1877. Its sweeping curved layout was designed by railway architects Thomas Prosser and William Peachey and was one of the largest stations of its day.",
+      "Explorer_Prompt": "From a safe public area, spot one surviving Victorian material in the roof or frontage.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Rails, Bars & a Bowl of Punch",
+      "Stop_ID": "YRA202",
+      "Stop_Order": 2,
+      "Stop_Name": "Micklegate Bar",
+      "Target_Lat": 53.9558521,
+      "Target_Long": -1.090889,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Walk to the gate where monarchs traditionally ask the city before passing under stone.",
+      "Hint_1": "Follow Queen Street and Blossom Street towards the city walls.",
+      "Hint_2": "Find the medieval gateway spanning Micklegate.",
+      "Unlock_Fact": "Micklegate Bar was the traditional ceremonial entrance for monarchs visiting York. In darker periods, the severed heads of traitors were displayed above it.",
+      "Explorer_Prompt": "Look up from the pavement and count the main arch openings visible from your side.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Rails, Bars & a Bowl of Punch",
+      "Stop_ID": "YRA203",
+      "Stop_Order": 3,
+      "Stop_Name": "The Bar Convent",
+      "Target_Lat": 53.9553101,
+      "Target_Long": -1.0911762,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find England's oldest surviving convent, founded when its very existence had to stay quiet.",
+      "Hint_1": "Stay on Blossom Street, just outside the gate.",
+      "Hint_2": "Look for the Georgian-fronted convent and its public sign.",
+      "Unlock_Fact": "The Bar Convent was founded in 1686 and is the oldest surviving Roman Catholic convent in England. It began secretly because Catholic religious communities faced legal restrictions.",
+      "Explorer_Prompt": "From outside, find a symbol that reveals the building's religious purpose.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "York",
+      "Route": "Rails, Bars & a Bowl of Punch",
+      "Stop_ID": "YRA204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Punch Bowl",
+      "Target_Lat": 53.9555764,
+      "Target_Long": -1.0909872,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Finish at a vessel big enough for a party, on the corner where Blossom meets Nunnery.",
+      "Hint_1": "Remain near the convent and Micklegate Bar.",
+      "Hint_2": "Find the food-serving pub on the Blossom Street and Nunnery Lane corner.",
+      "Unlock_Fact": "Route complete! A pub has stood here under this name since 1770. The punch-bowl sign became associated with the Whigs, for whom punch was a fashionable drink. Check today's hours, then enjoy food or a drink if it is open.",
+      "Explorer_Prompt": "Find the hanging sign and note how the bowl is shown.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Punch Bowl",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-punch-bowl-york",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

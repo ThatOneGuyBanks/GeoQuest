@@ -120,6 +120,66 @@
     {
       "file": "worcester-kings-battle-escape.json",
       "enabled": true
+    },
+    {
+      "file": "cambridge-poles-conduits-cinema.json",
+      "enabled": true
+    },
+    {
+      "file": "oxford-mottes-canals-candles.json",
+      "enabled": true
+    },
+    {
+      "file": "york-rails-bars-punch.json",
+      "enabled": true
+    },
+    {
+      "file": "bath-canals-bridges-wessex.json",
+      "enabled": true
+    },
+    {
+      "file": "birmingham-memory-art-briars.json",
+      "enabled": true
+    },
+    {
+      "file": "liverpool-cathedrals-bombs-railways.json",
+      "enabled": true
+    },
+    {
+      "file": "manchester-castlefield-books-moonlight.json",
+      "enabled": true
+    },
+    {
+      "file": "nottingham-castle-mirrors-roebuck.json",
+      "enabled": true
+    },
+    {
+      "file": "leicester-king-newarke-high-cross.json",
+      "enabled": true
+    },
+    {
+      "file": "chester-arches-towers-bottles.json",
+      "enabled": true
+    },
+    {
+      "file": "lincoln-romans-water-sails.json",
+      "enabled": true
+    },
+    {
+      "file": "norwich-castle-market-bells.json",
+      "enabled": true
+    },
+    {
+      "file": "peterborough-rails-museums-college.json",
+      "enabled": true
+    },
+    {
+      "file": "ely-octagons-eels-cutters.json",
+      "enabled": true
+    },
+    {
+      "file": "bedford-bridges-broadcasts-pilgrims.json",
+      "enabled": true
     }
   ]
 }

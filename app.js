@@ -1345,6 +1345,45 @@ function numberedIcon(number, className = '') {
   });
 }
 
+function mapTownGroups() {
+  const grouped = new Map();
+  packs.forEach(pack => {
+    const townName = String(pack.town || pack.display_name || '').trim() || 'Adventure';
+    const key = townName
+      .normalize('NFKD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[’']/g, '')
+      .toLocaleLowerCase()
+      .replace(/[^\p{L}\p{N}]+/gu, ' ')
+      .trim();
+    if (!grouped.has(key)) grouped.set(key, { townName, routes: [] });
+    grouped.get(key).routes.push(pack);
+  });
+  return [...grouped.values()].map(group => {
+    group.routes.sort((a, b) => String(a.route_name).localeCompare(String(b.route_name)));
+    const centres = group.routes
+      .map(pack => [Number(pack.centre?.lat), Number(pack.centre?.long)])
+      .filter(([lat, long]) => Number.isFinite(lat) && Number.isFinite(long));
+    const centre = centres.length
+      ? [
+          centres.reduce((total, point) => total + point[0], 0) / centres.length,
+          centres.reduce((total, point) => total + point[1], 0) / centres.length
+        ]
+      : [52.45, -0.18];
+    return { ...group, centre };
+  });
+}
+
+function townMapPopup(group) {
+  const routeCount = group.routes.length;
+  const routeButtons = group.routes.map(pack => {
+    const encodedId = encodeURIComponent(pack.pack_id).replace(/'/g, '%27');
+    const stopCount = pack.stops.length;
+    return `<button class="town-map-route" onclick="window.openPack(decodeURIComponent('${encodedId}'))"><b>${esc(pack.route_name)}</b><span>${pack.route_distance_km} km · ${stopCount} ${stopCount === 1 ? 'stop' : 'stops'} →</span></button>`;
+  }).join('');
+  return `<div class="town-map-popup"><span class="town-map-kicker">${routeCount} ${routeCount === 1 ? 'ADVENTURE' : 'ADVENTURES'}</span><b class="town-map-name">${esc(group.townName)}</b><div class="town-map-routes">${routeButtons}</div></div>`;
+}
+
 function showMap() {
   currentCollection = null;
   currentPack = null;
@@ -1354,12 +1393,23 @@ function showMap() {
     if (!mapReady) {
       map = L.map('map', { zoomControl: false }).setView([52.45, -0.18], 7);
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
-      packs.forEach(pack => {
-        const icon = L.divIcon({ className: '', html: `<div class="giant-pin" style="--pin:${colour(pack)}"><span>${pack.stops.length}</span></div>`, iconSize: [60, 60] });
-        L.marker([pack.centre.lat, pack.centre.long], { icon }).addTo(map)
-          .bindPopup(`<b>${esc(pack.display_name)}</b><br>${esc(pack.route_name)}<br>${pack.route_distance_km} km · ${pack.stops.length} stops<br><button onclick="window.openPack('${esc(pack.pack_id)}')">View adventure</button>`);
+      const townGroups = mapTownGroups();
+      townGroups.forEach(group => {
+        const routeCount = group.routes.length;
+        const accent = colour(group.routes[0]);
+        const extraClass = routeCount > 1 ? ' multi-route-pin' : '';
+        const icon = L.divIcon({
+          className: '',
+          html: `<div class="giant-pin town-pin${extraClass}" style="--pin:${accent}"><span>${routeCount}</span><small>${routeCount === 1 ? 'route' : 'routes'}</small></div>`,
+          iconSize: [66, 66],
+          iconAnchor: [33, 33]
+        });
+        L.marker(group.centre, { icon, title: `${group.townName}: ${routeCount} ${routeCount === 1 ? 'route' : 'routes'}` })
+          .addTo(map)
+          .bindPopup(townMapPopup(group), { maxWidth: 340, minWidth: 245 });
       });
-      if (packs.length > 1) map.fitBounds(packs.map(pack => [pack.centre.lat, pack.centre.long]), { padding: [45, 45], maxZoom: 9 });
+      if (townGroups.length > 1) map.fitBounds(townGroups.map(group => group.centre), { padding: [45, 45], maxZoom: 9 });
+      else if (townGroups.length === 1) map.setView(townGroups[0].centre, 13);
       mapReady = true;
     } else {
       map.invalidateSize();
@@ -3283,7 +3333,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=21', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=22', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);

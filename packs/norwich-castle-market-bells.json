@@ -1,0 +1,167 @@
+{
+  "pack_format": 2,
+  "pack_id": "norwich-castle-market-bells",
+  "version": 1,
+  "town": "Norwich",
+  "display_name": "Norwich",
+  "route_name": "Castle Stone, Market Stripes & Bells",
+  "description": "Circle Norwich's Norman keep, colourful ancient market and great flint parish church before ending at a coaching inn with wartime memories.",
+  "short_description": "A Norman cube, striped stalls, mighty flintwork and a coaching-inn meal.",
+  "centre": {
+    "lat": 52.627982,
+    "long": 1.294149
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.1,
+  "estimated_minutes": 55,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "norman",
+    "market",
+    "medieval",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact central circuit beginning above Castle Meadow and ending near Orford Hill.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Short slopes connect Castle Hill with the market; the remainder is fairly level.",
+    "steps": "No steps are required if the signed sloped approaches to Castle Hill are used.",
+    "accessibility": "Use the sloped public approaches around Castle Quarter; market crowding and temporary stalls can narrow routes.",
+    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally possible using the sloped approaches, with care through the busy market."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Norwich",
+      "Route": "Castle Stone, Market Stripes & Bells",
+      "Stop_ID": "NWC201",
+      "Stop_Order": 1,
+      "Stop_Name": "Norwich Castle",
+      "Target_Lat": 52.6283983,
+      "Target_Long": 1.296035,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Begin at the great stone cube raised by Norman rulers above the city.",
+      "Hint_1": "Climb Castle Hill using the public approach that suits you.",
+      "Hint_2": "Find the massive pale keep at the centre of the mound.",
+      "Unlock_Fact": "The Normans founded Norwich Castle soon after the Conquest. The stone keep was built in the early twelfth century and became a museum in 1894.",
+      "Explorer_Prompt": "From the public approach, count the repeated blind arches across one face.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Castle Stone, Market Stripes & Bells",
+      "Stop_ID": "NWC202",
+      "Stop_Order": 2,
+      "Stop_Name": "Norwich Market",
+      "Target_Lat": 52.6283936,
+      "Target_Long": 1.2928301,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find a patchwork of striped roofs where traders have gathered since Norman times.",
+      "Hint_1": "Descend west from the castle towards City Hall.",
+      "Hint_2": "Look for the permanent outdoor market below the guildhall and City Hall.",
+      "Unlock_Fact": "A market was established here after the Norman Conquest. Norwich Market remains one of England's largest and oldest permanent outdoor markets.",
+      "Explorer_Prompt": "Notice three different colours in the striped stall roofs without blocking the aisles.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Castle Stone, Market Stripes & Bells",
+      "Stop_ID": "NWC203",
+      "Stop_Order": 3,
+      "Stop_Name": "Saint Peter Mancroft",
+      "Target_Lat": 52.6278205,
+      "Target_Long": 1.2925559,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the city's largest parish church, built in flint beside the market rather than inside cathedral walls.",
+      "Hint_1": "Stay beside the market and walk towards Millennium Plain.",
+      "Hint_2": "Look for the broad flint church with a tall western tower.",
+      "Unlock_Fact": "Saint Peter Mancroft was built mainly between 1430 and 1455. It is the largest parish church in Norwich and a major example of East Anglian flint architecture.",
+      "Explorer_Prompt": "Find a pattern made by dark flint and pale stone on the exterior.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Norwich",
+      "Route": "Castle Stone, Market Stripes & Bells",
+      "Stop_ID": "NWC204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Bell Hotel",
+      "Target_Lat": 52.6273151,
+      "Target_Long": 1.2951762,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish at an old coaching house whose upper floor once slept American servicewomen.",
+      "Hint_1": "Walk east across the centre towards Orford Hill.",
+      "Hint_2": "Find the food-serving pub carrying a bell and hotel name.",
+      "Unlock_Fact": "Route complete! The Bell Hotel is said to date from 1485 and later became a leading coaching inn. During the Second World War, its top floor served as a dormitory for the American Women's Army Corps. Check today's hours before food or a drink.",
+      "Explorer_Prompt": "Find the bell on the sign and one feature that suggests the building's long life.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Bell Hotel",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-30",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-bell-hotel-norwich",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}
