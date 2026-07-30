@@ -41,6 +41,7 @@ let pendingDiscovery = null;
 let postcardEditorState = null;
 let adventurePhotos = [];
 let adventureNotes = [];
+let navigationHistoryMode = 'push';
 const POSTCARD_WIDTH = 1080;
 const POSTCARD_HEIGHT = 1350;
 const POSTCARD_PREVIEW_WIDTH = 540;
@@ -144,27 +145,87 @@ function readViewState() {
   }
 }
 
-function rememberView(view) {
-  try {
-    const state = { view, savedAt: Date.now() };
-    if (currentPack) {
-      state.packId = currentPack.pack_id;
-      state.isDaily = selectedAsDaily;
-      state.isSurprise = selectedAsSurprise;
-      if (selectedDailyDate) state.dailyDate = selectedDailyDate;
-    }
-    if (view === 'collectionView' && currentCollection) state.collection = currentCollection;
-    if (view === 'gameView') {
-      state.stopIndex = currentStop;
-      state.hints = currentHints;
-      if (pendingDiscovery) state.discovery = pendingDiscovery;
-    }
-    sessionStorage.setItem(VIEW_KEY, JSON.stringify(state));
-  } catch {}
+function viewState(view) {
+  const state = { view, savedAt: Date.now() };
+  if (currentPack) {
+    state.packId = currentPack.pack_id;
+    state.isDaily = selectedAsDaily;
+    state.isSurprise = selectedAsSurprise;
+    if (selectedDailyDate) state.dailyDate = selectedDailyDate;
+  }
+  if (view === 'collectionView' && currentCollection) state.collection = currentCollection;
+  if (view === 'gameView') {
+    state.stopIndex = currentStop;
+    state.hints = currentHints;
+    if (pendingDiscovery) state.discovery = pendingDiscovery;
+  }
+  return state;
 }
 
-function restoreView() {
-  const state = readViewState();
+function historyTarget(state = {}) {
+  return [state.view || 'homeView', state.packId || '', state.collection || ''].join('|');
+}
+
+function navigationState(state) {
+  return { ...state, dayTrippingHistory: true };
+}
+
+function rememberView(view, syncHistory = true) {
+  try {
+    const state = viewState(view);
+    sessionStorage.setItem(VIEW_KEY, JSON.stringify(state));
+    if (syncHistory && history.state?.dayTrippingHistory && historyTarget(history.state) === historyTarget(state)) {
+      history.replaceState(navigationState(state), '');
+    }
+    return state;
+  } catch {}
+  return viewState(view);
+}
+
+function seedNavigationHistory() {
+  if (!history.state?.dayTrippingHistory) {
+    history.replaceState(navigationState({ view: 'homeView', savedAt: Date.now() }), '');
+  }
+}
+
+function closeNavigationOverlays() {
+  closePostcardEditor();
+  closeSettings();
+  closeSearch();
+  closeTutorial(false);
+  closeArrival();
+}
+
+function handleHistoryNavigation(event) {
+  if (!event.state?.dayTrippingHistory) return;
+  closeNavigationOverlays();
+  navigationHistoryMode = 'none';
+  try {
+    restoreView(event.state);
+  } finally {
+    navigationHistoryMode = 'push';
+  }
+}
+
+function navigateBack() {
+  if (history.state?.dayTrippingHistory && history.state.view !== 'homeView') {
+    history.back();
+    return;
+  }
+  navigationHistoryMode = 'replace';
+  try {
+    showHome();
+  } finally {
+    navigationHistoryMode = 'push';
+  }
+}
+
+function bindNavigationButtons() {
+  $$('[data-home]').forEach(button => button.onclick = showHome);
+  $$('[data-back]').forEach(button => button.onclick = navigateBack);
+}
+
+function restoreView(state = readViewState()) {
   if (state.view === 'passportView') {
     showPassport();
     return;
@@ -492,6 +553,8 @@ async function init() {
     renderAll();
     bind();
     restoreContinue();
+    seedNavigationHistory();
+    window.addEventListener('popstate', handleHistoryNavigation);
     restoreView();
     navigationTransitionsReady = true;
   } catch (error) {
@@ -794,7 +857,7 @@ function openSearch() {
 }
 
 function bind() {
-  $$('[data-home]').forEach(button => button.onclick = showHome);
+  bindNavigationButtons();
   $('#acceptSafety').onclick = () => {
     localStorage.setItem(SAFETY_KEY, 'yes');
     $('#safetyModal').classList.add('hidden');
@@ -873,7 +936,14 @@ function showOnly(id) {
   if (navigationTransitionsReady && currentView && currentView !== id) playPageTransition();
   views.forEach(view => $(`#${view}`).classList.toggle('hidden', view !== id));
   scrollTo(0, 0);
-  rememberView(id);
+  const state = rememberView(id, false);
+  if (navigationHistoryMode === 'none') return;
+  const nextState = navigationState(state);
+  const shouldReplace = navigationHistoryMode === 'replace'
+    || !history.state?.dayTrippingHistory
+    || historyTarget(history.state) === historyTarget(nextState);
+  if (shouldReplace) history.replaceState(nextState, '');
+  else history.pushState(nextState, '');
 }
 
 function showPassport() {
@@ -1523,7 +1593,7 @@ function openDetail(pack, isDaily = false, isSurprise = false) {
   const chips = [...pack.collections, ...pack.tags].map(item => `<span class="meta">${esc(item)}</span>`).join('');
   const score = displayScore(pack);
   const activeMode = activeAdventure ? state.runMode : isDaily ? 'daily' : isSurprise ? 'surprise' : 'standard';
-  $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-home>←</button><span class="eyebrow detail-location">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
+  $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-back aria-label="Go back">←</button><span class="eyebrow detail-location">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
     <div class="detail-body">
       <div class="detail-stats">
         <div class="stat"><span>Distance</span><b>${pack.route_distance_km} km</b></div>
@@ -1545,7 +1615,7 @@ function openDetail(pack, isDaily = false, isSurprise = false) {
       <button id="startRoute" class="primary">${activeAdventure ? 'Continue adventure' : hasCompleted(pack) ? 'Play again' : 'Start adventure'}</button>
       ${activeAdventure ? '<button id="endRoute" class="end-adventure-btn">End adventure</button>' : ''}
     </div>`;
-  $$('[data-home]').forEach(button => button.onclick = showHome);
+  bindNavigationButtons();
   $('#startRoute').onclick = () => startGame(pack);
   $('#directionsToStart').onclick = () => openStartDirections(pack);
   $('#saveOffline').onclick = () => saveAdventureOffline(pack);
@@ -2707,7 +2777,7 @@ function renderGame(options = {}) {
       ${recommendations.length ? `<section class="completion-next"><span class="eyebrow">KEEP EXPLORING</span><h2>Two adventures nearby</h2><p>Carry the momentum into another town when you are ready.</p><div class="route-grid preview-grid">${recommendations.map(candidate => routeCard(candidate)).join('')}</div></section>` : ''}
       <button class="primary" data-home>Back to adventures</button>
     </div>`;
-    $$('[data-home]').forEach(button => button.onclick = showHome);
+    bindNavigationButtons();
     $('#shareCompletion').onclick = () => openPostcardEditor(pack, score);
     wireCards();
     renderCompletionMap(pack);
@@ -2719,7 +2789,7 @@ function renderGame(options = {}) {
       ? '<span class="surprise-run-badge">+20% Surprise Me</span>'
       : '';
   $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${formatPoints(state.score)}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${modeBadge ? `<div class="game-meta-row">${modeBadge}</div>` : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−100 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
-  $$('[data-home]').forEach(button => button.onclick = showHome);
+  bindNavigationButtons();
   if (debugMode) renderDebugPanel(stop, debugDistance);
   if (currentHints > 0) {
     $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
@@ -3333,7 +3403,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=22', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=23', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
