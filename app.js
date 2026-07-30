@@ -6,6 +6,7 @@ let distanceComparisons = [];
 let userPos = null;
 let map = null;
 let mapReady = false;
+let mapTownMarkers = [];
 let detailMap = null;
 let currentPack = null;
 let currentStop = 0;
@@ -1084,8 +1085,8 @@ function completed(pack) {
 function routeCard(pack, extra = '') {
   const [icon, label] = timeCategory(pack.estimated_minutes);
   const nearby = userPos
-    ? `${distance(userPos, [pack.centre.lat, pack.centre.long]).toFixed(1)} km away`
-    : `${pack.route_distance_km} km walk`;
+    ? `${formatRouteDistance(distance(userPos, [pack.centre.lat, pack.centre.long]))} away`
+    : `${formatRouteDistance(pack.route_distance_km)} walk`;
   const score = displayScore(pack);
   return `<article class="route-card" style="--accent:${colour(pack)}" data-pack="${esc(pack.pack_id)}">
     <span class="eyebrow route-location">${esc(extra ? `${extra} · ${pack.display_name}` : pack.display_name)}</span>
@@ -1128,18 +1129,18 @@ function renderDaily() {
     : streak.best ? `🔥 Best streak: ${streak.best} days · Play today to begin again` : '🔥 Complete today’s pick to start a streak';
   $('#mapPackCount').textContent = `${packs.length} adventures mapped`;
   $('#dailyDate').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY DOUBLE · ×2 POINTS</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${pick.route_distance_km} km</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Double it →</span></div>`;
+  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY DOUBLE · ×2 POINTS</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${formatRouteDistance(pick.route_distance_km)}</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Double it →</span></div>`;
   wireCards();
 }
 
-function renderAll() {
+function renderAll(query = '') {
   renderDaily();
   renderExplorerRecord();
   renderFeatured();
   renderNearby();
   renderCollections();
   renderFilters();
-  renderBrowse();
+  renderBrowse(query);
   wireCards();
 }
 
@@ -1302,7 +1303,10 @@ let sortFilter = 'recommended';
 function renderFilters() {
   const options = (items, selected) => items.map(([value, label]) => `<option value="${value}" ${value === selected ? 'selected' : ''}>${label}</option>`).join('');
   const times = [['all', 'Any duration'], ['quick', 'Up to 45 minutes'], ['hour', '45–100 minutes'], ['half', 'Half day'], ['full', 'Full day']];
-  const distances = [['all', 'Any distance'], ['short', 'Under 3 km'], ['medium', '3–6 km'], ['long', '6 km+']];
+  const unit = routeDistanceUnit();
+  const shortDistance = routeDistanceValue(3);
+  const longDistance = routeDistanceValue(6);
+  const distances = [['all', 'Any distance'], ['short', `Under ${shortDistance} ${unit}`], ['medium', `${shortDistance}–${longDistance} ${unit}`], ['long', `${longDistance} ${unit}+`]];
   const difficulties = [['all', 'Any difficulty'], ['relaxed', 'Relaxed'], ['explorer', 'Explorer'], ['detective', 'Detective'], ['challenging', 'Challenging']];
   const sorts = [['recommended', 'Recommended'], ['az', 'Town A–Z'], ['quickest', 'Quickest first'], ['shortest', 'Shortest walk'], ['longest', 'Longest walk'], ['nearest', 'Nearest to me']];
   $('#filterPanel').innerHTML = `
@@ -1449,7 +1453,7 @@ function townMapPopup(group) {
   const routeButtons = group.routes.map(pack => {
     const encodedId = encodeURIComponent(pack.pack_id).replace(/'/g, '%27');
     const stopCount = pack.stops.length;
-    return `<button class="town-map-route" onclick="window.openPack(decodeURIComponent('${encodedId}'))"><b>${esc(pack.route_name)}</b><span>${pack.route_distance_km} km · ${stopCount} ${stopCount === 1 ? 'stop' : 'stops'} →</span></button>`;
+    return `<button class="town-map-route" onclick="window.openPack(decodeURIComponent('${encodedId}'))"><b>${esc(pack.route_name)}</b><span>${formatRouteDistance(pack.route_distance_km)} · ${stopCount} ${stopCount === 1 ? 'stop' : 'stops'} →</span></button>`;
   }).join('');
   return `<div class="town-map-popup"><span class="town-map-kicker">${routeCount} ${routeCount === 1 ? 'ADVENTURE' : 'ADVENTURES'}</span><b class="town-map-name">${esc(group.townName)}</b><div class="town-map-routes">${routeButtons}</div></div>`;
 }
@@ -1462,6 +1466,7 @@ function showMap() {
   setTimeout(() => {
     if (!mapReady) {
       map = L.map('map', { zoomControl: false }).setView([52.45, -0.18], 7);
+      mapTownMarkers = [];
       L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(map);
       const townGroups = mapTownGroups();
       townGroups.forEach(group => {
@@ -1474,9 +1479,10 @@ function showMap() {
           iconSize: [66, 66],
           iconAnchor: [33, 33]
         });
-        L.marker(group.centre, { icon, title: `${group.townName}: ${routeCount} ${routeCount === 1 ? 'route' : 'routes'}` })
+        const marker = L.marker(group.centre, { icon, title: `${group.townName}: ${routeCount} ${routeCount === 1 ? 'route' : 'routes'}` })
           .addTo(map)
           .bindPopup(townMapPopup(group), { maxWidth: 340, minWidth: 245 });
+        mapTownMarkers.push({ marker, group });
       });
       if (townGroups.length > 1) map.fitBounds(townGroups.map(group => group.centre), { padding: [45, 45], maxZoom: 9 });
       else if (townGroups.length === 1) map.setView(townGroups[0].centre, 13);
@@ -1485,6 +1491,10 @@ function showMap() {
       map.invalidateSize();
     }
   }, 50);
+}
+
+function refreshMapDistances() {
+  mapTownMarkers.forEach(({ marker, group }) => marker.setPopupContent(townMapPopup(group)));
 }
 
 function applyRouteTheme(pack) {
@@ -1596,7 +1606,7 @@ function openDetail(pack, isDaily = false, isSurprise = false) {
   $('#detailContent').innerHTML = `<div class="detail-hero" style="--detail-accent:${colour(pack)}"><button class="back-btn" data-back aria-label="Go back">←</button><span class="eyebrow detail-location">${esc(pack.display_name.toUpperCase())}</span><h1>${esc(pack.route_name)}</h1><p>${esc(pack.short_description)}</p></div>
     <div class="detail-body">
       <div class="detail-stats">
-        <div class="stat"><span>Distance</span><b>${pack.route_distance_km} km</b></div>
+        <div class="stat"><span>Distance</span><b>${formatRouteDistance(pack.route_distance_km)}</b></div>
         <div class="stat"><span>Time</span><b>${pack.estimated_minutes} mins</b></div>
         <div class="stat"><span>Difficulty</span><b>${esc(pack.difficulty_label)}</b></div>
         <div class="stat"><span>Stops</span><b>${pack.stops.length}</b></div>
@@ -2234,7 +2244,7 @@ async function buildCompletionPostcard(pack, score, options = {}) {
   const stats = [
     ['ADVENTURE', formatPoints(score)],
     ['STOPS', String(pack.stops.length)],
-    ['WALK', `${pack.route_distance_km} KM`],
+    ['WALK', formatRouteDistance(pack.route_distance_km).toUpperCase()],
     ['TIME', elapsed.toUpperCase()]
   ];
   stats.forEach((item, index) => {
@@ -2767,7 +2777,7 @@ function renderGame(options = {}) {
       <span class="eyebrow">${esc(adventureTitle(state))}</span><h1>${esc(pack.display_name)} conquered!</h1><p>You uncovered ${pack.stops.length} landmarks and their stories.</p>
       ${state.lastDailyDate ? `<div class="daily-complete"><span>☀</span><div><b>Daily adventure complete</b><small>${streak.current > 1 ? `${streak.current}-day streak — keep it going tomorrow.` : 'Your daily streak has begun.'}</small></div></div>` : ''}
       ${(state.lastRunMode || state.runMode) === 'surprise' ? '<div class="surprise-complete"><span>⚄</span><div><b>Surprise accepted</b><small>Your completed score includes the 20% Lucky Dip bonus.</small></div></div>' : ''}
-      <div class="finish-score"><span>Adventure score</span><b>✦ ${formatPoints(score)}</b><small>Best: ${formatPoints(displayScore(pack))} points · Explorer total: ${formatPoints(explorerTotal)}</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${pack.route_distance_km} km</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
+      <div class="finish-score"><span>Adventure score</span><b>✦ ${formatPoints(score)}</b><small>Best: ${formatPoints(displayScore(pack))} points · Explorer total: ${formatPoints(explorerTotal)}</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${formatRouteDistance(pack.route_distance_km)}</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
       ${scoreBreakdownHtml(state)}
       <div class="route-map-head"><div><span class="eyebrow">YOUR ROUTE</span><h2>Stops at a glance</h2></div><span class="pill">Unlocked</span></div>
       <div id="completionMap" aria-label="Completed route map"></div>
@@ -2831,6 +2841,32 @@ function qualityFor(accuracy) {
   return ['poor', 'Uncertain'];
 }
 
+function routeDistanceUnit() {
+  return profile.unit === 'mi' ? 'mi' : 'km';
+}
+
+function routeDistanceValue(kilometres) {
+  const value = Math.max(0, Number(kilometres) || 0) * (profile.unit === 'mi' ? 0.621371192 : 1);
+  const maximumFractionDigits = profile.unit === 'mi' ? (value < 1 ? 2 : value < 100 ? 1 : 0) : 2;
+  return value.toLocaleString('en-GB', { maximumFractionDigits });
+}
+
+function formatRouteDistance(kilometres) {
+  return `${routeDistanceValue(kilometres)} ${routeDistanceUnit()}`;
+}
+
+function refreshDistanceDisplays() {
+  renderAll($('#searchInput').value);
+  refreshMapDistances();
+  if (!$('#detailView').classList.contains('hidden') && currentPack) {
+    openDetail(currentPack, selectedAsDaily, selectedAsSurprise);
+  } else if (!$('#collectionView').classList.contains('hidden') && currentCollection) {
+    openCollection(currentCollection);
+  } else if (!$('#gameView').classList.contains('hidden') && currentPack && !currentPack.stops[currentStop]) {
+    renderGame();
+  }
+}
+
 function setUnit(unit) {
   profile.unit = unit === 'mi' ? 'mi' : 'km';
   saveProfile();
@@ -2843,6 +2879,7 @@ function setUnit(unit) {
   else if (latestGuideReading) renderGuideReading(latestGuideReading.stop, latestGuideReading.position);
   else if (lastScanReading) renderScanResult(lastScanReading.stop, lastScanReading.position);
   if (pendingArrival) showArrivalConfirm(pendingArrival.stop, pendingArrival.distance, pendingArrival.accuracy, pendingArrival.base, pendingArrival.debug);
+  refreshDistanceDisplays();
   renderSettings();
 }
 
@@ -3062,17 +3099,17 @@ function renderDebugPanel(stop, metres = debugDistance, scanned = false) {
     <button id="closeGuidePanel" class="guide-close" aria-label="Close test panel">×</button>
     <div class="debug-head"><span class="debug-badge">TEST MODE</span><span>Hidden location simulator</span></div>
     <h3>Fake your distance</h3>
-    <p>Drag from directly on the landmark to 5,000 km away, then run a simulated GPS scan.</p>
+    <p>Drag from directly on the landmark to ${formatDistance(5000000)} away, then run a simulated GPS scan.</p>
     ${scanned ? `<div class="debug-scan-status">Simulated reading: <b>${formatDistance(debugDistance)}</b> away. Move closer to trigger the arrival check.</div>` : ''}
     <output id="debugDistanceValue">${formatDistance(debugDistance)}</output>
     <input id="debugDistanceSlider" type="range" min="0" max="1000" step="1" value="${metresToSlider(debugDistance)}" aria-label="Simulated distance">
-    <div class="debug-scale"><span>At target</span><span>5,000 km</span></div>
+    <div class="debug-scale"><span>At target</span><span>${formatDistance(5000000)}</span></div>
     <div class="debug-presets">
       <button type="button" data-debug-metres="0">At target</button>
-      <button type="button" data-debug-metres="35">35 m</button>
+      <button type="button" data-debug-metres="35">${formatDistance(35)}</button>
       <button type="button" data-debug-metres="262">London Bridge</button>
-      <button type="button" data-debug-metres="1000">1 km</button>
-      <button type="button" data-debug-metres="35000">35 km</button>
+      <button type="button" data-debug-metres="1000">${formatDistance(1000)}</button>
+      <button type="button" data-debug-metres="35000">${formatDistance(35000)}</button>
       <button type="button" data-debug-metres="3862400">Route 66</button>
     </div>
     <div id="debugFacts" class="distance-facts">${comparisonFact(debugDistance)}</div>
@@ -3403,7 +3440,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=23', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=24', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
