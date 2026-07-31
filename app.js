@@ -1339,14 +1339,15 @@ function achievementCard(badge) {
   return `<div class="achievement ${badge.unlocked ? 'unlocked' : 'locked'} ${esc(badge.tier || 'bronze')}"><span class="achievement-icon">${badge.icon}</span><div><b>${esc(badge.name)}</b><small>${esc(badge.description)}</small><em>+${formatPoints(badge.points)} Explorer Points</em></div></div>`;
 }
 
-function passportStamp(pack) {
+function passportStamp(pack, index, total) {
   const state = packProgress(pack);
   const initials = String(pack.display_name || pack.town || '?')
     .split(/[\s-]+/).map(word => word[0]).join('').slice(0, 3).toUpperCase();
   const completedDate = Number(state.completedAt)
     ? new Date(Number(state.completedAt)).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })
     : 'Adventure complete';
-  return `<article class="passport-stamp" style="--stamp:${colour(pack)}"><div class="passport-seal"><b>${esc(initials)}</b><span>EXPLORED</span></div><div><span>${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b><small>${esc(completedDate)} · ${formatPoints(displayScore(pack))} pts</small><em>${esc(pack.collections[0] || 'Local discovery')}</em></div></article>`;
+  const stampNumber = Math.max(1, Number(total) - Number(index));
+  return `<article class="passport-stamp" style="--stamp:${colour(pack)}"><span class="stamp-number">NO. ${stampNumber}</span><div class="passport-seal" aria-hidden="true"><b>${esc(initials)}</b><span>EXPLORED</span></div><div class="passport-stamp-copy"><span class="passport-stamp-town">${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b><div class="passport-stamp-meta"><small>${esc(completedDate)}</small><strong>${formatPoints(displayScore(pack))} pts</strong></div><em>${esc(pack.collections[0] || 'Local discovery')}</em></div></article>`;
 }
 
 function renderPassport() {
@@ -1366,7 +1367,7 @@ function renderPassport() {
     return `<div class="collection-patch ${found ? 'started' : ''} ${found === total ? 'complete' : ''}"><span>${['♜', '≈', '✎', '⚙', '◇'][index % 5]}</span><div><b>${esc(collection)}</b><small>${found}/${total} explored</small></div></div>`;
   }).join('');
   const completedHtml = completedPacks.length
-    ? completedPacks.map(passportStamp).join('')
+    ? completedPacks.map((pack, index) => passportStamp(pack, index, completedPacks.length)).join('')
     : '<div class="passport-empty"><span>◎</span><div><b>Your first highlight is waiting.</b><p>Complete an adventure and this space starts becoming unmistakably yours.</p></div></div>';
   const nextHtml = nextPacks.length ? `<div class="passport-next-label"><span>WHAT'S NEXT?</span><b>Your next story starts here</b></div>${nextPacks.map(pack => `<button class="passport-next" data-pack="${esc(pack.pack_id)}" style="--stamp:${colour(pack)}"><span>↗</span><div><b>${esc(pack.display_name)}</b><small>${esc(pack.route_name)} · ${pack.estimated_minutes} min</small></div></button>`).join('')}` : '';
   $('#passportGrid').innerHTML = completedHtml + nextHtml;
