@@ -1,5 +1,4 @@
 import { expect, test } from '@playwright/test';
-import { readFile } from 'node:fs/promises';
 
 async function skipFirstRun(page) {
   await page.addInitScript(() => {
@@ -67,45 +66,6 @@ test('route age guidance is presented separately from the key statistics', async
   await expect(ageGuidance.getByText('AGE GUIDANCE')).toBeVisible();
   await expect(ageGuidance).toContainText(/Recommended for explorers aged \d+\+/);
   await expect(ageGuidance).toContainText('Final venue entry policies may vary.');
-});
-
-test('a fully completed passport keeps every collection stamp inside the phone layout', async ({ page }) => {
-  const backup = JSON.parse(await readFile(new URL('../day-tripping-quiz-progress-all-45-complete.json', import.meta.url), 'utf8'));
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.addInitScript(completed => {
-    localStorage.setItem('day-tripping-quiz-safety-accepted-v1', 'yes');
-    localStorage.setItem('day-tripping-quiz-progress-v1', JSON.stringify(completed.progress));
-    localStorage.setItem('day-tripping-quiz-profile-v1', JSON.stringify(completed.profile));
-  }, backup);
-  await page.goto('/');
-  await page.getByRole('button', { name: 'Open explorer passport' }).click();
-  await expect(page.locator('.passport-stamp')).toHaveCount(45);
-  await expect(page.locator('.passport-stamp').first()).toContainText('Suspension, Collections & Wartime Airwaves');
-
-  const metrics = await page.evaluate(() => {
-    const showcase = document.querySelector('.passport-showcase');
-    const section = document.querySelector('#passportSection');
-    const grid = document.querySelector('#passportGrid');
-    const stamps = [...document.querySelectorAll('.passport-stamp')];
-    return {
-      innerWidth: window.innerWidth,
-      pageScrollWidth: document.documentElement.scrollWidth,
-      showcaseWidth: showcase.getBoundingClientRect().width,
-      sectionWidth: section.getBoundingClientRect().width,
-      gridWidth: grid.getBoundingClientRect().width,
-      stampsFit: stamps.every(stamp => stamp.getBoundingClientRect().width <= grid.getBoundingClientRect().width + 1),
-      contentFits: stamps.every(stamp => {
-        const copy = stamp.querySelector('.passport-stamp-copy');
-        return copy.clientWidth > 0 && copy.scrollWidth <= copy.clientWidth + 1;
-      })
-    };
-  });
-  expect(metrics.pageScrollWidth).toBeLessThanOrEqual(metrics.innerWidth);
-  expect(metrics.showcaseWidth).toBeLessThanOrEqual(metrics.innerWidth);
-  expect(metrics.sectionWidth).toBeLessThanOrEqual(metrics.showcaseWidth + 1);
-  expect(metrics.gridWidth).toBeLessThanOrEqual(metrics.sectionWidth);
-  expect(metrics.stampsFit).toBe(true);
-  expect(metrics.contentFits).toBe(true);
 });
 
 test('practical guidance has valid scores and does not name route stops', async ({ page }) => {

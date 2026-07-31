@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "shrewsbury-castle-darwin-welsh-harp",
+  "version": 1,
+  "town": "Shrewsbury",
+  "display_name": "Shrewsbury",
+  "route_name": "Castles, Darwin & Quantum Leaps",
+  "description": "Cross Shrewsbury from its Norman castle through Charles Darwin's schooldays and a modern evolutionary sculpture to a riverside coaching-inn finish.",
+  "short_description": "Red sandstone, a young naturalist, a giant curve and an old inn by the river.",
+  "centre": {
+    "lat": 52.710165,
+    "long": -2.753627
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1,
+  "estimated_minutes": 50,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "castle",
+    "science",
+    "public-art",
+    "pub-finish"
+  ],
+  "collections": [
+    "Historic Places",
+    "Makers & Industry"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact route from the castle and station area to the River Severn at Welsh Bridge.",
+  "before_you_go": {
+    "terrain": "Historic pavements and riverside approaches with some uneven stone and busy crossings.",
+    "hills": "Short slopes lead down from the castle area towards the river.",
+    "steps": "No steps are required on the intended street route.",
+    "accessibility_score": 2,
+    "accessibility": "The outdoor route uses public streets and riverside approaches; gradients, old paving and flood-related diversions can vary.",
+    "toilets": "Check current council, museum, library or shopping-centre facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable on the street route, with care on slopes and uneven paving."
+  },
+  "cover_theme": "bridge",
+  "stops": [
+    {
+      "Town": "Shrewsbury",
+      "Route": "Castles, Darwin & Quantum Leaps",
+      "Stop_ID": "SHR201",
+      "Stop_Order": 1,
+      "Stop_Name": "Shrewsbury Castle",
+      "Target_Lat": 52.7109513,
+      "Target_Long": -2.7495951,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin at the red fortress raised by a Norman earl to command the Severn crossing.",
+      "Hint_1": "Head to the castle above the railway station.",
+      "Hint_2": "Find the red-sandstone gate and main castle building; the checkpoint is outside on the public approach.",
+      "Unlock_Fact": "Roger de Montgomery founded Shrewsbury Castle in 1074. Much of its surviving red-sandstone form reflects later medieval rebuilding and subsequent restoration.",
+      "Explorer_Prompt": "From the public approach, find one arrow slit, battlement or other defensive-looking feature.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Shrewsbury",
+      "Route": "Castles, Darwin & Quantum Leaps",
+      "Stop_ID": "SHR202",
+      "Stop_Order": 2,
+      "Stop_Name": "Charles Darwin Statue",
+      "Target_Lat": 52.7104147,
+      "Target_Long": -2.7507904,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find the seated naturalist outside the school where his curiosity was not yet famous.",
+      "Hint_1": "Walk a short distance towards the library in Castle Gates.",
+      "Hint_2": "Look for the bronze seated figure outside the former Shrewsbury School building.",
+      "Unlock_Fact": "Charles Darwin attended Shrewsbury School when it occupied this building. The statue by Horace Montford was unveiled in 1897, fifteen years after Darwin's death.",
+      "Explorer_Prompt": "Observe the statue's hands and note what the sculptor chose to place with the seated figure.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Shrewsbury",
+      "Route": "Castles, Darwin & Quantum Leaps",
+      "Stop_ID": "SHR203",
+      "Stop_Order": 3,
+      "Stop_Name": "Quantum Leap",
+      "Target_Lat": 52.7099128,
+      "Target_Long": -2.7568502,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Seek a huge stone curve where evolution, sculpture and a local nickname collide beside the river.",
+      "Hint_1": "Walk west through the town towards Mardol Quay.",
+      "Hint_2": "Find the large looping public sculpture near the River Severn.",
+      "Unlock_Fact": "Quantum Leap was unveiled in 2009 for the bicentenary of Darwin's birth and the 150th anniversary of On the Origin of Species. Its abstract form refers to evolution and geological change.",
+      "Explorer_Prompt": "Walk around the public space and choose the angle from which the sculpture looks most like a living form.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Shrewsbury",
+      "Route": "Castles, Darwin & Quantum Leaps",
+      "Stop_ID": "SHR204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Shrewsbury Hotel",
+      "Target_Lat": 52.7093809,
+      "Target_Long": -2.7572721,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish where the Welsh Harp once sent stage waggons west from beside the bridge.",
+      "Hint_1": "Continue a short distance towards Welsh Bridge and Bridge Place.",
+      "Hint_2": "Find the food-serving pub and hotel overlooking the river approach.",
+      "Unlock_Fact": "Route complete! An inn called the Welsh Harp is thought to have stood here in the seventeenth century and later dispatched stage waggons for Welshpool. It became the Britannia and then The Shrewsbury Hotel. Check today's hours before food or a drink.",
+      "Explorer_Prompt": "From outside, find one detail linking the building to coaching, Wales or the nearby bridge.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Shrewsbury Hotel",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-shrewsbury-hotel-shrewsbury",
+    "hours": {
+      "mon": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "07:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "07:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "07:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

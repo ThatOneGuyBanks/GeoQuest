@@ -180,6 +180,26 @@
     {
       "file": "bedford-bridges-broadcasts-pilgrims.json",
       "enabled": true
+    },
+    {
+      "file": "derby-pickfords-silk-standing-order.json",
+      "enabled": true
+    },
+    {
+      "file": "gloucester-docks-friars-regal.json",
+      "enabled": true
+    },
+    {
+      "file": "ipswich-customs-wolsey-cricketers.json",
+      "enabled": true
+    },
+    {
+      "file": "kettering-wicksteed-rails-dalkeith.json",
+      "enabled": true
+    },
+    {
+      "file": "shrewsbury-castle-darwin-welsh-harp.json",
+      "enabled": true
     }
   ]
 }

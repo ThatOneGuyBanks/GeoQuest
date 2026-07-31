@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "ipswich-customs-wolsey-cricketers",
+  "version": 1,
+  "town": "Ipswich",
+  "display_name": "Ipswich",
+  "route_name": "Customs, Cardinals & Cricketers",
+  "description": "Walk uphill from the old port's customs house through Cardinal Wolsey's unfinished college and an exuberant merchant home to a purpose-built interwar pub.",
+  "short_description": "Maritime trade, a cardinal's gate, four continents and a cricketing finish.",
+  "centre": {
+    "lat": 52.055607,
+    "long": 1.155785
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.4,
+  "estimated_minutes": 60,
+  "difficulty_label": "Detective",
+  "tags": [
+    "maritime",
+    "tudor",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Rivers & Harbours",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A south-to-north route from Ipswich Waterfront through the town centre to Crown Street.",
+  "before_you_go": {
+    "terrain": "Waterside and town-centre pavements with some old paving and busy crossings.",
+    "hills": "A gentle uphill walk leads from the waterfront into the town centre.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility_score": 2,
+    "accessibility": "All checkpoints are outdoors; use signed crossings and allow extra time for gradients and waterfront works.",
+    "toilets": "Check current council, museum, library or shopping-centre facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable, with care on the gradual climb and busier central pavements."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Ipswich",
+      "Route": "Customs, Cardinals & Cricketers",
+      "Stop_ID": "IPS201",
+      "Stop_Order": 1,
+      "Stop_Name": "Old Custom House",
+      "Target_Lat": 52.052831,
+      "Target_Long": 1.1590311,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Begin where ships declared their cargo beneath a clock facing the wet dock.",
+      "Hint_1": "Head to the waterfront at Common Quay.",
+      "Hint_2": "Find the grand columned customs building overlooking the marina.",
+      "Unlock_Fact": "Ipswich's Old Custom House was completed in 1845 as trade expanded around the Wet Dock. Its classical frontage gave the working port a suitably official face.",
+      "Explorer_Prompt": "From the quay, spot a maritime symbol, clock or column without approaching the water's edge.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ipswich",
+      "Route": "Customs, Cardinals & Cricketers",
+      "Stop_ID": "IPS202",
+      "Stop_Order": 2,
+      "Stop_Name": "Wolsey's Gate",
+      "Target_Lat": 52.0529557,
+      "Target_Long": 1.1545321,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Find the lone Tudor gateway left from a cardinal's college that never reached its grand ambition.",
+      "Hint_1": "Walk west along the waterfront edge towards College Street.",
+      "Hint_2": "Look for the red-brick gateway standing beside the road.",
+      "Unlock_Fact": "Wolsey's Gate was built around 1528 for Cardinal Thomas Wolsey's planned college in his home town. The college was abandoned after his fall, leaving the gate as its principal survivor.",
+      "Explorer_Prompt": "Find the carved or moulded detail that gives the brick gateway a ceremonial appearance.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ipswich",
+      "Route": "Customs, Cardinals & Cricketers",
+      "Stop_ID": "IPS203",
+      "Stop_Order": 3,
+      "Stop_Name": "The Ancient House",
+      "Target_Lat": 52.0570018,
+      "Target_Long": 1.1548232,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Seek a merchant's house where plasterwork divides the world into four old continents.",
+      "Hint_1": "Walk north into the centre towards the Buttermarket and Saint Stephen's Lane.",
+      "Hint_2": "Find the richly decorated timber-framed corner house in Arras Square.",
+      "Unlock_Fact": "The Ancient House is a late-medieval merchant's home. Its elaborate seventeenth-century pargeting includes panels representing Europe, Asia, Africa and America.",
+      "Explorer_Prompt": "From the pedestrian area, find one continent, creature or repeated plaster motif.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Ipswich",
+      "Route": "Customs, Cardinals & Cricketers",
+      "Stop_ID": "IPS204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Cricketers",
+      "Target_Lat": 52.0596391,
+      "Target_Long": 1.1547545,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish at a sporting name in a 1930s pub styled after a moated Suffolk hall.",
+      "Hint_1": "Continue north towards Crown Street and the edge of Christchurch Park.",
+      "Hint_2": "Find the food-serving pub with cricket in its name.",
+      "Unlock_Fact": "Route complete! This building was purpose-built in the 1930s as The Cricketers. Its design was inspired by Helmingham Hall, ancestral home of the Tollemache family connected with the original brewery. Check today's hours before food or a drink.",
+      "Explorer_Prompt": "Find one gable, chimney or timber detail that gives the pub a country-house character.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Cricketers",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-cricketers-ipswich/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

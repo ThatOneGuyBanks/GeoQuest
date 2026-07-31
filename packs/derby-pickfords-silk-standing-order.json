@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "derby-pickfords-silk-standing-order",
+  "version": 1,
+  "town": "Derby",
+  "display_name": "Derby",
+  "route_name": "Pickfords, Silk & Standing Orders",
+  "description": "Follow a Georgian architect's showpiece home to a soaring parish tower and one of the world's earliest factory sites before finishing inside a former bank.",
+  "short_description": "Georgian design, a cathedral tower, revolutionary silk and a bank-vault finish.",
+  "centre": {
+    "lat": 52.924759,
+    "long": -1.479248
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.2,
+  "estimated_minutes": 55,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "architecture",
+    "industrial-history",
+    "museums",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A compact central route from Friar Gate to Iron Gate, ending a short walk from the bus station.",
+  "before_you_go": {
+    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
+    "hills": "Mostly gentle urban gradients.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility_score": 2,
+    "accessibility": "All checkpoints are outdoors on public routes. Temporary works, crowding and surface conditions can vary, so check local information if step-free travel is essential.",
+    "toilets": "Check current council, museum, library or shopping-centre facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+  },
+  "cover_theme": "cathedral",
+  "stops": [
+    {
+      "Town": "Derby",
+      "Route": "Pickfords, Silk & Standing Orders",
+      "Stop_ID": "DBY201",
+      "Stop_Order": 1,
+      "Stop_Name": "Pickford's House Museum",
+      "Target_Lat": 52.9243551,
+      "Target_Long": -1.4858587,
+      "Win_Radius_m": 40,
+      "Cryptic_Clue": "Begin at the Georgian home where an architect displayed his own best work to future clients.",
+      "Hint_1": "Head to Friar Gate west of the city centre.",
+      "Hint_2": "Look for the elegant townhouse museum numbered 41.",
+      "Unlock_Fact": "Architect Joseph Pickford built this house around 1770 as both his family home and a showcase for his work. Its rooms now explore domestic life from the Georgian period onward.",
+      "Explorer_Prompt": "From the pavement, choose one window, doorway or decorative detail that advertises the architect's skill.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Derby",
+      "Route": "Pickfords, Silk & Standing Orders",
+      "Stop_ID": "DBY202",
+      "Stop_Order": 2,
+      "Stop_Name": "Derby Cathedral",
+      "Target_Lat": 52.9248415,
+      "Target_Long": -1.4773624,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the church whose vast tower rose before it gained the title of cathedral.",
+      "Hint_1": "Walk east along Friar Gate and through the Cathedral Quarter.",
+      "Hint_2": "Look for the tall square tower on Iron Gate.",
+      "Unlock_Fact": "The tower of All Saints was built in the early sixteenth century. The church became Derby Cathedral in 1927, long after its landmark tower had defined the skyline.",
+      "Explorer_Prompt": "Look up safely and count the main stages of the tower above the surrounding roofs.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Derby",
+      "Route": "Pickfords, Silk & Standing Orders",
+      "Stop_ID": "DBY203",
+      "Stop_Order": 3,
+      "Stop_Name": "Museum of Making",
+      "Target_Lat": 52.9258732,
+      "Target_Long": -1.4758251,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Seek the riverside mill where imported secrets helped launch Britain's factory age.",
+      "Hint_1": "Continue north-east to the River Derwent on Full Street.",
+      "Hint_2": "Find the museum occupying the historic Silk Mill site.",
+      "Unlock_Fact": "John Lombe's silk mill was built here in the 1720s and is widely regarded as one of the world's first modern factories. The site now forms part of the Derwent Valley Mills World Heritage Site.",
+      "Explorer_Prompt": "From outside, find one feature that connects the building to water power or manufacturing.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Derby",
+      "Route": "Pickfords, Silk & Standing Orders",
+      "Stop_ID": "DBY204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Standing Order",
+      "Target_Lat": 52.923965,
+      "Target_Long": -1.4779447,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish where money once moved by instruction and refreshments now arrive by order.",
+      "Hint_1": "Return south towards Iron Gate.",
+      "Hint_2": "Find the food-serving pub inside a grand former bank.",
+      "Unlock_Fact": "Route complete! The building was the Crompton and Evans Union Bank and later a NatWest branch, which closed in 1993. Its banking past inspired the pub's name. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "From outside, spot one feature designed to make bank customers feel their money was secure.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Standing Order",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-standing-order-derby/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "00:30"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "00:30"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "00:30"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "00:30"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

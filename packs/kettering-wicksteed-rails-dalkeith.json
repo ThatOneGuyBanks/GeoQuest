@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "kettering-wicksteed-rails-dalkeith",
+  "version": 1,
+  "town": "Kettering",
+  "display_name": "Kettering",
+  "route_name": "Playgrounds, Rails & a Tall Spire",
+  "description": "Travel from Charles Wicksteed's pioneering play park through the railway that transformed the town to its medieval parish spire, finishing at a pub named for local landowners.",
+  "short_description": "Inventive play, Midland rails, a landmark spire and a historic town-centre meal.",
+  "centre": {
+    "lat": 52.394273,
+    "long": -0.723113
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 3.2,
+  "estimated_minutes": 100,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "parks",
+    "railways",
+    "medieval",
+    "pub-finish"
+  ],
+  "collections": [
+    "Makers & Industry",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A one-way route from Wicksteed Park to the town centre, ending about a ten-minute walk from Kettering station.",
+  "before_you_go": {
+    "terrain": "Park entrance paths and town pavements, with several main-road crossings and occasional uneven surfaces.",
+    "hills": "Mostly gentle gradients on the walk north into town.",
+    "steps": "No steps are required on the intended route; use signed crossings and dropped kerbs.",
+    "accessibility_score": 2,
+    "accessibility": "Every checkpoint is outdoors, but park access, road works and crossing conditions can change. Check current local information if step-free travel is essential.",
+    "toilets": "Check current Wicksteed Park, station and town-centre public-facility information before setting off; access depends on opening hours.",
+    "footwear": "Comfortable walking shoes are recommended for the longer distance.",
+    "dogs": "The outdoor route can suit controlled dogs; check current park rules and the final venue's dog policy.",
+    "pushchairs": "Generally possible on the intended paved route, but the distance and major crossings require extra time."
+  },
+  "cover_theme": "meadow",
+  "stops": [
+    {
+      "Town": "Kettering",
+      "Route": "Playgrounds, Rails & a Tall Spire",
+      "Stop_ID": "KET201",
+      "Stop_Order": 1,
+      "Stop_Name": "Wicksteed Park Main Entrance",
+      "Target_Lat": 52.3863934,
+      "Target_Long": -0.7088375,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Begin at the gateway to an engineer's experiment in healthy, unrestricted play.",
+      "Hint_1": "Head to the public main entrance on Barton Road; no ride admission is needed for this checkpoint.",
+      "Hint_2": "Find the signed entrance to the park founded by Charles Wicksteed.",
+      "Unlock_Fact": "Engineer Charles Wicksteed created the park to encourage family play and healthy outdoor life. It officially opened in 1921 after work on its lake and early playground equipment.",
+      "Explorer_Prompt": "From the public entrance, find one sign, piece of play equipment or engineering detail linked to the park's purpose.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Kettering",
+      "Route": "Playgrounds, Rails & a Tall Spire",
+      "Stop_ID": "KET202",
+      "Stop_Order": 2,
+      "Stop_Name": "Kettering Railway Station",
+      "Target_Lat": 52.3943329,
+      "Target_Long": -0.7313137,
+      "Win_Radius_m": 60,
+      "Cryptic_Clue": "Walk to the Gothic station where the Midland line helped a leather-and-shoe town reach wider markets.",
+      "Hint_1": "Follow public pavements north-west towards Station Road and Northfield Avenue.",
+      "Hint_2": "Find the main entrance to the four-platform station.",
+      "Unlock_Fact": "Kettering station opened in 1857 on the Midland Railway's Leicester-to-Hitchin line. Surviving buildings record its original design and later expansion as the railway grew.",
+      "Explorer_Prompt": "From the forecourt, spot one Gothic shape or piece of decorative railway ironwork.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Kettering",
+      "Route": "Playgrounds, Rails & a Tall Spire",
+      "Stop_ID": "KET203",
+      "Stop_Order": 3,
+      "Stop_Name": "Church of St Peter and St Paul",
+      "Target_Lat": 52.3969,
+      "Target_Long": -0.7266461,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Find the town's oldest building beneath a spire rising about 180 feet above the streets.",
+      "Hint_1": "Walk east towards the historic centre and Church Walk.",
+      "Hint_2": "Look for the large parish church with the exceptionally tall west tower and spire.",
+      "Unlock_Fact": "The Grade I-listed parish church is mainly fifteenth-century and is Kettering's oldest building. Its tower and spire rise about 180 feet and contain a ring of twelve bells.",
+      "Explorer_Prompt": "From the public churchyard path, find one change in stone colour, carving or medieval window shape.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Kettering",
+      "Route": "Playgrounds, Rails & a Tall Spire",
+      "Stop_ID": "KET204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Earl of Dalkeith",
+      "Target_Lat": 52.3994662,
+      "Target_Long": -0.7256547,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Finish where a Scottish title remembers the family that owned land around the town for centuries.",
+      "Hint_1": "Continue north through the centre towards Dalkeith Place.",
+      "Hint_2": "Find the food-serving pub carrying an earl's title.",
+      "Unlock_Fact": "Route complete! Dalkeith Place and the pub take their name from the Earl of Dalkeith, the title traditionally given to the eldest son of the Duke of Buccleuch, whose family were major local landowners. Check today's hours before stopping for food or a drink.",
+      "Explorer_Prompt": "Find the title or heraldic imagery on the exterior sign.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Earl of Dalkeith",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-earl-of-dalkeith-kettering/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "01:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}

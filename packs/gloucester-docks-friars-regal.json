@@ -1,0 +1,169 @@
+{
+  "pack_format": 2,
+  "pack_id": "gloucester-docks-friars-regal",
+  "version": 1,
+  "town": "Gloucester",
+  "display_name": "Gloucester",
+  "route_name": "Docks, Friars & Picture Palaces",
+  "description": "Move from Gloucester's monumental dock warehouses through the remains of a medieval friary and a royal abbey church to a cinema delayed by war.",
+  "short_description": "Tall warehouses, ruined friars, fan vaults and a cinematic food stop.",
+  "centre": {
+    "lat": 51.865332,
+    "long": -2.24718
+  },
+  "author": "Day Tripping Quiz",
+  "route_distance_km": 1.5,
+  "estimated_minutes": 65,
+  "difficulty_label": "Explorer",
+  "tags": [
+    "docks",
+    "medieval",
+    "architecture",
+    "pub-finish"
+  ],
+  "collections": [
+    "Rivers & Harbours",
+    "Historic Places"
+  ],
+  "featured": false,
+  "daily_eligible": true,
+  "recommended_age": "All ages",
+  "transport_note": "A central route from Gloucester Docks through the historic core to King's Square.",
+  "before_you_go": {
+    "terrain": "Dockside paving, town-centre pavements and historic stone surfaces that may be slippery after rain.",
+    "hills": "Mostly level, with only short ramps around the docks.",
+    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility_score": 2,
+    "accessibility": "Outdoor checkpoints use public dock and street routes; old paving, events and waterside works may create temporary restrictions.",
+    "toilets": "Check current council, museum, library or shopping-centre facility listings before setting off; opening times can change.",
+    "footwear": "Comfortable everyday walking shoes should be suitable.",
+    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "pushchairs": "Generally suitable, with care on old dock paving and busy central streets."
+  },
+  "cover_theme": "river",
+  "stops": [
+    {
+      "Town": "Gloucester",
+      "Route": "Docks, Friars & Picture Palaces",
+      "Stop_ID": "GLC201",
+      "Stop_Order": 1,
+      "Stop_Name": "North Warehouse",
+      "Target_Lat": 51.8641254,
+      "Target_Long": -2.2523607,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Begin beside the water at the first of the giant brick stores that made this inland port look seagoing.",
+      "Hint_1": "Head to the north side of Gloucester Docks near Severn Road.",
+      "Hint_2": "Find the long red-brick warehouse facing the dock basin.",
+      "Unlock_Fact": "North Warehouse was completed in 1827 and was the first of the monumental grain warehouses that came to define Gloucester Docks.",
+      "Explorer_Prompt": "From the public quay, count a vertical row of loading openings without approaching the water's edge.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Gloucester",
+      "Route": "Docks, Friars & Picture Palaces",
+      "Stop_ID": "GLC202",
+      "Stop_Order": 2,
+      "Stop_Name": "Greyfriars",
+      "Target_Lat": 51.8638843,
+      "Target_Long": -2.2470447,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Find the roofless remains of brothers in grey hidden among modern streets.",
+      "Hint_1": "Walk east from the docks towards Greyfriars and Eastgate Street.",
+      "Hint_2": "Look for the surviving stone walls of the medieval friary church.",
+      "Unlock_Fact": "Franciscan friars were established in Gloucester in the thirteenth century. Much of their church was rebuilt around 1518, and substantial stone ruins survive after the Dissolution.",
+      "Explorer_Prompt": "From the public boundary, find a blocked arch or window that once opened into the church.",
+      "Difficulty": 3,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Gloucester",
+      "Route": "Docks, Friars & Picture Palaces",
+      "Stop_ID": "GLC203",
+      "Stop_Order": 3,
+      "Stop_Name": "Gloucester Cathedral",
+      "Target_Lat": 51.8673376,
+      "Target_Long": -2.2467498,
+      "Win_Radius_m": 55,
+      "Cryptic_Clue": "Seek the former abbey whose cloisters turned stone ribs into fans and sheltered a fallen king.",
+      "Hint_1": "Continue north through the historic centre to Cathedral Close.",
+      "Hint_2": "Find the great abbey church with its central tower.",
+      "Unlock_Fact": "The present church began as the abbey of Saint Peter in 1089. Its cloisters contain celebrated medieval fan vaulting, and King Edward II was buried here after his death in 1327.",
+      "Explorer_Prompt": "From the public close, find one carved creature, pinnacle or repeated stone pattern.",
+      "Difficulty": 2,
+      "Image": null,
+      "Audio": null
+    },
+    {
+      "Town": "Gloucester",
+      "Route": "Docks, Friars & Picture Palaces",
+      "Stop_ID": "GLC204",
+      "Stop_Order": 4,
+      "Stop_Name": "The Regal",
+      "Target_Lat": 51.8659797,
+      "Target_Long": -2.2425656,
+      "Win_Radius_m": 50,
+      "Cryptic_Clue": "Finish at a royal-sounding picture house whose construction paused for an entire world war.",
+      "Hint_1": "Walk east towards King's Square and St Aldate Street.",
+      "Hint_2": "Find the large food-serving pub whose name recalls its cinema years.",
+      "Unlock_Fact": "Route complete! Construction of the Regal cinema began in 1939, stopped during the Second World War and was finally completed in the 1950s. It later became the ABC and Cannon before returning to its original name as a pub. Check today's hours before food or a drink.",
+      "Explorer_Prompt": "Look for one broad frontage detail that hints at the building's life as a cinema.",
+      "Difficulty": 1,
+      "Image": null,
+      "Audio": null
+    }
+  ],
+  "final_venue": {
+    "name": "The Regal",
+    "timezone": "Europe/London",
+    "minimum_visit_minutes": 30,
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.jdwetherspoon.com/pubs/the-regal-gloucester/",
+    "hours": {
+      "mon": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "tue": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "wed": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "thu": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ],
+      "fri": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sat": [
+        [
+          "08:00",
+          "02:00"
+        ]
+      ],
+      "sun": [
+        [
+          "08:00",
+          "24:00"
+        ]
+      ]
+    }
+  }
+}
