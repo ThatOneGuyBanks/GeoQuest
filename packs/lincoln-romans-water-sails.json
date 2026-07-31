@@ -32,12 +32,13 @@
   "transport_note": "A mostly downhill route from uphill Lincoln to Brayford Pool; reaching the start from the station requires a substantial climb.",
   "before_you_go": {
     "terrain": "City pavements with old stone, uneven sections and busy crossings.",
-    "hills": "A pronounced downhill walk from Newport to Brayford Pool; the reverse journey is steep.",
+    "hills": "A pronounced downhill walk leads from the upper city to the waterfront; the reverse journey is steep.",
     "steps": "The intended street route avoids required steps, but some optional shortcuts are stepped.",
+    "accessibility_score": 1,
     "accessibility": "Use signed pavements and allow extra time for Lincoln's steep gradients and uneven historic surfaces.",
     "toilets": "Check current museum, council and Brayford visitor-facility listings before setting off.",
     "footwear": "Supportive, grippy walking shoes are recommended.",
-    "dogs": "The outdoor route can suit controlled dogs; take care beside traffic and check the final venue's current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible on the street route, but the long downhill gradient requires care."
   },
   "cover_theme": "river",

@@ -30,13 +30,14 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact route south and east of the historic centre, starting on Lensfield Road and crossing Parker's Piece.",
   "before_you_go": {
-    "terrain": "Busy central pavements around Lensfield Road and Regent Street, plus surfaced paths across Parker’s Piece.",
+    "terrain": "Busy central pavements around Lensfield Road and Regent Street, plus surfaced public-park paths.",
     "hills": "Almost entirely level, with ordinary kerb and crossing gradients.",
     "steps": "No steps are required for the outdoor clues; use marked crossings and dropped kerbs.",
+    "accessibility_score": 3,
     "accessibility": "The route is step-free outdoors, though Parker’s Piece paths, roadworks and heavy pedestrian traffic can vary.",
-    "toilets": "Check the Polar Museum, city-centre and shopping-area facility listings and opening times before departure.",
+    "toilets": "Check current museum, city-centre and shopping-area facility listings and opening times before departure.",
     "footwear": "Comfortable everyday shoes are suitable; paths across Parker’s Piece may be damp after rain.",
-    "dogs": "Dogs can join the outdoor route under control; take care around traffic and check the final venue’s policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally straightforward, with busy crossings on Regent Street the main pinch points."
   },
   "cover_theme": "meadow",

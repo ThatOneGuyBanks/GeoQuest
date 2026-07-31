@@ -29,13 +29,14 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
   "before_you_go": {
-    "terrain": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
+    "terrain": "A compact central route using public pavements and public-garden paths whose opening times can vary.",
     "hills": "Mostly gentle town-centre gradients.",
     "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility_score": 3,
     "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
     "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
     "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
   },
   "cover_theme": "cathedral",

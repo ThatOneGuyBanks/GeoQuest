@@ -87,14 +87,15 @@
   ],
   "short_description": "Decode royal, civic and river-trade stories from the cathedral to the Nene.",
   "before_you_go": {
-    "terrain": "Paved city-centre streets, Cathedral Square and riverside paths, ending beside a moored barge.",
+    "terrain": "Paved city-centre streets, a civic square and surfaced riverside paths.",
     "hills": "The route is largely level, with bridge approaches and ordinary dropped-kerb gradients.",
-    "steps": "No steps are needed to reach the outdoor checkpoints; access aboard the final barge uses its current gangway arrangements.",
-    "accessibility": "All clues can be solved from public, outdoor routes. Riverside surfaces, bridge works and the barge gangway can change, so check current access if step-free travel is essential.",
+    "steps": "No steps are needed to reach the outdoor checkpoints. Access inside the finishing venue has separate arrangements that may change.",
+    "accessibility_score": 2,
+    "accessibility": "The clue route is step-free on public paths. Riverside surfaces, bridge works and access inside the finishing venue can change, so check current conditions if step-free travel is essential.",
     "toilets": "Check current city-centre or cathedral visitor-facility listings before departure; facilities at the finish depend on opening hours.",
     "footwear": "Comfortable shoes with grip are sensible for paving that may be wet beside the river.",
-    "dogs": "Dogs can accompany the outdoor route on a lead; check Charters Bar’s current dog policy before entering.",
-    "pushchairs": "The outdoor route is generally pushchair-friendly, but the final gangway and temporary riverside works may need extra care."
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
+    "pushchairs": "The outdoor route is generally pushchair-friendly, but temporary riverside works and access inside the finishing venue may need extra care."
   },
   "cover_theme": "cathedral",
   "route_distance_km": 1.5,

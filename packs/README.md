@@ -101,7 +101,15 @@ Record the venue or bar opening hours rather than only the kitchen serving hours
 
 ## Before you go
 
-Every `before_you_go` object must include honest notes for terrain, hills, steps, accessibility, toilets, footwear, dogs and pushchairs. These are shown before the player starts, so keep them useful without naming or revealing the final venue. Check these notes on the ground and avoid absolute accessibility promises because temporary works and closures can change conditions.
+Every `before_you_go` object must include honest notes for terrain, hills, steps, `accessibility_score`, accessibility, toilets, footwear, dogs and pushchairs. These are shown before the player starts, so they must not name any checkpoint, pub, restaurant or finishing venue. Street names and alternative-route streets are acceptable when they help someone plan a safer route. Check these notes on the ground and avoid absolute accessibility promises because temporary works and closures can change conditions.
+
+Use the accessibility score conservatively:
+
+- `3` — the intended route is step-free, generally level and uses suitable surfaced public pavements or paths.
+- `2` — a step-free route or alternative exists, but gradients, uneven surfaces, narrow sections or busy crossings require caution.
+- `1` — the route has a significant barrier such as a steep gradient, difficult historic surface or impractical step-free alternative and is not generally accessible.
+
+The score describes the outdoor clue route, not guaranteed access inside the finishing venue. Temporary works, weather and local conditions can still change accessibility.
 
 ## Quality checklist
 

@@ -1636,8 +1636,30 @@ function beforeYouGoItems(pack) {
   ];
 }
 
+function accessibilityScore(pack) {
+  const score = Number(pack.before_you_go?.accessibility_score);
+  return [1, 2, 3].includes(score) ? score : 2;
+}
+
+function accessibilityScoreDetails(score) {
+  if (score === 3) return {
+    label: 'Generally fully accessible',
+    text: 'The intended route is step-free, generally level and uses surfaced public pavements or paths. Temporary works and local conditions can still change.'
+  };
+  if (score === 1) return {
+    label: 'Not generally accessible',
+    text: 'The route includes a significant barrier such as a steep gradient, difficult historic surface or impractical step-free alternative. Read every detail before deciding whether it is suitable.'
+  };
+  return {
+    label: 'Accessible with caution',
+    text: 'A step-free route or alternative is available, but gradients, uneven surfaces, narrow sections or busy crossings may require extra care.'
+  };
+}
+
 function beforeYouGoCard(pack) {
-  return `<section class="before-you-go"><div class="section-heading"><div><span class="eyebrow">BEFORE YOU GO</span><h2>Know the walk, keep the mystery</h2></div></div><div class="before-grid">${beforeYouGoItems(pack).map(([icon, label, text]) => `<div class="before-item"><span>${esc(icon)}</span><div><b>${esc(label)}</b><small>${esc(text)}</small></div></div>`).join('')}</div></section>`;
+  const score = accessibilityScore(pack);
+  const scoreDetails = accessibilityScoreDetails(score);
+  return `<details class="before-you-go"><summary class="before-summary"><span class="before-summary-title"><span class="eyebrow">BEFORE YOU GO</span><b>Accessibility score</b></span><span class="accessibility-score score-${score}" aria-label="Accessibility score ${score} out of 3"><strong>${score}</strong><small>out of 3</small></span><span class="before-summary-arrow" aria-hidden="true">⌄</span></summary><div class="before-panel"><div class="accessibility-explainer score-${score}"><span>${esc(scoreDetails.label)}</span><p>${esc(scoreDetails.text)}</p></div><div class="section-heading"><div><h2>Know the walk, keep the mystery</h2></div></div><div class="before-grid">${beforeYouGoItems(pack).map(([icon, label, text]) => `<div class="before-item"><span>${esc(icon)}</span><div><b>${esc(label)}</b><small>${esc(text)}</small></div></div>`).join('')}</div></div></details>`;
 }
 
 function offlineAdventureUrl(pack) {

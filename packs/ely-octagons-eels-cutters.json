@@ -31,12 +31,13 @@
   "transport_note": "A compact route from the cathedral and market area downhill to Ely's riverside, ending close to the railway station.",
   "before_you_go": {
     "terrain": "Historic pavements, market-area paving, park paths and riverside surfaces that may be damp.",
-    "hills": "A gentle but sustained descent leads from the cathedral area to the river.",
+    "hills": "A gentle but sustained descent leads from the upper historic centre to the river.",
     "steps": "No steps are required on the intended street and park route.",
+    "accessibility_score": 2,
     "accessibility": "Outdoor checkpoints are on public routes, but gradients, riverside conditions and temporary works can vary.",
     "toilets": "Check current cathedral-area, market and station facility listings before setting off.",
     "footwear": "Comfortable shoes with grip are useful after wet weather near the river.",
-    "dogs": "The outdoor route is dog-friendly when animals are controlled; check the final venue's current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable, with care on the downhill park paths and any damp riverside paving."
   },
   "cover_theme": "river",

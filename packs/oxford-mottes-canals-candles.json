@@ -31,14 +31,15 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A short western city-centre route close to Oxford station and Gloucester Green bus station.",
   "before_you_go": {
-    "terrain": "Central pavements around the castle quarter and Hythe Bridge Street, with patches of old or uneven paving.",
-    "hills": "The walking route stays level; climbing Oxford Castle Mound is not required.",
-    "steps": "All clues can be solved without climbing the mound or using steps.",
+    "terrain": "Central pavements around the castle quarter and nearby city streets, with patches of old or uneven paving.",
+    "hills": "The walking route stays level; optional heritage-site climbs are not required.",
+    "steps": "All clues can be solved without taking optional climbs or using steps.",
+    "accessibility_score": 2,
     "accessibility": "The outdoor line is step-free, but crowded pavements, crossings and temporary works near the station can affect access.",
     "toilets": "Check Gloucester Green, station and castle-quarter visitor-facility information before setting out.",
     "footwear": "Comfortable town walking shoes should be sufficient.",
-    "dogs": "The outdoor route is suitable for controlled dogs; check the Four Candles’ current policy before entering.",
-    "pushchairs": "Generally suitable, avoiding any optional climb at the castle mound."
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
+    "pushchairs": "Generally suitable when optional climbs are avoided."
   },
   "cover_theme": "bridge",
   "stops": [

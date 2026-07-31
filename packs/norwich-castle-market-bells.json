@@ -30,12 +30,13 @@
   "transport_note": "A compact central circuit beginning above Castle Meadow and ending near Orford Hill.",
   "before_you_go": {
     "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
-    "hills": "Short slopes connect Castle Hill with the market; the remainder is fairly level.",
-    "steps": "No steps are required if the signed sloped approaches to Castle Hill are used.",
-    "accessibility": "Use the sloped public approaches around Castle Quarter; market crowding and temporary stalls can narrow routes.",
+    "hills": "Short slopes connect the upper centre with the market; the remainder is fairly level.",
+    "steps": "No steps are required when the signed sloped public approaches are used.",
+    "accessibility_score": 2,
+    "accessibility": "Use the signed sloped public approaches; market crowding and temporary stalls can narrow routes.",
     "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
     "footwear": "Comfortable everyday walking shoes should be suitable.",
-    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally possible using the sloped approaches, with care through the busy market."
   },
   "cover_theme": "cathedral",

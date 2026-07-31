@@ -27,16 +27,17 @@
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
-  "transport_note": "An especially compact route beginning at York railway station and ending on Blossom Street.",
+  "transport_note": "An especially compact route through the station area and along Blossom Street.",
   "before_you_go": {
-    "terrain": "Station approaches and Blossom Street pavements, with historic paving around Micklegate Bar.",
+    "terrain": "Station-area and Blossom Street pavements, with historic paving around a city-wall gateway.",
     "hills": "Mostly level, with a gentle rise towards the city-wall gateway.",
-    "steps": "Climbing Micklegate Bar is not required; every clue is solvable from street level.",
+    "steps": "Climbing the city-wall gateway is not required; every clue is solvable from street level.",
+    "accessibility_score": 2,
     "accessibility": "The street-level route is step-free, though station traffic, narrow pavements and busy crossings need care.",
     "toilets": "Check York station and current city-centre public-facility listings before starting.",
     "footwear": "Everyday walking shoes are suitable for this short urban route.",
-    "dogs": "Keep dogs close around the station and road crossings; check the Punch Bowl’s current policy.",
-    "pushchairs": "Suitable at street level, without entering or climbing the historic bar."
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
+    "pushchairs": "Suitable at street level without climbing the historic gateway."
   },
   "cover_theme": "bridge",
   "stops": [

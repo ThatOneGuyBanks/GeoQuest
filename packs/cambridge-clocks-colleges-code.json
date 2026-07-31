@@ -29,13 +29,14 @@
   "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A central walking route. The bridge checkpoint is at a free public viewpoint; no college admission is required.",
   "before_you_go": {
-    "terrain": "A central walking route. The bridge checkpoint is at a free public viewpoint; no college admission is required.",
+    "terrain": "A central walking route on public pavements. No college admission is required.",
     "hills": "Mostly gentle town-centre gradients.",
     "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility_score": 3,
     "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
     "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
     "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
   },
   "cover_theme": "cathedral",

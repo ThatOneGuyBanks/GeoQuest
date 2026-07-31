@@ -31,10 +31,11 @@
     "terrain": "Describe the real surfaces players will use, such as pavements, cobbles, grass or riverside paths.",
     "hills": "Say whether the route is level, gently sloped or includes a notable climb or descent.",
     "steps": "Say whether steps are required and give a truthful alternative where one exists.",
+    "accessibility_score": 2,
     "accessibility": "Give a cautious, practical summary without promising that temporary conditions will be accessible.",
     "toilets": "Explain where players can check for public facilities without relying on the mystery final venue.",
     "footwear": "Recommend suitable footwear for the actual terrain.",
-    "dogs": "Explain outdoor suitability and remind players to check the final venue’s current dog policy.",
+    "dogs": "Explain outdoor suitability and remind players to check the finishing venue’s current dog policy without naming it.",
     "pushchairs": "Explain whether gradients, cobbles, narrow paths or steps may make the route difficult."
   },
   "cover_theme": "cathedral",

@@ -29,14 +29,15 @@
   "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A public-street route; no college ticket is needed. The final tavern is reached through a narrow pedestrian alley.",
   "before_you_go": {
-    "terrain": "A public-street route; no college ticket is needed. The final tavern is reached through a narrow pedestrian alley.",
+    "terrain": "A public-street route with no college ticket required. A narrow pedestrian alley is used near the end.",
     "hills": "Mostly gentle town-centre gradients.",
     "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Public streets throughout, but the final pedestrian alley is narrow.",
+    "accessibility_score": 2,
+    "accessibility": "Public streets throughout, but a narrow pedestrian alley near the end may require caution.",
     "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
     "footwear": "Supportive, grippy walking shoes are recommended.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Most of the route is suitable, but the narrow final alley may be awkward."
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
+    "pushchairs": "Most of the route is suitable, but the narrow alley near the end may be awkward."
   },
   "cover_theme": "cathedral",
   "stops": [

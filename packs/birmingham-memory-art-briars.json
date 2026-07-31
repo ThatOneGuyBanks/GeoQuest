@@ -30,13 +30,14 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact central route between Centenary Square, Victoria Square and Colmore Row.",
   "before_you_go": {
-    "terrain": "Paved civic squares and city-centre streets between Centenary Square, Victoria Square and Colmore Row.",
+    "terrain": "Paved civic squares and city-centre streets, with broad pedestrian areas and busy central crossings.",
     "hills": "Gentle central-city gradients, with no sustained climb.",
     "steps": "The intended exterior route uses level approaches and does not require building entry.",
+    "accessibility_score": 3,
     "accessibility": "Broad public spaces make most of the route step-free, but events, tram works and crowding can alter routes.",
     "toilets": "Check current library, museum, shopping-centre and council facility listings before departure.",
     "footwear": "Comfortable shoes for hard city paving are recommended.",
-    "dogs": "Dogs can accompany the outdoor route under control; check the Briar Rose’s current policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally easy on broad pavements, with temporary diversions the main variable."
   },
   "cover_theme": "cathedral",

@@ -17,3 +17,5 @@
 - Rewrote the five original packs' clues, hints, facts, fieldwork prompts and completion messages.
 - Replaced duplicated practical guidance with route-specific terrain and accessibility notes.
 - Added age guidance that accounts for clue difficulty and final-venue policies.
+- Added conservative 1–3 accessibility scores to every route and collapsed the full practical guidance behind the score.
+- Removed checkpoint and finishing-venue names from practical and accessibility guidance so route planning does not spoil clues.

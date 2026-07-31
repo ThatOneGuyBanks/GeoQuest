@@ -33,10 +33,11 @@
     "terrain": "Riverside and city pavements with old stone near the walls; wall-top paving can be uneven.",
     "hills": "Several climbs and descents connect the river, walls and city streets.",
     "steps": "The wall-top route includes steps. A longer street-level alternative can reach every checkpoint without using the wall walk.",
+    "accessibility_score": 2,
     "accessibility": "Use the street-level route if steps or narrow wall sections are unsuitable; temporary closures may alter access.",
     "toilets": "Check current city-centre and visitor-attraction facility listings before setting off.",
     "footwear": "Supportive walking shoes are recommended for stone, slopes and the longer distance.",
-    "dogs": "Suitable outdoors for controlled dogs, but wall sections can be narrow; check the final venue's current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Prefer street-level pavements rather than the stepped wall walk and allow extra time."
   },
   "cover_theme": "bridge",

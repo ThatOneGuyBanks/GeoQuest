@@ -30,13 +30,14 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A town-centre loop starting at the railway station, passing the museum and Lido, and ending on Broadway.",
   "before_you_go": {
-    "terrain": "Station approaches, central pavements and surfaced paths around the museum, Embankment and Lido.",
+    "terrain": "Central pavements and surfaced paths around public gardens, the Embankment and a riverside leisure area.",
     "hills": "Largely level, with bridge approaches and ordinary street gradients.",
-    "steps": "The clues are exterior and do not require station, museum or Lido steps.",
+    "steps": "The clues are exterior and do not require entering any station, museum or leisure attraction.",
+    "accessibility_score": 3,
     "accessibility": "A step-free outdoor line is available, but major crossings and event or construction diversions may alter it.",
-    "toilets": "Check current station, museum, Lido and city-centre facility information before setting out.",
+    "toilets": "Check current city-centre and visitor-facility information before setting out.",
     "footwear": "Comfortable shoes are suitable; riverside and Lido approaches can be slick after rain.",
-    "dogs": "Keep dogs controlled around the station and busy crossings; check the College Arms’ current policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable on public pavements, with care needed at the larger road crossings."
   },
   "cover_theme": "fenland",

@@ -32,11 +32,12 @@
   "before_you_go": {
     "terrain": "City pavements from Castlefield to Deansgate, with cobbles, canal-side edges and busy junctions in places.",
     "hills": "Mostly level, with short ramps around viaduct and canal infrastructure.",
-    "steps": "No steps or entry to the elevated viaduct garden are required to solve the clues.",
+    "steps": "No steps or entry to elevated attractions are required to solve the clues.",
+    "accessibility_score": 2,
     "accessibility": "The outdoor route can be step-free, but Castlefield cobbles, construction work and major crossings may require detours.",
     "toilets": "Check current museum, library and city-centre visitor-facility information before starting.",
     "footwear": "Supportive shoes with grip are useful on cobbles and wet canal-side paving.",
-    "dogs": "Keep dogs close beside roads and canals; check the Moon Under Water’s current policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible throughout on pavement alternatives, though cobbles may make sections uncomfortable."
   },
   "cover_theme": "bridge",

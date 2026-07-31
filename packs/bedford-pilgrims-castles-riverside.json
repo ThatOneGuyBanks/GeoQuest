@@ -32,10 +32,11 @@
     "terrain": "A town-centre walking route using public squares, paths and the riverside Embankment.",
     "hills": "Mostly level, with ordinary kerbs and street crossings.",
     "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility_score": 3,
     "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
     "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
     "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable on the main route; check temporary diversions."
   },
   "cover_theme": "river",

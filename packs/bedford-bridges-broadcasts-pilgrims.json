@@ -34,10 +34,11 @@
     "terrain": "Surfaced Embankment paths, bridge approaches and town-centre paving through Bedford’s cultural quarter.",
     "hills": "Flat apart from the gentle suspension-bridge approaches.",
     "steps": "No building entry or steps are required for the outdoor checkpoints.",
+    "accessibility_score": 3,
     "accessibility": "The riverside and central route is broadly step-free, though flooding, events and temporary works can cause diversions.",
-    "toilets": "Check The Higgins, council and shopping-area facility listings and opening times before starting.",
+    "toilets": "Check current museum, council and shopping-area facility listings and opening times before starting.",
     "footwear": "Comfortable shoes with grip are useful beside the river after wet weather.",
-    "dogs": "Dogs can join the outdoor walk on a lead; check the Pilgrim’s Progress venue policy before entering.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable on surfaced paths and pavements, with gentle bridge gradients."
   },
   "cover_theme": "river",

@@ -90,10 +90,11 @@
     "terrain": "Market-town pavements, the historic bridge approach and short riverside streets, with occasional uneven surfaces.",
     "hills": "Largely level apart from the gentle rise over St Ives Bridge.",
     "steps": "No steps are required to solve the exterior clues; entry to individual buildings is not part of the route.",
+    "accessibility_score": 2,
     "accessibility": "The medieval bridge can be narrow and busy, and old paving may be uneven. Check local access updates if step-free travel is essential.",
     "toilets": "Check current town-centre, bus-station or museum facility listings before departure.",
     "footwear": "Comfortable shoes are suitable; grip helps when the bridge and quayside are wet.",
-    "dogs": "Keep dogs close on the narrow bridge and busy market streets; check the final pub’s current policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "The route is compact but the historic bridge and crowded market area may require patience."
   },
   "cover_theme": "bridge",

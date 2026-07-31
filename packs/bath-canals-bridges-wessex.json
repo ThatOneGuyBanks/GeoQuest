@@ -33,10 +33,11 @@
     "terrain": "Pavements, park paths and canal-side approaches, with some uneven stone and busy crossings.",
     "hills": "Gentle gradients; the canal and river approaches include short slopes.",
     "steps": "The intended route can be completed without required steps by staying on signed street approaches.",
+    "accessibility_score": 2,
     "accessibility": "All checkpoints are outdoors, but gradients, old paving and temporary canal works may affect access.",
     "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
     "footwear": "Comfortable everyday walking shoes should be suitable.",
-    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible on the intended street route; use care on slopes and narrow approaches near the canal."
   },
   "cover_theme": "river",

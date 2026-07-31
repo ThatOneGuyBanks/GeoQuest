@@ -87,13 +87,14 @@
   ],
   "short_description": "A gentle Great Ouse circuit through markets, monks and changing bridges.",
   "before_you_go": {
-    "terrain": "Level market-town pavements with short surfaced sections beside the Great Ouse and Priory Centre.",
+    "terrain": "Level market-town pavements with short surfaced sections beside the Great Ouse and a riverside community area.",
     "hills": "The route is mostly flat, with only bridge and kerb gradients.",
     "steps": "No steps are required on the intended outdoor route.",
+    "accessibility_score": 3,
     "accessibility": "Checkpoints are on public routes, but busy crossings, riverside works and ordinary kerbs may affect access.",
     "toilets": "Check current council and Priory Centre facility information before setting off; opening arrangements can change.",
     "footwear": "Everyday walking shoes should be suitable, with extra grip useful after rain near the river.",
-    "dogs": "The outdoor route is suitable for dogs on a lead; check the Coach House’s current policy before entering.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable using the main pavements and dropped kerbs."
   },
   "cover_theme": "meadow",
@@ -112,7 +113,7 @@
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
-  "transport_note": "A very compact town-centre loop linking Market Square, the river and Priory Centre.",
+  "transport_note": "A very compact town-centre loop linking the market area, river and public riverside paths.",
   "final_venue": {
     "name": "The Coach House",
     "timezone": "Europe/London",

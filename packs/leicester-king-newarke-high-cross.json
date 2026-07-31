@@ -29,13 +29,14 @@
   "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A central walking route from The Newarke to High Street, close to the bus stations.",
   "before_you_go": {
-    "terrain": "Paved streets and pedestrian areas through The Newarke, the cathedral quarter and High Street.",
+    "terrain": "Paved streets and pedestrian areas through the museum and cathedral quarters and High Street.",
     "hills": "Mostly level, with gentle street gradients.",
     "steps": "No museum or cathedral entry is required and the exterior route avoids mandatory steps.",
+    "accessibility_score": 3,
     "accessibility": "Outdoor checkpoints are reachable on public routes, subject to kerbs, city-centre works and event closures.",
     "toilets": "Check current museum, shopping-centre and council facility listings before departure.",
     "footwear": "Comfortable urban walking shoes should be suitable.",
-    "dogs": "Dogs can join the outdoor route on a lead; check the High Cross venue’s current policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable across the pedestrianised centre, allowing for crowds."
   },
   "cover_theme": "cathedral",

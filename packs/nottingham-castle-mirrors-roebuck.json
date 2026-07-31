@@ -33,10 +33,11 @@
     "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
     "hills": "A short but noticeable climb leads to the castle area; the remainder is gentler.",
     "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
+    "accessibility_score": 2,
     "accessibility": "All checkpoints are outdoors, but castle-area gradients and old paving may require extra time.",
     "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
     "footwear": "Comfortable everyday walking shoes should be suitable.",
-    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible on public pavements, though the castle climb and busy crossings can be tiring."
   },
   "cover_theme": "cathedral",

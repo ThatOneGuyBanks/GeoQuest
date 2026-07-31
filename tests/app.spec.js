@@ -43,6 +43,45 @@ test('adventure cards are real keyboard controls', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Your mission' })).toBeVisible();
 });
 
+test('accessibility summary is collapsed and reveals the full practical guidance', async ({ page }) => {
+  await openHome(page);
+  await page.locator('.route-card-open').first().click();
+  const practical = page.locator('.before-you-go');
+  await expect(practical).not.toHaveAttribute('open', '');
+  await expect(practical.getByText('Accessibility score')).toBeVisible();
+  await expect(practical.getByText(/out of 3/)).toBeVisible();
+  await expect(practical.getByText('Terrain', { exact: true })).toBeHidden();
+  await practical.locator('summary').click();
+  await expect(practical).toHaveAttribute('open', '');
+  await expect(practical.getByText('Terrain', { exact: true })).toBeVisible();
+  await expect(practical.getByText('Dogs', { exact: true })).toBeVisible();
+});
+
+test('practical guidance has valid scores and does not name route stops', async ({ page }) => {
+  await openHome(page);
+  const audit = await page.evaluate(async () => {
+    const normalise = value => String(value || '')
+      .normalize('NFKD')
+      .replace(/[’']/g, '')
+      .replace(/[^a-z0-9]+/gi, ' ')
+      .trim()
+      .toLowerCase();
+    const index = await fetch('packs/index.json').then(response => response.json());
+    const packs = await Promise.all(index.packs.map(entry => fetch(`packs/${entry.file}`).then(response => response.json())));
+    return packs.flatMap(pack => {
+      const practical = normalise(`${Object.values(pack.before_you_go || {}).join(' ')} ${pack.transport_note || ''}`);
+      const spoilers = pack.stops
+        .map(stop => stop.Stop_Name)
+        .filter(name => practical.includes(normalise(name)));
+      const score = Number(pack.before_you_go?.accessibility_score);
+      return spoilers.length || ![1, 2, 3].includes(score)
+        ? [{ pack: pack.pack_id, score, spoilers }]
+        : [];
+    });
+  });
+  expect(audit).toEqual([]);
+});
+
 test('settings traps focus, closes with Escape and returns focus', async ({ page }) => {
   await openHome(page);
   const opener = page.getByRole('button', { name: 'Help and settings' });

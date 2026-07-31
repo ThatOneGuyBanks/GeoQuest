@@ -33,10 +33,11 @@
     "terrain": "City pavements and pedestrian crossings, with some stone paving around the monuments.",
     "hills": "Mostly downhill from the cathedral towards Lime Street, with moderate urban gradients.",
     "steps": "No steps are required on the intended pavement route.",
+    "accessibility_score": 2,
     "accessibility": "Outdoor checkpoints use public pavements, but gradients and busy junctions require care.",
     "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
     "footwear": "Comfortable everyday walking shoes should be suitable.",
-    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable, with care on the downhill sections and at major crossings."
   },
   "cover_theme": "cathedral",

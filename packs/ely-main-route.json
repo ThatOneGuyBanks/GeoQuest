@@ -87,13 +87,14 @@
   ],
   "short_description": "Follow Cromwell, monastic Ely and the malt trade from cathedral hill to Waterside.",
   "before_you_go": {
-    "terrain": "Town pavements, historic precinct paths and a paved riverside section around The Maltings.",
+    "terrain": "Town pavements, historic precinct paths and a paved riverside section.",
     "hills": "Expect a noticeable descent from the cathedral area to Waterside and a climb back for the finish.",
     "steps": "The intended outdoor route avoids required steps, although the sloping alternatives are longer.",
+    "accessibility_score": 2,
     "accessibility": "The checkpoints are viewable outdoors; gradients, older paving and temporary cathedral-precinct works may affect step-free travel.",
     "toilets": "Check current cathedral, council and Waterside visitor-facility information before setting out.",
     "footwear": "Wear comfortable shoes with grip for the climb and potentially damp riverside paving.",
-    "dogs": "The outdoor route suits dogs kept under control; check the Minster Tavern’s current policy separately.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible throughout on the intended route, but the Waterside climb may be tiring with a pushchair."
   },
   "cover_theme": "fenland",

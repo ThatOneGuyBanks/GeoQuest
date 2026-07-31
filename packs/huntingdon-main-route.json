@@ -89,11 +89,12 @@
   "before_you_go": {
     "terrain": "High Street pavements, Market Hill and surfaced paths leading to the Great Ouse crossing.",
     "hills": "Mostly level, with gentle gradients between the town centre and river.",
-    "steps": "No steps are required; use the modern pedestrian crossing beside the old bridge rather than the historic carriageway.",
+    "steps": "No steps are required; use the modern pedestrian crossing beside the historic carriageway.",
+    "accessibility_score": 3,
     "accessibility": "Outdoor checkpoints are on public routes, but kerbs, busy crossings and the bridge approach can affect access.",
     "toilets": "Check current town-centre and museum visitor-facility listings; the final venue’s facilities depend on opening hours.",
     "footwear": "Comfortable everyday walking shoes should be sufficient.",
-    "dogs": "Dogs can join the outdoor walk on a lead; check the George Hotel’s current policy before entering.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Generally suitable, using dropped kerbs and the pedestrian bridge where available."
   },
   "cover_theme": "river",
@@ -112,7 +113,7 @@
   "featured": false,
   "daily_eligible": true,
   "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
-  "transport_note": "A town-centre and riverside loop from the High Street to the old bridge and back.",
+  "transport_note": "A town-centre and riverside loop from the High Street to the Great Ouse and back.",
   "final_venue": {
     "name": "The George Hotel",
     "timezone": "Europe/London",

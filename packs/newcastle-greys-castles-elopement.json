@@ -33,10 +33,11 @@
     "terrain": "A steep downhill route using public pavements and historic lanes. Cross around the castle carefully because railway lines and busy roads divide the area.",
     "hills": "Includes a notable steep section; take your time and use a suitable alternative where available.",
     "steps": "No required steps are known, though temporary diversions may vary.",
+    "accessibility_score": 1,
     "accessibility": "Steep gradients and historic surfaces may be difficult; check a step-free alternative before setting off.",
     "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
     "footwear": "Supportive, grippy walking shoes are recommended.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
+    "dogs": "Outdoor route; keep dogs under control and check the finishing venue’s current dog policy before entering.",
     "pushchairs": "Possible but the steep section and historic surfaces may be demanding."
   },
   "cover_theme": "river",
