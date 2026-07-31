@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "bury-st-edmunds-kings-abbeys-ales",
-  "version": 1,
+  "version": 2,
   "town": "Bury St Edmunds",
   "display_name": "Bury St Edmunds",
   "route_name": "Kings, Abbeys & Tiny Ales",
@@ -12,7 +12,7 @@
     "long": 0.71606
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.8,
+  "route_distance_km": 1.5,
   "estimated_minutes": 75,
   "difficulty_label": "Explorer",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
   "before_you_go": {
     "terrain": "A compact central route. Abbey Gardens opening times vary, but its main historical area is normally free to enter.",
@@ -65,7 +65,7 @@
       "Stop_Name": "Abbey Ruins and St Edmund's Shrine",
       "Target_Lat": 52.2443031,
       "Target_Long": 0.7195644,
-      "Win_Radius_m": 65,
+      "Win_Radius_m": 60,
       "Cryptic_Clue": "Find the broken stone heart of a mighty monastery built around a murdered king.",
       "Hint_1": "Walk east through Abbey Gardens among the ruins.",
       "Hint_2": "Head towards the modern marker for the shrine of St Edmund.",

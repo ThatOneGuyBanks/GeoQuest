@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "newcastle-greys-castles-elopement",
-  "version": 1,
+  "version": 2,
   "town": "Newcastle upon Tyne",
   "display_name": "Newcastle",
   "route_name": "Greys, Castles & Elopement",
@@ -12,7 +12,7 @@
     "long": -1.60948
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.5,
+  "route_distance_km": 1.3,
   "estimated_minutes": 70,
   "difficulty_label": "Challenging",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 14+; under-18s with an adult; check final venue policy",
   "transport_note": "A steep downhill route using public pavements and historic lanes. Cross around the castle carefully because railway lines and busy roads divide the area.",
   "before_you_go": {
     "terrain": "A steep downhill route using public pavements and historic lanes. Cross around the castle carefully because railway lines and busy roads divide the area.",

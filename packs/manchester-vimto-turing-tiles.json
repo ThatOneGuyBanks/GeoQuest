@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "manchester-vimto-turing-tiles",
-  "version": 1,
+  "version": 2,
   "town": "Manchester",
   "display_name": "Manchester",
   "route_name": "Vimto, Turing & Tiles",
@@ -12,7 +12,7 @@
     "long": -2.23995
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.4,
+  "route_distance_km": 1.8,
   "estimated_minutes": 65,
   "difficulty_label": "Detective",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A level city-centre walk on public pavements. Granby Row and Great Bridgewater Street can be busy, so use marked crossings.",
   "before_you_go": {
     "terrain": "A level city-centre walk on public pavements. Granby Row and Great Bridgewater Street can be busy, so use marked crossings.",

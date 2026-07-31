@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "norwich-dragons-lanes-ale",
-  "version": 1,
+  "version": 2,
   "town": "Norwich",
   "display_name": "Norwich",
   "route_name": "Dragons, Lanes & Ancient Ale",
@@ -26,7 +26,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A central walking route on public streets and cathedral paths. Dragon Hall can be solved from King Street without entering.",
   "before_you_go": {
     "terrain": "A central walking route on public streets and cathedral paths. Dragon Hall can be solved from King Street without entering.",
@@ -65,7 +65,7 @@
       "Stop_Name": "Elm Hill",
       "Target_Lat": 52.6316616,
       "Target_Long": 1.2969808,
-      "Win_Radius_m": 65,
+      "Win_Radius_m": 60,
       "Cryptic_Clue": "Find a crooked hill rebuilt after flames ate nearly every house but one.",
       "Hint_1": "Head north-west towards the Norwich Lanes and cross the river.",
       "Hint_2": "Search for the cobbled street of leaning timber-framed buildings near Princes Street.",

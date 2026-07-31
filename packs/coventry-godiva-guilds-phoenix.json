@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "coventry-godiva-guilds-phoenix",
-  "version": 1,
+  "version": 2,
   "town": "Coventry",
   "display_name": "Coventry",
   "route_name": "Godiva, Guilds & Phoenix",
@@ -12,7 +12,7 @@
     "long": -1.50879
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.1,
+  "route_distance_km": 0.5,
   "estimated_minutes": 55,
   "difficulty_label": "Relaxed",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
   "transport_note": "A very compact pedestrian route through Coventry's historic centre. Cathedral opening is not required.",
   "before_you_go": {
     "terrain": "A very compact pedestrian route through Coventry's historic centre. Cathedral opening is not required.",

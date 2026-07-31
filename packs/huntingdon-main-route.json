@@ -1,11 +1,11 @@
 {
   "pack_format": 2,
   "pack_id": "huntingdon-main-route",
-  "version": 1,
+  "version": 2,
   "town": "Huntingdon",
   "display_name": "Huntingdon",
   "route_name": "Cromwell, Bridges & Players",
-  "description": "Huntingdon walking trail",
+  "description": "Follow Cromwell and Pepys from their old schoolroom through Civil War stories to a six-arched medieval bridge and a historic coaching-yard finish.",
   "centre": {
     "lat": 52.329075,
     "long": -0.182775
@@ -21,13 +21,14 @@
       "Target_Lat": 52.3308,
       "Target_Long": -0.1831,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Where a future Lord Protector learned to read",
-      "Hint_1": "in a building born from a Norman need.",
-      "Hint_2": "Find the old stone building in the High Street.",
-      "Unlock_Fact": "Look for the small stone building that used to be a Grammar School. This is the Cromwell Museum housed in the former Huntingdon Grammar School. Both Oliver Cromwell and Samuel Pepys were educated in this very room!",
+      "Cryptic_Clue": "A future Lord Protector and a famous diarist both learned their lessons within these old walls.",
+      "Hint_1": "Begin on the High Street and look for a small historic school building.",
+      "Hint_2": "Find the former grammar school that now houses the Cromwell Museum.",
+      "Unlock_Fact": "Huntingdon Grammar School was founded in 1565 in the building that now houses the Cromwell Museum. Oliver Cromwell studied here, and the diarist Samuel Pepys later attended the school.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look for the building’s plaque or school-like details and note one date or symbol."
     },
     {
       "Town": "Huntingdon",
@@ -38,13 +39,14 @@
       "Target_Lat": 52.3298,
       "Target_Long": -0.1825,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "A bird of prey in the market square",
-      "Hint_1": "where Civil War soldiers would drink and swear.",
-      "Hint_2": "Look for a historic pub right on the Market Square.",
-      "Unlock_Fact": "Find the pub named after a hunting bird. This is The Falcon. It was famously used as the headquarters for Oliver Cromwell's cavalry during the English Civil War. You can still feel the history in the timber beams.",
+      "Cryptic_Clue": "A hunting bird watched an Ironside regiment gather in the market town.",
+      "Hint_1": "Walk towards Market Hill and look for an inn named after a bird of prey.",
+      "Hint_2": "Find The Falcon on the edge of the historic market area.",
+      "Unlock_Fact": "The Cromwell Museum records that Oliver Cromwell used The Falcon as his headquarters while raising his regiment of Ironsides in 1643. Its timbered exterior still marks the historic inn.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Find the bird on the sign or frontage and describe its pose without entering the inn."
     },
     {
       "Town": "Huntingdon",
@@ -52,16 +54,17 @@
       "Stop_ID": "HUN003",
       "Stop_Order": 3,
       "Stop_Name": "The Old Bridge",
-      "Target_Lat": 52.3265,
-      "Target_Long": -0.1812,
-      "Win_Radius_m": 35,
-      "Cryptic_Clue": "Six arches of stone span the divide",
-      "Hint_1": "linking two towns on the river's tide.",
-      "Hint_2": "Head down to the River Great Ouse.",
-      "Unlock_Fact": "Find the medieval stone bridge crossing the river. This beautiful six-arch stone bridge was built around 1332. It connects Huntingdon with Godmanchester and is one of the finest surviving medieval bridges in England.",
+      "Target_Lat": 52.327243,
+      "Target_Long": -0.177547,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "Six stone arches meet with a slight kink where two medieval building teams joined their work.",
+      "Hint_1": "Follow the High Street south-east towards the Great Ouse.",
+      "Hint_2": "Use the pedestrian crossing beside the Grade I old bridge linking Huntingdon and Godmanchester.",
+      "Unlock_Fact": "Huntingdon’s Grade I old bridge was built around 1332 with six pointed arches. Its slight change in alignment reflects construction advancing from opposite sides of the Great Ouse.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the safe pedestrian route, compare two arches and note one visible difference in their shape or stonework."
     },
     {
       "Town": "Huntingdon",
@@ -72,42 +75,44 @@
       "Target_Lat": 52.3292,
       "Target_Long": -0.1843,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "A royal saint lends his name to this coaching inn",
-      "Hint_1": "where Shakespeare's company might have been.",
-      "Hint_2": "Head back up the High Street to a grand hotel.",
-      "Unlock_Fact": "Look for the large coaching inn with a courtyard. We made it! The George Hotel is a historic coaching inn. It features a rare surviving galleried courtyard a style of inn where travelling theatre companies perhaps even Shakespeare's men used to perform plays.",
+      "Cryptic_Clue": "A saint names this coaching inn, where a galleried yard became a summer Shakespeare stage.",
+      "Hint_1": "Return up the High Street towards a large historic hotel.",
+      "Hint_2": "Find The George at the corner of George Street.",
+      "Unlock_Fact": "Route complete! The George Hotel preserves a historic galleried courtyard. Open-air Shakespeare productions were staged there for sixty-five years, from 1959 to 2024. Finish with food or a drink if the hotel is open.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the public approach, look for the carriage entrance or gallery and note one theatrical-looking feature."
     }
   ],
-  "short_description": "Follow old streets, river crossings and remarkable local characters.",
+  "short_description": "Uncover Cromwell, Civil War drama and a medieval crossing beside the Great Ouse.",
   "before_you_go": {
-    "terrain": "Designed as a walking route.",
-    "hills": "Mostly level, with ordinary kerbs and street crossings.",
-    "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
-    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
-    "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+    "terrain": "High Street pavements, Market Hill and surfaced paths leading to the Great Ouse crossing.",
+    "hills": "Mostly level, with gentle gradients between the town centre and river.",
+    "steps": "No steps are required; use the modern pedestrian crossing beside the old bridge rather than the historic carriageway.",
+    "accessibility": "Outdoor checkpoints are on public routes, but kerbs, busy crossings and the bridge approach can affect access.",
+    "toilets": "Check current town-centre and museum visitor-facility listings; the final venue’s facilities depend on opening hours.",
+    "footwear": "Comfortable everyday walking shoes should be sufficient.",
+    "dogs": "Dogs can join the outdoor walk on a lead; check the George Hotel’s current policy before entering.",
+    "pushchairs": "Generally suitable, using dropped kerbs and the pedestrian bridge where available."
   },
   "cover_theme": "river",
-  "route_distance_km": 3.0,
-  "estimated_minutes": 70,
+  "route_distance_km": 1.3,
+  "estimated_minutes": 60,
   "difficulty_label": "Detective",
   "tags": [
     "history",
     "riverside",
-    "hidden-gems"
+    "civil-war",
+    "hotel-finish"
   ],
   "collections": [
     "Historic Places"
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
+  "transport_note": "A town-centre and riverside loop from the High Street to the old bridge and back.",
   "final_venue": {
     "name": "The George Hotel",
     "timezone": "Europe/London",

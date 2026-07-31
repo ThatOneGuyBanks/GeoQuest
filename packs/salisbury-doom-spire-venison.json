@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "salisbury-doom-spire-venison",
-  "version": 1,
+  "version": 2,
   "town": "Salisbury",
   "display_name": "Salisbury",
   "route_name": "Doom, Spire & Venison",
@@ -12,7 +12,7 @@
     "long": -1.79667
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.2,
+  "route_distance_km": 1,
   "estimated_minutes": 65,
   "difficulty_label": "Detective",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A mostly level central loop. The Doom painting is inside a working church and may not always be viewable; the location unlocks from the public exterior.",
   "before_you_go": {
     "terrain": "A mostly level central loop. The Doom painting is inside a working church and may not always be viewable; the location unlocks from the public exterior.",

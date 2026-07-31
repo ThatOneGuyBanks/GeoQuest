@@ -1,142 +1,147 @@
 {
   "pack_format": 2,
   "pack_id": "peterborough-main-route",
-  "version": 1,
+  "version": 2,
   "town": "Peterborough",
   "display_name": "Peterborough",
-  "route_name": "Queens, Tolls & Highwaymen",
-  "description": "Peterborough walking trail",
+  "route_name": "Queens, Tolls & Barges",
+  "description": "Walk from Cathedral Square to the River Nene, decoding a Restoration guildhall, royal burials and the city’s trading waterfront before a finish aboard a historic barge.",
   "centre": {
-    "lat": 52.582125,
-    "long": -0.252025
+    "lat": 52.570046,
+    "long": -0.240769
   },
   "author": "Day Tripping Quiz",
   "stops": [
     {
       "Town": "Peterborough",
-      "Route": "Queens, Tolls & Highwaymen",
+      "Route": "Queens, Tolls & Barges",
       "Stop_ID": "PET001",
       "Stop_Order": 1,
       "Stop_Name": "Guildhall",
       "Target_Lat": 52.5718,
       "Target_Long": -0.2415,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Standing on legs in the Cathedral's shadow",
-      "Hint_1": "I was built to celebrate a King restored.",
-      "Hint_2": "Look for an open-air building resting on stone pillars in the main square.",
-      "Unlock_Fact": "Find the stone structure in Cathedral Square with the date 1671. This is the Guildhall. It was built in 1671 by the city to commemorate the restoration of King Charles II to the throne. It originally housed a butter market beneath it.",
+      "Cryptic_Clue": "Raised on stone legs, I watched a king return while butter changed hands below. What am I?",
+      "Hint_1": "Search Cathedral Square for a small open-sided stone building.",
+      "Hint_2": "Look for the date 1671 above a structure raised on columns.",
+      "Unlock_Fact": "The Old Guildhall is dated 1671 and is Grade II* listed. Its open ground floor served as a market space, placing civic business above the bustle of Cathedral Square.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the square, count the visible ground-floor arches or note the date displayed on the building."
     },
     {
       "Town": "Peterborough",
-      "Route": "Queens, Tolls & Highwaymen",
+      "Route": "Queens, Tolls & Barges",
       "Stop_ID": "PET002",
       "Stop_Order": 2,
       "Stop_Name": "Cathedral West Front",
       "Target_Lat": 52.5724,
       "Target_Long": -0.2392,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Three massive arches reach for the sky",
-      "Hint_1": "guarding the grave of a tragic Queen.",
-      "Hint_2": "Walk towards the largest building in the city.",
-      "Unlock_Fact": "Stand before the three massive gothic arches of the Cathedral. This is the spectacular West Front of Peterborough Cathedral. Katherine of Aragon Henry VIII's first wife is buried inside. Mary Queen of Scots was also buried here before being moved to Westminster!",
+      "Cryptic_Clue": "Three great arches guard the resting places of one queen and the former grave of another.",
+      "Hint_1": "Walk towards the cathedral and face its monumental west front.",
+      "Hint_2": "Look for three enormous Gothic arches beneath matching gables.",
+      "Unlock_Fact": "Peterborough Cathedral’s west front is famous for its three vast Gothic arches. Katharine of Aragon is buried inside, while Mary, Queen of Scots rested at Peterborough for twenty-five years before James I moved her remains to Westminster Abbey.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look up safely from the precinct and note one repeated shape or figure across the three gables."
     },
     {
       "Town": "Peterborough",
-      "Route": "Queens, Tolls & Highwaymen",
+      "Route": "Queens, Tolls & Barges",
       "Stop_ID": "PET003",
       "Stop_Order": 3,
       "Stop_Name": "Customs House",
-      "Target_Lat": 52.5701,
-      "Target_Long": -0.2413,
+      "Target_Lat": 52.567844,
+      "Target_Long": -0.240234,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Where the river runs and taxes were paid",
-      "Hint_1": "look for the stone house where boats were delayed.",
-      "Hint_2": "Head down to the River Nene.",
-      "Unlock_Fact": "Find the small stone building right by the old town bridge. Built in the early 1700s this is the Old Customs House. This was where tolls were collected from the barges bringing goods up the River Nene from the Wash.",
+      "Cryptic_Clue": "Beside the Nene, a little house once watched cargo arrive and made river traders pay their dues.",
+      "Hint_1": "Follow public pavements south towards Town Bridge and the river.",
+      "Hint_2": "Find the small historic building beside the north side of the bridge.",
+      "Unlock_Fact": "The Old Customs House recalls Peterborough’s working waterfront, when tolls and duties were collected from goods arriving by barge on the River Nene. The building is viewed from outside.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the public path, note one feature that makes this small building look different from the modern riverside structures."
     },
     {
       "Town": "Peterborough",
-      "Route": "Queens, Tolls & Highwaymen",
+      "Route": "Queens, Tolls & Barges",
       "Stop_ID": "PET004",
       "Stop_Order": 4,
-      "Stop_Name": "The Blue Bell (Werrington)",
-      "Target_Lat": 52.6142,
-      "Target_Long": -0.2861,
-      "Win_Radius_m": 35,
-      "Cryptic_Clue": "A ringing sound in a village swallowed by the city. Find the pub where the highwayman drank.",
-      "Hint_1": "Head north to the old village of Werrington.",
-      "Hint_2": "Look for the traditional thatched pub.",
-      "Unlock_Fact": "We made it! The Blue Bell in Werrington is one of the oldest pubs in the area. Local legend claims it was a favourite haunt of highwaymen operating on the old Great North Road!",
+      "Stop_Name": "Charters Bar",
+      "Target_Lat": 52.5681403,
+      "Target_Long": -0.2421408,
+      "Win_Radius_m": 45,
+      "Cryptic_Clue": "My deck once carried grain across European canals; now I stay moored where the Nene meets Town Bridge.",
+      "Hint_1": "Stay beside the river and look for a large converted barge.",
+      "Hint_2": "Find the floating venue called Charters on the west side of Town Bridge.",
+      "Unlock_Fact": "Route complete! Charters occupies the converted Dutch barge Leendert-R, built in 1907 and used to carry cargo on European waterways until 1990. Enjoy the riverside finish if it is open.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the public riverside, notice one surviving working-boat feature on the barge’s exterior."
     }
   ],
-  "short_description": "Decode the cathedral city through kings, queens and river trade.",
+  "short_description": "Decode royal, civic and river-trade stories from the cathedral to the Nene.",
   "before_you_go": {
-    "terrain": "Designed as a walking route.",
-    "hills": "Mostly gentle town-centre gradients.",
-    "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
-    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
-    "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+    "terrain": "Paved city-centre streets, Cathedral Square and riverside paths, ending beside a moored barge.",
+    "hills": "The route is largely level, with bridge approaches and ordinary dropped-kerb gradients.",
+    "steps": "No steps are needed to reach the outdoor checkpoints; access aboard the final barge uses its current gangway arrangements.",
+    "accessibility": "All clues can be solved from public, outdoor routes. Riverside surfaces, bridge works and the barge gangway can change, so check current access if step-free travel is essential.",
+    "toilets": "Check current city-centre or cathedral visitor-facility listings before departure; facilities at the finish depend on opening hours.",
+    "footwear": "Comfortable shoes with grip are sensible for paving that may be wet beside the river.",
+    "dogs": "Dogs can accompany the outdoor route on a lead; check Charters Bar’s current dog policy before entering.",
+    "pushchairs": "The outdoor route is generally pushchair-friendly, but the final gangway and temporary riverside works may need extra care."
   },
   "cover_theme": "cathedral",
-  "route_distance_km": 6.2,
-  "estimated_minutes": 115,
+  "route_distance_km": 1.5,
+  "estimated_minutes": 60,
   "difficulty_label": "Detective",
   "tags": [
     "history",
     "architecture",
-    "city-centre"
+    "riverside",
+    "pub-finish"
   ],
   "collections": [
     "Historic Places"
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
+  "transport_note": "A compact city-centre route from Cathedral Square to Town Bridge and the River Nene.",
   "final_venue": {
-    "name": "The Blue Bell (Werrington)",
+    "name": "Charters Bar",
     "timezone": "Europe/London",
     "minimum_visit_minutes": 30,
-    "hours_verified": "2026-07-29",
-    "hours_url": "https://peterborough.camra.org.uk/viewnode.php?id=93615",
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://www.charters-bar.com/contact/",
     "hours": {
       "mon": [
         [
-          "13:00",
+          "12:00",
           "23:00"
         ]
       ],
       "tue": [
         [
-          "13:00",
+          "12:00",
           "23:00"
         ]
       ],
       "wed": [
         [
-          "13:00",
+          "12:00",
           "23:00"
         ]
       ],
       "thu": [
         [
-          "13:00",
-          "24:00"
+          "12:00",
+          "23:00"
         ]
       ],
       "fri": [

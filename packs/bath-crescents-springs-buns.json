@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "bath-crescents-springs-buns",
-  "version": 1,
+  "version": 2,
   "town": "Bath",
   "display_name": "Bath",
   "route_name": "Crescents, Springs & Buns",
@@ -12,7 +12,7 @@
     "long": -2.36246
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.4,
+  "route_distance_km": 1.5,
   "estimated_minutes": 70,
   "difficulty_label": "Detective",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A downhill city-centre route on public pavements. Expect Georgian paving, busy crossings and a steeper descent from the Circus towards the centre.",
   "before_you_go": {
     "terrain": "A downhill city-centre route on public pavements. Expect Georgian paving, busy crossings and a steeper descent from the Circus towards the centre.",

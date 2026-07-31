@@ -1,11 +1,11 @@
 {
   "pack_format": 2,
   "pack_id": "st-neots-main-route",
-  "version": 1,
+  "version": 2,
   "town": "St Neots",
   "display_name": "St Neots",
   "route_name": "Monks, Markets & Coaches",
-  "description": "St Neots walking trail",
+  "description": "Uncover the market, river crossing and priory that shaped St Neots before finishing where the town’s old coaching story is remembered.",
   "centre": {
     "lat": 52.2274,
     "long": -0.266825
@@ -21,13 +21,14 @@
       "Target_Lat": 52.2275,
       "Target_Long": -0.2662,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "One of the largest squares in the land",
-      "Hint_1": "where markets have thrived since the monks took a stand.",
-      "Hint_2": "Start in the very centre of town.",
-      "Unlock_Fact": "Find the massive open square surrounded by shops. This is the St Neots Market Square. At over 2 acres it's one of the largest market squares in England established by the monks of the local priory in the 12th century.",
+      "Cryptic_Clue": "A priory’s weekly market grew into the broad civic heart of this river town.",
+      "Hint_1": "Begin in the large open square at the centre of St Neots.",
+      "Hint_2": "Stand where the regular town market is held, surrounded by historic frontages.",
+      "Unlock_Fact": "St Neots developed around its priory and river crossing. A weekly Thursday market was authorised by 1130, bringing trade and income to the monks and helping the settlement grow.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Choose one historic-looking frontage around the square and note its roofline or building material."
     },
     {
       "Town": "St Neots",
@@ -38,13 +39,14 @@
       "Target_Lat": 52.2268,
       "Target_Long": -0.2685,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Spanning the Ouse",
-      "Hint_1": "connecting the shires",
-      "Hint_2": "built of stone to withstand the mires.",
-      "Unlock_Fact": "Walk west from the square towards the river. Find the main stone bridge crossing the Great Ouse. This three-arch stone bridge was completed in 1617. Before this bridge was built travellers had to rely on a precarious wooden bridge or a ferry to cross the river into Bedfordshire.",
+      "Cryptic_Clue": "Monks, merchants and modern traffic have all crossed the Ouse here, but today’s bridge is not the old stone span.",
+      "Hint_1": "Walk west from Market Square towards the River Great Ouse.",
+      "Hint_2": "Find the present road bridge and view it from a safe public pavement.",
+      "Unlock_Fact": "The river crossing helped make St Neots a market town. A stone bridge built around 1617 survived until 1964, when it was demolished and replaced by the present concrete crossing.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From the pavement, notice one clearly modern material or shape in the present bridge."
     },
     {
       "Town": "St Neots",
@@ -55,13 +57,14 @@
       "Target_Lat": 52.2281,
       "Target_Long": -0.2671,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "No monks chant here in the modern day",
-      "Hint_1": "but the name remembers where they used to pray.",
-      "Hint_2": "Look for a modern community building near the river.",
-      "Unlock_Fact": "Find the building that shares its name with a monastery. This site sits on the land of the original St Neots Priory a massive monastery founded in 975 AD. The priory was dissolved by Henry VIII and almost nothing remains of it above ground today.",
+      "Cryptic_Clue": "No monks chant here now, but this riverside centre keeps their vanished home in its name.",
+      "Hint_1": "Stay near the river and look for a modern community and events building.",
+      "Hint_2": "Find the Priory Centre beside the site of the medieval monastery.",
+      "Unlock_Fact": "A monastery was founded here around 974 and later rebuilt as a Benedictine priory. After the Dissolution its buildings disappeared; the site later became a brewery and now includes the Priory Centre.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look for the nearby surviving oast-house form or another exterior clue to the site’s later brewing history."
     },
     {
       "Town": "St Neots",
@@ -72,42 +75,44 @@
       "Target_Lat": 52.2272,
       "Target_Long": -0.2655,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Horses were rested and weary men fed",
-      "Hint_1": "where coaches to London found a warm bed.",
-      "Hint_2": "Return near the square and look for an old coaching inn.",
-      "Unlock_Fact": "Look for the pub on the High Street. We made it! St Neots was a major stop on the Great North Road. The Coach House (and the nearby cross keys) were essential rest stops for the stagecoaches travelling between London and the North.",
+      "Cryptic_Clue": "Return towards the market for a house named after the wheels and horses of the old north road.",
+      "Hint_1": "Walk back towards the High Street near Market Square.",
+      "Hint_2": "Find The Coach House at 18 High Street.",
+      "Unlock_Fact": "Route complete! St Neots grew as a river crossing and later prospered on busy coaching routes between London and the north. The Coach House’s name makes a fitting end to that travel story; stop for food or a drink if it is open.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From outside, find one sign, doorway or courtyard feature that suits the coaching-house name."
     }
   ],
-  "short_description": "A gentle riverside mystery through the heart of St Neots.",
+  "short_description": "A gentle Great Ouse circuit through markets, monks and changing bridges.",
   "before_you_go": {
-    "terrain": "Designed as a walking route.",
-    "hills": "Mostly level, with ordinary kerbs and street crossings.",
-    "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Mostly level public routes, but kerbs, crossings and temporary works can affect access.",
-    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
-    "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Generally suitable on the main route; check temporary diversions."
+    "terrain": "Level market-town pavements with short surfaced sections beside the Great Ouse and Priory Centre.",
+    "hills": "The route is mostly flat, with only bridge and kerb gradients.",
+    "steps": "No steps are required on the intended outdoor route.",
+    "accessibility": "Checkpoints are on public routes, but busy crossings, riverside works and ordinary kerbs may affect access.",
+    "toilets": "Check current council and Priory Centre facility information before setting off; opening arrangements can change.",
+    "footwear": "Everyday walking shoes should be suitable, with extra grip useful after rain near the river.",
+    "dogs": "The outdoor route is suitable for dogs on a lead; check the Coach House’s current policy before entering.",
+    "pushchairs": "Generally suitable using the main pavements and dropped kerbs."
   },
   "cover_theme": "meadow",
-  "route_distance_km": 3.0,
-  "estimated_minutes": 70,
+  "route_distance_km": 0.7,
+  "estimated_minutes": 45,
   "difficulty_label": "Relaxed",
   "tags": [
     "riverside",
     "history",
-    "family"
+    "market-town",
+    "pub-finish"
   ],
   "collections": [
     "Rivers & Harbours"
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
+  "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
+  "transport_note": "A very compact town-centre loop linking Market Square, the river and Priory Centre.",
   "final_venue": {
     "name": "The Coach House",
     "timezone": "Europe/London",

@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "winchester-alfred-arthur-eclipse",
-  "version": 1,
+  "version": 2,
   "town": "Winchester",
   "display_name": "Winchester",
   "route_name": "Alfred, Arthur & an Eclipse",
@@ -12,7 +12,7 @@
     "long": -1.31411
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.5,
+  "route_distance_km": 1.7,
   "estimated_minutes": 70,
   "difficulty_label": "Detective",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A central route on public pavements with a steady climb along the High Street. The cathedral and Great Hall clues unlock from outside.",
   "before_you_go": {
     "terrain": "A central route on public pavements with a steady climb along the High Street. The cathedral and Great Hall clues unlock from outside.",

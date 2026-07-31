@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "northampton-shoes-spires-stories",
-  "version": 1,
+  "version": 2,
   "town": "Northampton",
   "display_name": "Northampton",
   "route_name": "Shoes, Spires & Fire",
@@ -12,7 +12,7 @@
     "long": -0.89455
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.2,
+  "route_distance_km": 0.6,
   "estimated_minutes": 55,
   "difficulty_label": "Relaxed",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
   "transport_note": "A short town-centre route using level public streets and squares.",
   "before_you_go": {
     "terrain": "A short town-centre route using level public streets and squares.",

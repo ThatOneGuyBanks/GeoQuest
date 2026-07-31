@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "ely-octagons-eels-cutters",
-  "version": 1,
+  "version": 2,
   "town": "Ely",
   "display_name": "Ely",
   "route_name": "Octagons, Gaols & Silver Eels",
@@ -12,7 +12,7 @@
     "long": 0.265631
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.6,
+  "route_distance_km": 1.5,
   "estimated_minutes": 65,
   "difficulty_label": "Explorer",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact route from the cathedral and market area downhill to Ely's riverside, ending close to the railway station.",
   "before_you_go": {
     "terrain": "Historic pavements, market-area paving, park paths and riverside surfaces that may be damp.",

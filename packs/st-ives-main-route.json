@@ -1,11 +1,11 @@
 {
   "pack_format": 2,
   "pack_id": "st-ives-main-route",
-  "version": 1,
+  "version": 2,
   "town": "St Ives",
   "display_name": "St Ives",
   "route_name": "Chapels, Markets & Cromwell",
-  "description": "St Ives walking trail",
+  "description": "Cross a rare bridge chapel, meet the town’s Victorian traders and find the public statue that remembers Cromwell’s five years in St Ives.",
   "centre": {
     "lat": 52.33215,
     "long": -0.074325
@@ -21,13 +21,14 @@
       "Target_Lat": 52.3312,
       "Target_Long": -0.0735,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "A place of prayer suspended over the flow",
-      "Hint_1": "one of only four such sights to show.",
-      "Hint_2": "Walk down to the river.",
-      "Unlock_Fact": "Find the tiny chapel built directly into the middle of the bridge. This is the St Ives Bridge Chapel built in 1426. It is one of only four surviving bridge chapels in the whole of England originally meant for travellers to pray for a safe journey.",
+      "Cryptic_Clue": "A tiny place of prayer rides the bridge above the river’s flow.",
+      "Hint_1": "Walk to the medieval bridge across the Great Ouse.",
+      "Hint_2": "Find the small stone chapel built into the bridge itself.",
+      "Unlock_Fact": "The St Leger bridge chapel was completed in 1426 as part of St Ives Bridge. It is one of four surviving medieval bridge chapels in England and once served travellers through prayer and toll collection.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From a safe point on the bridge, identify one feature that makes the chapel look like a tiny church."
     },
     {
       "Town": "St Ives",
@@ -38,13 +39,14 @@
       "Target_Lat": 52.3325,
       "Target_Long": -0.0745,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Where farmers traded grain for gold",
-      "Hint_1": "find the grand hall",
-      "Hint_2": "imposing and bold.",
-      "Unlock_Fact": "Look for the most impressive civic building in the town centre. Find the building with the large pillars on the pavement. Built in 1864 this Corn Exchange reflects the massive agricultural wealth of the area. It was the central hub for farmers across the fens to negotiate the sale of their crops.",
+      "Cryptic_Clue": "Victorian merchants raised this grand hall so grain could be traded and townspeople could gather.",
+      "Hint_1": "Head into the centre and look for an imposing public building on The Pavement.",
+      "Hint_2": "Find the Corn Exchange, opened in 1864.",
+      "Unlock_Fact": "St Ives Corn Exchange opened in 1864, funded by local businessmen for corn trading, concerts and public meetings. Residents later campaigned to save it, and it reopened as a community venue in 2010.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look for one decorative detail in the Italianate frontage and describe its colour or shape."
     },
     {
       "Town": "St Ives",
@@ -55,13 +57,14 @@
       "Target_Lat": 52.3331,
       "Target_Long": -0.0752,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "He stands in bronze",
-      "Hint_1": "stern and tall",
-      "Hint_2": "watching over the market stall.",
-      "Unlock_Fact": "Look for the large statue in the main market square. Find the bronze statue of a man with a sword and a bible. This is a statue of Oliver Cromwell who lived in St Ives for five years. He was a local farmer here before rising to become the Lord Protector of England.",
+      "Cryptic_Clue": "A bronze farmer with sword and Bible remembers five local years before national power.",
+      "Hint_1": "Search Market Hill for a standing bronze figure.",
+      "Hint_2": "Find the 1901 statue of Oliver Cromwell.",
+      "Unlock_Fact": "Oliver Cromwell lived in St Ives from 1631 to 1636. F. W. Pomeroy’s statue was unveiled in 1901 after a public fundraising campaign and portrays Cromwell as a country gentleman.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Without stepping into traffic, identify the two objects held by the statue."
     },
     {
       "Town": "St Ives",
@@ -72,82 +75,84 @@
       "Target_Lat": 52.3318,
       "Target_Long": -0.0741,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "After seeing his statue",
-      "Hint_1": "seek his name. Find the riverside pub with a civil war claim.",
-      "Hint_2": "Look for a pub near the river named after the statue you just saw.",
-      "Unlock_Fact": "Find the pub on the waterfront. We made it! The Oliver Cromwell pub. Given the town's strong connections to the man it's the perfect place to end the trail and review the history we've just walked through.",
+      "Cryptic_Clue": "Follow Cromwell’s name from bronze to a former brewery near the old riverport.",
+      "Hint_1": "Leave Market Hill for Wellington Street near the quayside.",
+      "Hint_2": "Find the pub named The Oliver Cromwell.",
+      "Unlock_Fact": "Route complete! The Oliver Cromwell began as the Feathers brewery in the early 1800s and took its present name in 1876, chosen by a republican-minded landlord’s son. Stop for food or a drink if it is open.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look for one exterior detail that refers either to Cromwell or the building’s brewing past."
     }
   ],
-  "short_description": "Explore a beautiful market town shaped by its medieval bridge and river.",
+  "short_description": "A compact riverport trail of medieval devotion, market trade and Cromwell.",
   "before_you_go": {
-    "terrain": "Designed as a walking route.",
-    "hills": "Mostly gentle town-centre gradients.",
-    "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
-    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
-    "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+    "terrain": "Market-town pavements, the historic bridge approach and short riverside streets, with occasional uneven surfaces.",
+    "hills": "Largely level apart from the gentle rise over St Ives Bridge.",
+    "steps": "No steps are required to solve the exterior clues; entry to individual buildings is not part of the route.",
+    "accessibility": "The medieval bridge can be narrow and busy, and old paving may be uneven. Check local access updates if step-free travel is essential.",
+    "toilets": "Check current town-centre, bus-station or museum facility listings before departure.",
+    "footwear": "Comfortable shoes are suitable; grip helps when the bridge and quayside are wet.",
+    "dogs": "Keep dogs close on the narrow bridge and busy market streets; check the final pub’s current policy.",
+    "pushchairs": "The route is compact but the historic bridge and crowded market area may require patience."
   },
   "cover_theme": "bridge",
-  "route_distance_km": 3.0,
-  "estimated_minutes": 70,
+  "route_distance_km": 1.2,
+  "estimated_minutes": 55,
   "difficulty_label": "Relaxed",
   "tags": [
     "riverside",
     "market-town",
-    "family"
+    "history",
+    "pub-finish"
   ],
   "collections": [
     "Rivers & Harbours"
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
+  "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
+  "transport_note": "A short, mostly level circuit around the historic bridge, Market Hill and quayside streets.",
   "final_venue": {
     "name": "The Oliver Cromwell",
     "timezone": "Europe/London",
     "minimum_visit_minutes": 30,
-    "hours_verified": "2026-07-29",
-    "hours_url": "https://theolivercromwellpub.co.uk/food-2/",
+    "hours_verified": "2026-07-31",
+    "hours_url": "https://theolivercromwellpub.co.uk/about-us/",
     "hours": {
       "mon": [
         [
-          "09:30",
+          "11:30",
           "22:00"
         ]
       ],
       "tue": [
         [
-          "09:30",
+          "11:30",
           "22:00"
         ]
       ],
       "wed": [
         [
-          "09:30",
+          "11:30",
           "22:00"
         ]
       ],
       "thu": [
         [
-          "09:30",
+          "11:30",
           "23:00"
         ]
       ],
       "fri": [
         [
-          "09:30",
+          "11:30",
           "24:00"
         ]
       ],
       "sat": [
         [
-          "09:30",
+          "11:30",
           "24:00"
         ]
       ],

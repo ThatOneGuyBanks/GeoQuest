@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "chester-clocks-romans-rows",
-  "version": 1,
+  "version": 2,
   "town": "Chester",
   "display_name": "Chester",
   "route_name": "Clocks, Romans & Rows",
@@ -12,7 +12,7 @@
     "long": -2.88904
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.4,
+  "route_distance_km": 1.3,
   "estimated_minutes": 65,
   "difficulty_label": "Explorer",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact city-centre route on public streets, with cobbles and short gradients near the walls. The amphitheatre can be viewed without entering a building.",
   "before_you_go": {
     "terrain": "A compact city-centre route on public streets, with cobbles and short gradients near the walls. The amphitheatre can be viewed without entering a building.",

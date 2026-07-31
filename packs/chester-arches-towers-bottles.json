@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "chester-arches-towers-bottles",
-  "version": 1,
+  "version": 2,
   "town": "Chester",
   "display_name": "Chester",
   "route_name": "Great Arches, Water Towers & Glass",
@@ -12,7 +12,7 @@
     "long": -2.892648
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 3,
+  "route_distance_km": 3.2,
   "estimated_minutes": 100,
   "difficulty_label": "Challenging",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 14+; under-18s with an adult; check final venue policy",
   "transport_note": "A longer route from the River Dee to the north and east walls; use street-level alternatives where wall access is unsuitable.",
   "before_you_go": {
     "terrain": "Riverside and city pavements with old stone near the walls; wall-top paving can be uneven.",

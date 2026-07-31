@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "worcester-kings-battle-escape",
-  "version": 1,
+  "version": 2,
   "town": "Worcester",
   "display_name": "Worcester",
   "route_name": "Kings, Battle & Escape",
@@ -12,7 +12,7 @@
     "long": -2.2185
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.8,
+  "route_distance_km": 2,
   "estimated_minutes": 75,
   "difficulty_label": "Challenging",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 14+; under-18s with an adult; check final venue policy",
   "transport_note": "A city-centre loop with a steep climb to Fort Royal Park and normal road crossings. Use the park's surfaced public paths.",
   "before_you_go": {
     "terrain": "A city-centre loop with a steep climb to Fort Royal Park and normal road crossings. Use the park's surfaced public paths.",

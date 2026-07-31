@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "york-walls-vikings-wobbly-ale",
-  "version": 1,
+  "version": 2,
   "town": "York",
   "display_name": "York",
   "route_name": "Walls, Windows & Wobbly Ale",
@@ -12,7 +12,7 @@
     "long": -1.08204
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.4,
+  "route_distance_km": 1.1,
   "estimated_minutes": 70,
   "difficulty_label": "Detective",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 12+; under-18s with an adult; check final venue policy",
   "transport_note": "A compact central walk. The checkpoint at Bootham Bar is at street level, so climbing the walls is optional.",
   "before_you_go": {
     "terrain": "A compact central walk. The checkpoint at Bootham Bar is at street level, so climbing the walls is optional.",
@@ -65,7 +65,7 @@
       "Stop_Name": "York Minster",
       "Target_Lat": 53.9623561,
       "Target_Long": -1.0820834,
-      "Win_Radius_m": 65,
+      "Win_Radius_m": 60,
       "Cryptic_Clue": "Find a stone giant whose eastern eye is a tennis court made from medieval glass.",
       "Hint_1": "Walk east through the bar and along High Petergate.",
       "Hint_2": "Your target is the enormous Gothic cathedral dominating Minster Yard.",

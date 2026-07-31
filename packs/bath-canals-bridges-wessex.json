@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "bath-canals-bridges-wessex",
-  "version": 1,
+  "version": 2,
   "town": "Bath",
   "display_name": "Bath",
   "route_name": "Canals, Bridges & a Saxon Crown",
@@ -12,7 +12,7 @@
     "long": -2.355314
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 2,
+  "route_distance_km": 1.9,
   "estimated_minutes": 75,
   "difficulty_label": "Explorer",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "An east-to-west route starting in Sydney Gardens and finishing near Bath Spa station.",
   "before_you_go": {
     "terrain": "Pavements, park paths and canal-side approaches, with some uneven stone and busy crossings.",

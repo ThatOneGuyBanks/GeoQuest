@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "lincoln-romans-water-sails",
-  "version": 1,
+  "version": 2,
   "town": "Lincoln",
   "display_name": "Lincoln",
   "route_name": "Roman Roads, Clean Water & Square Sails",
@@ -12,7 +12,7 @@
     "long": -0.542072
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 2.2,
+  "route_distance_km": 2,
   "estimated_minutes": 85,
   "difficulty_label": "Challenging",
   "tags": [
@@ -28,7 +28,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 14+; under-18s with an adult; check final venue policy",
   "transport_note": "A mostly downhill route from uphill Lincoln to Brayford Pool; reaching the start from the station requires a substantial climb.",
   "before_you_go": {
     "terrain": "City pavements with old stone, uneven sections and busy crossings.",

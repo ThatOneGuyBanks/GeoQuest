@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "liverpool-cathedrals-bombs-railways",
-  "version": 1,
+  "version": 2,
   "town": "Liverpool",
   "display_name": "Liverpool",
   "route_name": "Lanterns, Bombs & Railway Grandeur",
@@ -12,7 +12,7 @@
     "long": -2.975408
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.7,
+  "route_distance_km": 2.3,
   "estimated_minutes": 70,
   "difficulty_label": "Explorer",
   "tags": [
@@ -27,7 +27,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A downhill city-centre route ending inside the Lime Street station complex.",
   "before_you_go": {
     "terrain": "City pavements and pedestrian crossings, with some stone paving around the monuments.",

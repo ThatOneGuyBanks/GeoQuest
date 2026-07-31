@@ -1,11 +1,11 @@
 {
   "pack_format": 2,
   "pack_id": "ely-main-route",
-  "version": 1,
+  "version": 2,
   "town": "Ely",
   "display_name": "Ely",
   "route_name": "Cromwell, Monks & Maltings",
-  "description": "Ely walking trail",
+  "description": "Trace Cromwell’s Ely years, a medieval monastic gate and the city’s riverside malting trade before returning beneath the cathedral towers.",
   "centre": {
     "lat": 52.39785000000001,
     "long": 0.263525
@@ -21,13 +21,14 @@
       "Target_Lat": 52.3995,
       "Target_Long": 0.2618,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "The Lord Protector laid his head",
-      "Hint_1": "in a timber frame before he bled (or rather",
-      "Hint_2": "died of natural causes).",
-      "Unlock_Fact": "Find the heavily timbered house near the cathedral. Look for the house with the plaque for Oliver Cromwell. This is Oliver Cromwell's House. He lived here for 10 years before he led the Parliamentarian army against King Charles I. It's one of the few surviving residences of Cromwell.",
+      "Cryptic_Clue": "Before crowns fell and armies marched, the future Lord Protector called this timber-framed house home.",
+      "Hint_1": "Search near the cathedral for a heavily timbered house linked to Oliver Cromwell.",
+      "Hint_2": "Find the building carrying Cromwell’s name and an information plaque.",
+      "Unlock_Fact": "Oliver Cromwell and his family lived in Ely for roughly a decade from 1636. The surviving timber-framed house is now a visitor attraction and also contains Ely’s tourist information centre.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Look at the exterior timber pattern and describe one shape made by the beams."
     },
     {
       "Town": "Ely",
@@ -38,13 +39,14 @@
       "Target_Lat": 52.3965,
       "Target_Long": 0.2611,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "A massive gatehouse of brick and stone",
-      "Hint_1": "where monks once walked and scholars now roam.",
-      "Hint_2": "Walk south of the cathedral to find a massive medieval gate.",
-      "Unlock_Fact": "Look for the large brick archway leading into the school grounds. This is the Ely Porta completed in 1397. It was the main gatehouse to the medieval monastery. Today it forms part of the King's School Ely.",
+      "Cryptic_Clue": "Monks once passed through this mighty gate; scholars now walk where the monastery stood.",
+      "Hint_1": "Walk south through the cathedral precinct and look for a large medieval gateway.",
+      "Hint_2": "Find the tall brick-and-stone arch known as The Porta.",
+      "Unlock_Fact": "The Porta was completed in 1397 as the main gatehouse to Ely’s medieval monastery precinct. It survives as part of King’s Ely school.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Notice the mix of brick and stone and record which material frames the main arch."
     },
     {
       "Town": "Ely",
@@ -55,13 +57,14 @@
       "Target_Lat": 52.3968,
       "Target_Long": 0.2687,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "Where barley was soaked by the river's edge",
-      "Hint_1": "find the grand brick building by the water's ledge.",
-      "Hint_2": "Head down the hill to the River Great Ouse.",
-      "Unlock_Fact": "Look for the massive brick building right on the riverbank. This is The Maltings. Built in 1868 it was a massive industrial brewery complex where barley was malted for local beer production making use of the river for transport.",
+      "Cryptic_Clue": "Barley once climbed my floors beside the river before returning as malt for a brewer.",
+      "Hint_1": "Descend towards Waterside and the River Great Ouse.",
+      "Hint_2": "Find the large brick Maltings building dated 1868.",
+      "Unlock_Fact": "The Maltings was built in 1868 for brewer Ebenezer William Harlock. Barley was processed here beside the Great Ouse; the landmark now serves as an events and community venue.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "Find the dated gable and note the initials displayed with 1868."
     },
     {
       "Town": "Ely",
@@ -72,42 +75,44 @@
       "Target_Lat": 52.3986,
       "Target_Long": 0.2625,
       "Win_Radius_m": 35,
-      "Cryptic_Clue": "The closest pint to the Bishop's seat. Find the tavern where the stonemasons meet.",
-      "Hint_1": "Head back towards the front of the Cathedral.",
-      "Hint_2": "Look for the pub literally right next to the Cathedral entrance.",
-      "Unlock_Fact": "We made it! The Minster Tavern is practically in the Cathedral's front garden. It's built on the site of the original monks' alehouse and generations of stonemasons drank here while building the cathedral.",
+      "Cryptic_Clue": "Return to the great west tower for a tavern that borrows its neighbour’s churchly title.",
+      "Hint_1": "Climb back towards the cathedral’s west front.",
+      "Hint_2": "Find the traditional pub at 1 Minster Place, opposite the cathedral.",
+      "Unlock_Fact": "Route complete! The Minster Tavern is a traditional old pub opposite Ely Cathedral’s west tower and is described locally as the city’s oldest pub. Stop for food or a drink if it is open.",
       "Difficulty": 2,
       "Image": null,
-      "Audio": null
+      "Audio": null,
+      "Explorer_Prompt": "From outside, find one detail in the pub frontage that echoes its historic setting."
     }
   ],
-  "short_description": "A compact trail through soaring architecture and Fenland stories.",
+  "short_description": "Follow Cromwell, monastic Ely and the malt trade from cathedral hill to Waterside.",
   "before_you_go": {
-    "terrain": "Designed as a walking route.",
-    "hills": "Mostly gentle town-centre gradients.",
-    "steps": "No required steps are known, though temporary diversions may vary.",
-    "accessibility": "Public pavements and paths throughout; check current diversions if step-free access is essential.",
-    "toilets": "Check local public facilities before setting off; customer toilets may depend on opening hours.",
-    "footwear": "Comfortable walking shoes should be suitable.",
-    "dogs": "Outdoor route; keep dogs under control and check the final venue’s current dog policy.",
-    "pushchairs": "Generally possible on public paths; check temporary diversions and busy crossings."
+    "terrain": "Town pavements, historic precinct paths and a paved riverside section around The Maltings.",
+    "hills": "Expect a noticeable descent from the cathedral area to Waterside and a climb back for the finish.",
+    "steps": "The intended outdoor route avoids required steps, although the sloping alternatives are longer.",
+    "accessibility": "The checkpoints are viewable outdoors; gradients, older paving and temporary cathedral-precinct works may affect step-free travel.",
+    "toilets": "Check current cathedral, council and Waterside visitor-facility information before setting out.",
+    "footwear": "Wear comfortable shoes with grip for the climb and potentially damp riverside paving.",
+    "dogs": "The outdoor route suits dogs kept under control; check the Minster Tavern’s current policy separately.",
+    "pushchairs": "Possible throughout on the intended route, but the Waterside climb may be tiring with a pushchair."
   },
   "cover_theme": "fenland",
-  "route_distance_km": 3.0,
-  "estimated_minutes": 70,
+  "route_distance_km": 2,
+  "estimated_minutes": 65,
   "difficulty_label": "Relaxed",
   "tags": [
     "history",
     "cathedral",
-    "waterside"
+    "waterside",
+    "pub-finish"
   ],
   "collections": [
     "Rivers & Harbours"
   ],
   "featured": true,
   "daily_eligible": true,
-  "recommended_age": "All ages",
-  "transport_note": "Designed as a walking route.",
+  "recommended_age": "Recommended 8+; under-18s with an adult; check final venue policy",
+  "transport_note": "A there-and-back city walk between the cathedral precinct and Waterside, including a noticeable hill.",
   "final_venue": {
     "name": "The Minster Tavern",
     "timezone": "Europe/London",

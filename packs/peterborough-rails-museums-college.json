@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "peterborough-rails-museums-college",
-  "version": 1,
+  "version": 2,
   "town": "Peterborough",
   "display_name": "Peterborough",
   "route_name": "Junctions, Infirmaries & Open-Air Swims",
@@ -12,7 +12,7 @@
     "long": -0.244016
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 2.2,
+  "route_distance_km": 2.3,
   "estimated_minutes": 80,
   "difficulty_label": "Explorer",
   "tags": [
@@ -27,17 +27,17 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A town-centre loop starting at the railway station, passing the museum and Lido, and ending on Broadway.",
   "before_you_go": {
-    "terrain": "Town-centre pavements and pedestrian areas, with occasional uneven paving and busy crossings.",
-    "hills": "Mostly level, with only gentle street gradients.",
-    "steps": "No steps are required on the intended route; use nearby dropped kerbs at crossings.",
-    "accessibility": "The checkpoints are outdoors on public routes. Surfaces, temporary works and crowding can vary, so check local access information if step-free travel is essential.",
-    "toilets": "Check current council, shopping-centre or museum visitor-facility listings before setting off; opening times can change.",
-    "footwear": "Comfortable everyday walking shoes should be suitable.",
-    "dogs": "The outdoor route is suitable for dogs kept under control; check the final venue's current dog policy separately.",
-    "pushchairs": "Generally suitable for pushchairs, though busy pavements and occasional uneven surfaces may slow progress."
+    "terrain": "Station approaches, central pavements and surfaced paths around the museum, Embankment and Lido.",
+    "hills": "Largely level, with bridge approaches and ordinary street gradients.",
+    "steps": "The clues are exterior and do not require station, museum or Lido steps.",
+    "accessibility": "A step-free outdoor line is available, but major crossings and event or construction diversions may alter it.",
+    "toilets": "Check current station, museum, Lido and city-centre facility information before setting out.",
+    "footwear": "Comfortable shoes are suitable; riverside and Lido approaches can be slick after rain.",
+    "dogs": "Keep dogs controlled around the station and busy crossings; check the College Arms’ current policy.",
+    "pushchairs": "Generally suitable on public pavements, with care needed at the larger road crossings."
   },
   "cover_theme": "fenland",
   "stops": [

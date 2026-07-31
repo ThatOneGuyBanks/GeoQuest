@@ -11,4 +11,9 @@
 - Added player-facing privacy, offline-use and support information.
 - Added automated non-pack smoke checks for navigation, accessibility, responsive layout and offline replay.
 
-Route-pack content and route validation are intentionally outside this release-hardening change.
+- Repaired advertised walking distances across all 45 routes using pedestrian routing between their stops.
+- Reworked the Peterborough main route to finish beside Town Bridge instead of requiring a long walk to Werrington.
+- Corrected displaced Peterborough and Huntingdon stop coordinates and outdated St Neots bridge copy.
+- Rewrote the five original packs' clues, hints, facts, fieldwork prompts and completion messages.
+- Replaced duplicated practical guidance with route-specific terrain and accessibility notes.
+- Added age guidance that accounts for clue difficulty and final-venue policies.

@@ -1,7 +1,7 @@
 {
   "pack_format": 2,
   "pack_id": "bedford-pilgrims-castles-riverside",
-  "version": 1,
+  "version": 2,
   "town": "Bedford",
   "display_name": "Bedford",
   "route_name": "Pilgrims, Castles & Riverside",
@@ -12,7 +12,7 @@
     "long": -0.46499
   },
   "author": "Day Tripping Quiz",
-  "route_distance_km": 1.8,
+  "route_distance_km": 1.6,
   "estimated_minutes": 65,
   "difficulty_label": "Explorer",
   "tags": [
@@ -26,7 +26,7 @@
   ],
   "featured": false,
   "daily_eligible": true,
-  "recommended_age": "All ages",
+  "recommended_age": "Recommended 10+; under-18s with an adult; check final venue policy",
   "transport_note": "A town-centre walking route using public squares, paths and the riverside Embankment.",
   "before_you_go": {
     "terrain": "A town-centre walking route using public squares, paths and the riverside Embankment.",
