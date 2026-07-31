@@ -19,3 +19,5 @@
 - Added age guidance that accounts for clue difficulty and final-venue policies.
 - Added conservative 1–3 accessibility scores to every route and collapsed the full practical guidance behind the score.
 - Removed checkpoint and finishing-venue names from practical and accessibility guidance so route planning does not spoil clues.
+- Reworked age guidance into a dedicated, readable route panel instead of squeezing policy copy into the statistics grid.
+- Promoted completion postcards into a large keepsake feature ahead of the route recap and achievements.

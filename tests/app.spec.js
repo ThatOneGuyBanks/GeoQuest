@@ -57,6 +57,17 @@ test('accessibility summary is collapsed and reveals the full practical guidance
   await expect(practical.getByText('Dogs', { exact: true })).toBeVisible();
 });
 
+test('route age guidance is presented separately from the key statistics', async ({ page }) => {
+  await openHome(page);
+  await page.locator('.route-card-open').first().click();
+  await expect(page.locator('.detail-stats .stat')).toHaveCount(4);
+  const ageGuidance = page.locator('.age-guidance');
+  await expect(ageGuidance).toBeVisible();
+  await expect(ageGuidance.getByText('AGE GUIDANCE')).toBeVisible();
+  await expect(ageGuidance).toContainText(/Recommended for explorers aged \d+\+/);
+  await expect(ageGuidance).toContainText('Final venue entry policies may vary.');
+});
+
 test('practical guidance has valid scores and does not name route stops', async ({ page }) => {
   await openHome(page);
   const audit = await page.evaluate(async () => {

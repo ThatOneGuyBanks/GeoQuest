@@ -1636,6 +1636,17 @@ function beforeYouGoItems(pack) {
   ];
 }
 
+function routeAgeGuidance(pack) {
+  const guidance = String(pack.recommended_age || 'Suitable for all ages');
+  const recommendedAge = guidance.match(/Recommended\s+(\d+)\+/i)?.[1];
+  const rating = recommendedAge ? `${recommendedAge}+` : 'All';
+  const title = recommendedAge ? `Recommended for explorers aged ${rating}` : guidance;
+  const note = recommendedAge
+    ? 'Under-18s should join with an adult. Final venue entry policies may vary.'
+    : 'Check the route details and finishing venue policy before setting off.';
+  return `<aside class="age-guidance" aria-label="Age guidance: ${esc(title)}"><span class="age-rating">${esc(rating)}</span><span class="age-guidance-copy"><span class="eyebrow">AGE GUIDANCE</span><b>${esc(title)}</b><small>${esc(note)}</small></span></aside>`;
+}
+
 function accessibilityScore(pack) {
   const score = Number(pack.before_you_go?.accessibility_score);
   return [1, 2, 3].includes(score) ? score : 2;
@@ -1736,8 +1747,8 @@ function openDetail(pack, isDaily = false, isSurprise = false) {
         <div class="stat"><span>Time</span><b>${pack.estimated_minutes} mins</b></div>
         <div class="stat"><span>Difficulty</span><b>${esc(pack.difficulty_label)}</b></div>
         <div class="stat"><span>Stops</span><b>${pack.stops.length}</b></div>
-        <div class="stat"><span>Age</span><b>${esc(pack.recommended_age)}</b></div>
       </div>
+      ${routeAgeGuidance(pack)}
       <h2>Your mission</h2><p>${esc(pack.description)}</p>
       <div class="meta-row detail-tags">${chips}</div>
       <p class="route-credit">By ${esc(pack.author)} · Route pack v${Number(pack.version) || 1}</p>
@@ -2910,11 +2921,11 @@ function renderGame(options = {}) {
       ${(state.lastRunMode || state.runMode) === 'surprise' ? '<div class="surprise-complete"><span>⚄</span><div><b>Surprise accepted</b><small>Your completed score includes the 20% Lucky Dip bonus.</small></div></div>' : ''}
       <div class="finish-score"><span>Adventure score</span><b>✦ ${formatPoints(score)}</b><small>Best: ${formatPoints(displayScore(pack))} points · Explorer total: ${formatPoints(explorerTotal)}</small>${elapsedTime ? `<div class="finish-quiet-stats"><span>${pack.stops.length} stops</span><span>${formatRouteDistance(pack.route_distance_km)}</span><span>Time · ${esc(elapsedTime)}</span></div>` : ''}</div>
       ${scoreBreakdownHtml(state)}
+      <button id="shareCompletion" class="postcard-btn"><span class="postcard-btn-art" aria-hidden="true"><i>✦</i><b>DAY TRIPPING</b><small>${esc(pack.display_name)}</small></span><span class="postcard-btn-copy"><span class="eyebrow">YOUR ADVENTURE, FRAMED</span><b>Create your adventure postcard</b><small>Turn the day into a keepsake with your own photo, field notes and message.</small><i>Personalise my postcard <span>→</span></i></span></button>
       <div class="route-map-head"><div><span class="eyebrow">YOUR ROUTE</span><h2>Stops at a glance</h2></div><span class="pill">Unlocked</span></div>
       <div id="completionMap" aria-label="Completed route map"></div>
       <ol class="route-recap-list">${pack.stops.map((item, index) => `<li><span>${index + 1}</span><b>${esc(item.Stop_Name)}</b></li>`).join('')}</ol>
       <h2>Your achievements</h2><p class="muted">One-time achievement awards contribute ${formatPoints(achievementPointsTotal(badges))} points to your Explorer total.</p><div class="achievement-grid">${unlocked.map(achievementCard).join('')}</div>
-      <button id="shareCompletion" class="postcard-btn"><span>▣</span><div><b>Personalise my completion postcard</b><small>Add an optional photo and message before sharing</small></div></button>
       ${recommendations.length ? `<section class="completion-next"><span class="eyebrow">KEEP EXPLORING</span><h2>Two adventures nearby</h2><p>Carry the momentum into another town when you are ready.</p><div class="route-grid preview-grid">${recommendations.map(candidate => routeCard(candidate)).join('')}</div></section>` : ''}
       <button class="primary" data-home>Back to adventures</button>
     </div>`;
