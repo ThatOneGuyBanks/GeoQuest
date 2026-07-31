@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://thatoneguybanks.github.io/GeoQuest/sitemap.xml

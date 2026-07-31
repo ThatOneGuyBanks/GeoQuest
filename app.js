@@ -43,6 +43,8 @@ let postcardEditorState = null;
 let adventurePhotos = [];
 let adventureNotes = [];
 let navigationHistoryMode = 'push';
+let connectionOffline = !navigator.onLine;
+const dialogReturnFocus = new WeakMap();
 const POSTCARD_WIDTH = 1080;
 const POSTCARD_HEIGHT = 1350;
 const POSTCARD_PREVIEW_WIDTH = 540;
@@ -190,11 +192,11 @@ function seedNavigationHistory() {
 }
 
 function closeNavigationOverlays() {
-  closePostcardEditor();
-  closeSettings();
+  closePostcardEditor(false);
+  closeSettings(false);
   closeSearch();
-  closeTutorial(false);
-  closeArrival();
+  closeTutorial(false, false);
+  closeArrival(false);
 }
 
 function handleHistoryNavigation(event) {
@@ -297,6 +299,78 @@ function maybeShowTutorial() {
   if (!profile.tutorialSeen) openTutorial(0);
 }
 
+function openModal(modal, initialFocusSelector) {
+  if (!modal) return;
+  const wasHidden = modal.classList.contains('hidden');
+  if (wasHidden) {
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && !active.closest('[role="dialog"]')) dialogReturnFocus.set(modal, active);
+  }
+  modal.classList.remove('hidden');
+  document.body.classList.add('modal-open');
+  if (!wasHidden) return;
+  requestAnimationFrame(() => {
+    const target = initialFocusSelector ? modal.querySelector(initialFocusSelector) : null;
+    const fallback = modal.querySelector('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])');
+    (target || fallback)?.focus();
+  });
+}
+
+function closeModal(modal, restoreFocus = true) {
+  if (!modal || modal.classList.contains('hidden')) return;
+  modal.classList.add('hidden');
+  const returnTarget = dialogReturnFocus.get(modal);
+  dialogReturnFocus.delete(modal);
+  if (!activeModal()) document.body.classList.remove('modal-open');
+  if (restoreFocus && returnTarget instanceof HTMLElement && returnTarget.isConnected) {
+    requestAnimationFrame(() => returnTarget.focus());
+  }
+}
+
+function activeModal() {
+  return ['#postcardModal', '#arrivalModal', '#tutorialModal', '#settingsBackdrop', '#safetyModal']
+    .map(selector => $(selector))
+    .find(modal => modal && !modal.classList.contains('hidden')) || null;
+}
+
+function modalFocusableElements(modal) {
+  return [...modal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])')]
+    .filter(element => element.getClientRects().length > 0 && element.getAttribute('aria-hidden') !== 'true');
+}
+
+function handleModalKeydown(event) {
+  const modal = activeModal();
+  if (!modal) return false;
+  if (event.key === 'Escape') {
+    event.preventDefault();
+    if (modal.id === 'safetyModal') return true;
+    if (modal.id === 'postcardModal') closePostcardEditor();
+    else if (modal.id === 'arrivalModal') closeArrival();
+    else if (modal.id === 'tutorialModal') closeTutorial(true);
+    else if (modal.id === 'settingsBackdrop') closeSettings();
+    return true;
+  }
+  if (event.key !== 'Tab') return false;
+  const focusable = modalFocusableElements(modal);
+  if (!focusable.length) {
+    event.preventDefault();
+    return true;
+  }
+  const first = focusable[0];
+  const last = focusable[focusable.length - 1];
+  if (!modal.contains(document.activeElement)) {
+    event.preventDefault();
+    first.focus();
+  } else if (event.shiftKey && document.activeElement === first) {
+    event.preventDefault();
+    last.focus();
+  } else if (!event.shiftKey && document.activeElement === last) {
+    event.preventDefault();
+    first.focus();
+  }
+  return true;
+}
+
 function openTutorial(step = 0) {
   tutorialStep = Math.max(0, Math.min(TUTORIAL_STEPS.length - 1, Number(step) || 0));
   const item = TUTORIAL_STEPS[tutorialStep];
@@ -307,24 +381,24 @@ function openTutorial(step = 0) {
   $('#tutorialDots').innerHTML = TUTORIAL_STEPS.map((_, index) => `<i class="${index === tutorialStep ? 'active' : ''}"></i>`).join('');
   $('#tutorialBack').disabled = tutorialStep === 0;
   $('#tutorialNext').textContent = tutorialStep === TUTORIAL_STEPS.length - 1 ? 'Start exploring' : 'Next';
-  $('#tutorialModal').classList.remove('hidden');
+  openModal($('#tutorialModal'), '#tutorialClose');
 }
 
-function closeTutorial(markSeen = false) {
+function closeTutorial(markSeen = false, restoreFocus = true) {
   if (markSeen) {
     profile.tutorialSeen = true;
     saveProfile();
   }
-  $('#tutorialModal').classList.add('hidden');
+  closeModal($('#tutorialModal'), restoreFocus);
 }
 
 function openSettings() {
   renderSettings();
-  $('#settingsBackdrop').classList.remove('hidden');
+  openModal($('#settingsBackdrop'), '#settingsClose');
 }
 
-function closeSettings() {
-  $('#settingsBackdrop').classList.add('hidden');
+function closeSettings(restoreFocus = true) {
+  closeModal($('#settingsBackdrop'), restoreFocus);
 }
 
 function renderSettings() {
@@ -838,9 +912,10 @@ function scrollToSearchResults(behavior = 'smooth') {
   target.scrollIntoView({ behavior: reducedMotion ? 'auto' : behavior, block: 'start' });
 }
 
-function closeSearch() {
+function closeSearch(restoreFocus = false) {
   $('#searchWrap').classList.add('hidden');
   $('#searchToggle').setAttribute('aria-expanded', 'false');
+  if (restoreFocus) $('#searchToggle').focus();
 }
 
 function openSearch() {
@@ -861,14 +936,14 @@ function bind() {
   bindNavigationButtons();
   $('#acceptSafety').onclick = () => {
     localStorage.setItem(SAFETY_KEY, 'yes');
-    $('#safetyModal').classList.add('hidden');
+    closeModal($('#safetyModal'), false);
     maybeShowTutorial();
   };
   $('#keepSearching').onclick = closeArrival;
   $('#confirmArrival').onclick = () => {
     if (!pendingArrival) return;
     const { stop, debug } = pendingArrival;
-    closeArrival();
+    closeArrival(false);
     completeStop(stop, false, debug);
   };
   $('#mapOpen').onclick = showMap;
@@ -881,7 +956,7 @@ function bind() {
   $('#settingsBackdrop').onclick = event => { if (event.target.id === 'settingsBackdrop') closeSettings(); };
   $('#soundSetting').onclick = () => setFeedbackSetting('sound', !profile.sound);
   $('#vibrationSetting').onclick = () => setFeedbackSetting('vibration', !profile.vibration);
-  $('#replayTutorial').onclick = () => { closeSettings(); openTutorial(0); };
+  $('#replayTutorial').onclick = () => { closeSettings(false); openTutorial(0); };
   $('#exportProgress').onclick = exportProgress;
   $('#importProgress').onchange = async event => {
     const input = event.currentTarget;
@@ -894,8 +969,8 @@ function bind() {
   $('#tutorialBack').onclick = () => openTutorial(Math.max(0, tutorialStep - 1));
   $('#tutorialNext').onclick = () => tutorialStep >= TUTORIAL_STEPS.length - 1 ? closeTutorial(true) : openTutorial(tutorialStep + 1);
   $('#locateBtn').onclick = getNearby;
-  $('#searchToggle').onclick = () => $('#searchWrap').classList.contains('hidden') ? openSearch() : closeSearch();
-  $('#searchClose').onclick = closeSearch;
+  $('#searchToggle').onclick = () => $('#searchWrap').classList.contains('hidden') ? openSearch() : closeSearch(true);
+  $('#searchClose').onclick = () => closeSearch(true);
   $('#searchInput').oninput = event => renderBrowse(event.target.value);
   $('#searchInput').onkeydown = event => {
     if (event.key !== 'Enter') return;
@@ -904,11 +979,33 @@ function bind() {
     scrollToSearchResults();
   };
   document.addEventListener('keydown', event => {
-    if (event.key === 'Escape' && !$('#postcardModal').classList.contains('hidden')) closePostcardEditor();
+    if (handleModalKeydown(event)) return;
+    if (event.key === 'Escape' && !$('#searchWrap').classList.contains('hidden')) {
+      event.preventDefault();
+      closeSearch(true);
+    }
   });
-  if (!readStoredValue(SAFETY_KEY, LEGACY_SAFETY_KEY)) $('#safetyModal').classList.remove('hidden');
+  window.addEventListener('online', renderNetworkStatus);
+  window.addEventListener('offline', renderNetworkStatus);
+  renderNetworkStatus();
+  if (!readStoredValue(SAFETY_KEY, LEGACY_SAFETY_KEY)) openModal($('#safetyModal'), '#acceptSafety');
   else maybeShowTutorial();
   renderSettings();
+}
+
+function renderNetworkStatus(event) {
+  const status = $('#networkStatus');
+  if (!status) return;
+  if (event?.type === 'offline') connectionOffline = true;
+  else if (event?.type === 'online') connectionOffline = false;
+  else connectionOffline = !navigator.onLine;
+  const offline = connectionOffline;
+  status.classList.toggle('hidden', !offline);
+  document.body.classList.toggle('is-offline', offline);
+  status.textContent = offline
+    ? 'You are offline. Saved adventures, clues and progress still work; maps, directions and external links need a connection.'
+    : '';
+  if (currentPack) renderOfflineControls(currentPack);
 }
 
 function playPageTransition() {
@@ -1088,9 +1185,10 @@ function routeCard(pack, extra = '') {
     ? `${formatRouteDistance(distance(userPos, [pack.centre.lat, pack.centre.long]))} away`
     : `${formatRouteDistance(pack.route_distance_km)} walk`;
   const score = displayScore(pack);
-  return `<article class="route-card" style="--accent:${colour(pack)}" data-pack="${esc(pack.pack_id)}">
+  const accessibleName = `Open ${pack.display_name}: ${pack.route_name}. ${label}, ${nearby}, ${pack.difficulty_label}.`;
+  return `<article class="route-card" style="--accent:${colour(pack)}">
     <span class="eyebrow route-location">${esc(extra ? `${extra} · ${pack.display_name}` : pack.display_name)}</span>
-    <h3>${esc(pack.route_name)}</h3>
+    <h3><button type="button" class="route-card-open" data-pack="${esc(pack.pack_id)}" aria-label="${esc(accessibleName)}">${esc(pack.route_name)}</button></h3>
     <p>${esc(pack.short_description || pack.description)}</p>
     <div class="card-bottom">
       <div class="meta-row"><span class="meta">${icon} ${label}</span><span class="meta">${esc(nearby)}</span><span class="meta">${esc(pack.difficulty_label)}</span>${score ? `<span class="meta score-chip">✦ ${formatPoints(score)} pts</span>` : ''}</div>
@@ -1129,7 +1227,8 @@ function renderDaily() {
     : streak.best ? `🔥 Best streak: ${streak.best} days · Play today to begin again` : '🔥 Complete today’s pick to start a streak';
   $('#mapPackCount').textContent = `${packs.length} adventures mapped`;
   $('#dailyDate').textContent = new Date().toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' });
-  $('#dailyCard').innerHTML = `<div class="daily-card" data-pack="${esc(pick.pack_id)}" data-daily="true"><div><span class="eyebrow">DAILY DOUBLE · ×2 POINTS</span><h3>${esc(pick.display_name)}<br>${esc(pick.route_name)}</h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${formatRouteDistance(pick.route_distance_km)}</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Double it →</span></div>`;
+  const accessibleName = `Open today’s Daily Double: ${pick.display_name}, ${pick.route_name}. ${formatRouteDistance(pick.route_distance_km)}, ${pick.estimated_minutes} minutes, ${pick.difficulty_label}.`;
+  $('#dailyCard').innerHTML = `<article class="daily-card"><div><span class="eyebrow">DAILY DOUBLE · ×2 POINTS</span><h3><button type="button" class="daily-card-open" data-pack="${esc(pick.pack_id)}" data-daily="true" aria-label="${esc(accessibleName)}">${esc(pick.display_name)}<br>${esc(pick.route_name)}</button></h3><p>${esc(pick.short_description)}</p><div class="meta-row"><span class="meta">${formatRouteDistance(pick.route_distance_km)}</span><span class="meta">${pick.estimated_minutes} mins</span><span class="meta">${esc(pick.difficulty_label)}</span></div><span class="daily-streak">${esc(streakLabel)}</span></div><span class="daily-badge">Double it →</span></article>`;
   wireCards();
 }
 
@@ -1464,6 +1563,10 @@ function showMap() {
   pendingDiscovery = null;
   showOnly('mapView');
   setTimeout(() => {
+    if (!window.L) {
+      $('#map').innerHTML = '<div class="map-unavailable" role="status"><span>⌖</span><h3>The adventure map needs a connection</h3><p>Your saved clues and progress still work offline. Reconnect to load the map and its tiles.</p></div>';
+      return;
+    }
     if (!mapReady) {
       map = L.map('map', { zoomControl: false }).setView([52.45, -0.18], 7);
       mapTownMarkers = [];
@@ -1550,13 +1653,14 @@ async function renderOfflineControls(pack) {
     button.classList.add('hidden');
     return;
   }
-  const cached = await caches.match(offlineAdventureUrl(pack));
+  const adventureCache = await caches.open('day-tripping-quiz-adventures-v1');
+  const cached = await adventureCache.match(offlineAdventureUrl(pack));
   status.classList.toggle('saved', Boolean(cached));
   status.innerHTML = cached
-    ? '<i></i><span>Saved on this device for offline play</span>'
-    : `<i></i><span>${navigator.onLine ? 'Available now · save this adventure for patchy signal' : 'You are offline · this adventure is not saved yet'}</span>`;
+    ? '<i></i><span>Route saved · clues and progress work offline; maps and directions need internet</span>'
+    : `<i></i><span>${connectionOffline ? 'You are offline · this adventure is not saved yet' : 'Save the clues for patchy signal; maps and directions still need internet'}</span>`;
   button.textContent = cached ? 'Saved offline ✓' : 'Save offline';
-  button.disabled = Boolean(cached) || !navigator.onLine;
+  button.disabled = Boolean(cached) || connectionOffline;
 }
 
 async function saveAdventureOffline(pack) {
@@ -1678,12 +1782,12 @@ function clearAdventurePhotos() {
   adventureNotes = [];
 }
 
-function closePostcardEditor() {
+function closePostcardEditor(restoreFocus = true) {
   if (postcardEditorState?.renderTimer) clearTimeout(postcardEditorState.renderTimer);
   if (postcardEditorState?.dragFrame) cancelAnimationFrame(postcardEditorState.dragFrame);
   if (postcardEditorState?.photoUrl) URL.revokeObjectURL(postcardEditorState.photoUrl);
   postcardEditorState = null;
-  $('#postcardModal')?.classList.add('hidden');
+  closeModal($('#postcardModal'), restoreFocus);
 }
 
 function postcardEditorAccent(editor = postcardEditorState) {
@@ -1935,7 +2039,7 @@ function bindPostcardDragging() {
 }
 
 function openPostcardEditor(pack, score, kind = 'completion') {
-  closePostcardEditor();
+  closePostcardEditor(false);
   const passportMode = kind === 'passport';
   const editorPhotos = passportMode ? [] : adventurePhotos.filter(photo => photo.packId === pack.pack_id).slice(0, 6);
   const editorNotes = passportMode ? [] : adventureNotes.filter(note => note.packId === pack.pack_id).slice(0, 6);
@@ -1983,7 +2087,7 @@ function openPostcardEditor(pack, score, kind = 'completion') {
     ? `<span>▣</span><div><b>${collageCount} fieldwork ${collageCount === 1 ? 'extra is' : 'extras are'} ready</b><small>Open Postcard extras to choose what appears, then drag each one into place.</small></div>`
     : '';
   renderPostcardExtras();
-  $('#postcardModal').classList.remove('hidden');
+  openModal($('#postcardModal'), '#postcardClose');
   updatePostcardPreview();
   bindPostcardDragging();
   $('#postcardClose').onclick = closePostcardEditor;
@@ -2636,6 +2740,11 @@ function playDiscoveryFeedback(skip) {
 function renderCompletionMap(pack) {
   setTimeout(() => {
     destroyCompletionMap();
+    if (!window.L) {
+      const container = $('#completionMap');
+      if (container) container.innerHTML = '<div class="map-unavailable compact" role="status"><span>⌖</span><p>Reconnect to view the completed route map.</p></div>';
+      return;
+    }
     const coordinates = pack.stops.map(stop => [stop.Target_Lat, stop.Target_Long]);
     detailMap = L.map('completionMap', { zoomControl: true, scrollWheelZoom: false });
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19, attribution: '© OpenStreetMap' }).addTo(detailMap);
@@ -2798,7 +2907,7 @@ function renderGame(options = {}) {
     : state.runMode === 'surprise'
       ? '<span class="surprise-run-badge">+20% Surprise Me</span>'
       : '';
-  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home>×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${formatPoints(state.score)}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${modeBadge ? `<div class="game-meta-row">${modeBadge}</div>` : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−100 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
+  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home aria-label="Exit adventure and return home">×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${formatPoints(state.score)}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${modeBadge ? `<div class="game-meta-row">${modeBadge}</div>` : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−100 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
   bindNavigationButtons();
   if (debugMode) renderDebugPanel(stop, debugDistance);
   if (currentHints > 0) {
@@ -3018,12 +3127,12 @@ function showArrivalConfirm(stop, metres, accuracy, base, debug = false) {
   $('#arrivalMessage').innerHTML = metres <= base
     ? `Your phone places you inside the normal ${formatDistance(base)} discovery area. <strong>Can you actually see the building or landmark described by the clue?</strong>`
     : 'Your GPS reading is less precise, so Day Tripping Quiz is allowing a little extra room. <strong>Only submit if you can genuinely see the building or landmark in question.</strong>';
-  $('#arrivalModal').classList.remove('hidden');
+  openModal($('#arrivalModal'), '#confirmArrival');
 }
 
-function closeArrival() {
+function closeArrival(restoreFocus = true) {
   pendingArrival = null;
-  $('#arrivalModal').classList.add('hidden');
+  closeModal($('#arrivalModal'), restoreFocus);
 }
 
 function handleStuckTap(stop) {

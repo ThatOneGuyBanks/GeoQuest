@@ -3,10 +3,15 @@
   "short_name": "Day Tripping",
   "id": "./",
   "start_url": "./",
+  "scope": "./",
+  "lang": "en-GB",
   "display": "standalone",
+  "display_override": ["standalone", "minimal-ui"],
+  "orientation": "any",
   "background_color": "#0c161f",
   "theme_color": "#0c161f",
   "description": "Real-world walking adventures, clues and local discoveries.",
+  "categories": ["games", "travel", "lifestyle"],
   "icons": [
     {
       "src": "assets/day-tripping-quiz-install-192-dark.png",

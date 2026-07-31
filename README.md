@@ -2,6 +2,10 @@
 
 A GitHub Pages-ready static GPS adventure game with modular JSON route packs.
 
+**[Play Day Tripping Quiz](https://thatoneguybanks.github.io/GeoQuest/)**
+
+The current release candidate is local-first: no account, analytics or application server is required. See [Privacy and offline use](PRIVACY.md), [Support](SUPPORT.md), [Security](SECURITY.md) and the [changelog](CHANGELOG.md).
+
 ## Uploading to GitHub
 Upload every file in this folder to the root of your existing repository, replacing matching files. Keep `packs/` as a folder. Commit to `main`; GitHub Pages will redeploy automatically.
 
@@ -16,6 +20,24 @@ Cards and filters use: `route_distance_km`, `estimated_minutes`, `difficulty_lab
 
 ## Map
 The map uses Leaflet and OpenStreetMap tiles. The overview shows town-level adventure pins only. The route line, numbered stops and landmark names are revealed in the completed-route recap, so the clues are not spoiled before play. GPS and compass permission require HTTPS, which GitHub Pages provides.
+
+## Offline behaviour
+
+The app shell is cached after a successful online visit. A player can save an individual adventure from its detail page so its clues, scoring and progress continue to work without a connection.
+
+Live map tiles, external directions, venue websites and other external links still require internet access. Recently viewed map tiles use a small bounded cache, but complete offline maps are not promised. Saved adventures use a cache-first strategy and refresh quietly when a connection returns; other app data falls back to cache after a short network timeout so patchy signal does not leave the app hanging indefinitely.
+
+## Release checks
+
+The automated checks deliberately avoid judging or changing route-pack content. They cover the application shell, keyboard access, modal behaviour, responsive layout, history/refresh recovery and saved-adventure offline replay.
+
+```bash
+npm ci
+npx playwright install chromium
+npm test
+```
+
+GitHub Actions runs the same checks for pull requests and pushes to `main`.
 
 ## Player record and scoring
 
