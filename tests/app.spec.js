@@ -43,6 +43,35 @@ test('adventure cards are real keyboard controls', async ({ page }) => {
   await expect(page.getByRole('heading', { name: 'Your mission' })).toBeVisible();
 });
 
+test('Surprise Me only chooses adventures inside the selected distance', async ({ page, context }) => {
+  await context.grantPermissions(['geolocation'], { origin: 'http://127.0.0.1:4173' });
+  await context.setGeolocation({ latitude: 52.570046, longitude: -0.240769 });
+  await openHome(page);
+  const slider = page.getByRole('slider', { name: 'Maximum distance from my location' });
+  await slider.evaluate(element => {
+    element.value = '5';
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await expect(page.locator('#surpriseDistanceValue')).toHaveText('5 km');
+  await page.getByRole('button', { name: /Surprise me/ }).click();
+  await expect(page.locator('.detail-location')).toHaveText('PETERBOROUGH');
+  await expect(page.getByText(/Surprise Me bonus/)).toBeVisible();
+});
+
+test('Surprise Me never falls back to a route outside the selected distance', async ({ page, context }) => {
+  await context.grantPermissions(['geolocation'], { origin: 'http://127.0.0.1:4173' });
+  await context.setGeolocation({ latitude: 60.35, longitude: -1.2 });
+  await openHome(page);
+  const slider = page.getByRole('slider', { name: 'Maximum distance from my location' });
+  await slider.evaluate(element => {
+    element.value = '5';
+    element.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+  await page.getByRole('button', { name: /Surprise me/ }).click();
+  await expect(page.getByText('No adventures within 5 km. Widen the range and try again.')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Where will your next clue lead?' })).toBeVisible();
+});
+
 test('accessibility summary is collapsed and reveals the full practical guidance', async ({ page }) => {
   await openHome(page);
   await page.locator('.route-card-open').first().click();
@@ -133,6 +162,7 @@ test('the phone layout has no horizontal overflow and keeps 44px header targets'
   }));
   expect(metrics.scrollWidth).toBeLessThanOrEqual(metrics.innerWidth);
   expect(metrics.controls.every(control => control.width >= 44 && control.height >= 44)).toBe(true);
+  await expect(page.getByRole('slider', { name: 'Maximum distance from my location' })).toBeVisible();
 });
 
 test('a saved adventure reloads and starts while offline', async ({ page, context }) => {
