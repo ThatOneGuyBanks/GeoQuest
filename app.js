@@ -951,6 +951,7 @@ function bind() {
   $('#passportOpen').onclick = showPassport;
   $('#sharePassport').onclick = openPassportPoster;
   $('#surpriseHero').onclick = surprise;
+  $('#surpriseDistance').oninput = updateSurpriseDistance;
   $('#settingsOpen').onclick = openSettings;
   $('#settingsClose').onclick = closeSettings;
   $('#settingsBackdrop').onclick = event => { if (event.target.id === 'settingsBackdrop') closeSettings(); };
@@ -988,6 +989,7 @@ function bind() {
   window.addEventListener('online', renderNetworkStatus);
   window.addEventListener('offline', renderNetworkStatus);
   renderNetworkStatus();
+  configureSurpriseDistance();
   if (!readStoredValue(SAFETY_KEY, LEGACY_SAFETY_KEY)) openModal($('#safetyModal'), '#acceptSafety');
   else maybeShowTutorial();
   renderSettings();
@@ -1468,11 +1470,68 @@ function openCollection(name) {
   wireCards();
 }
 
-function surprise() {
-  const pool = userPos
-    ? [...packs].sort((a, b) => distance(userPos, [a.centre.lat, a.centre.long]) - distance(userPos, [b.centre.lat, b.centre.long])).slice(0, Math.min(5, packs.length))
-    : packs;
+function updateSurpriseDistance() {
+  const slider = $('#surpriseDistance');
+  const output = $('#surpriseDistanceValue');
+  if (!slider || !output) return;
+  const displayedDistance = Math.max(0, Number(slider.value) || 0);
+  const kilometres = displayedDistance * (profile.unit === 'mi' ? 1.609344 : 1);
+  slider.dataset.radiusKm = String(kilometres);
+  output.textContent = `${displayedDistance} ${routeDistanceUnit()}`;
+}
+
+function configureSurpriseDistance() {
+  const slider = $('#surpriseDistance');
+  if (!slider) return;
+  const factor = profile.unit === 'mi' ? 0.621371192 : 1;
+  const maximum = profile.unit === 'mi' ? 100 : 160;
+  const radiusKm = Math.max(5, Number(slider.dataset.radiusKm) || 50);
+  slider.min = '5';
+  slider.max = String(maximum);
+  slider.step = '5';
+  slider.value = String(Math.min(maximum, Math.max(5, Math.round(radiusKm * factor / 5) * 5)));
+  updateSurpriseDistance();
+}
+
+function setSurpriseBusy(busy) {
+  const button = $('#surpriseHero');
+  if (!button) return;
+  button.disabled = busy;
+  button.setAttribute('aria-busy', String(busy));
+  button.classList.toggle('locating', busy);
+}
+
+function chooseSurpriseWithinRadius() {
+  const radiusKm = Math.max(0, Number($('#surpriseDistance')?.dataset.radiusKm) || 0);
+  const radiusLabel = $('#surpriseDistanceValue')?.textContent || formatRouteDistance(radiusKm);
+  const pool = packs.filter(pack => distance(userPos, [pack.centre.lat, pack.centre.long]) <= radiusKm);
+  if (!pool.length) {
+    toast(`No adventures within ${radiusLabel}. Widen the range and try again.`);
+    return;
+  }
   openDetail(pool[Math.floor(Math.random() * pool.length)], false, true);
+}
+
+function surprise() {
+  if (userPos) return chooseSurpriseWithinRadius();
+  if (!navigator.geolocation) return toast('Location is not available on this device');
+  setSurpriseBusy(true);
+  $('#surpriseDistanceStatus').textContent = 'Finding your current location…';
+  navigator.geolocation.getCurrentPosition(position => {
+    userPos = [position.coords.latitude, position.coords.longitude];
+    $('#surpriseDistanceStatus').textContent = 'Using your current location.';
+    $('#nearbyStatus').textContent = 'Sorted by distance from your current location.';
+    renderDaily();
+    renderNearby();
+    renderFilters();
+    renderBrowse($('#searchInput').value);
+    setSurpriseBusy(false);
+    chooseSurpriseWithinRadius();
+  }, () => {
+    setSurpriseBusy(false);
+    $('#surpriseDistanceStatus').textContent = 'Uses your current location when you roll.';
+    toast('Location was not available. Check browser permission.');
+  }, { enableHighAccuracy: false, maximumAge: 300000, timeout: 12000 });
 }
 
 function getNearby() {
@@ -2999,6 +3058,7 @@ function formatRouteDistance(kilometres) {
 }
 
 function refreshDistanceDisplays() {
+  configureSurpriseDistance();
   renderAll($('#searchInput').value);
   refreshMapDistances();
   if (!$('#detailView').classList.contains('hidden') && currentPack) {

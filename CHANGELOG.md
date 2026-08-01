@@ -22,3 +22,4 @@
 - Reworked age guidance into a dedicated, readable route panel instead of squeezing policy copy into the statistics grid.
 - Promoted completion postcards into a large keepsake feature ahead of the route recap and achievements.
 - Rebuilt passport collection stamps to contain long route names and large scores without widening or clipping the mobile layout.
+- Added a unit-aware distance slider to Surprise Me and restricted its Lucky Dip to routes genuinely inside the chosen radius.
