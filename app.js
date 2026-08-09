@@ -25,6 +25,8 @@ let debugMode = false;
 let debugStop = null;
 let debugDistance = 100;
 let stuckTapTimer = null;
+let toastDismissTimer = null;
+let toastCleanupTimer = null;
 let achievementsExpanded = false;
 let featuredExpanded = false;
 let nearbyExpanded = false;
@@ -37,6 +39,11 @@ let pageTransitionTimers = [];
 let tutorialStep = 0;
 let resetProgressTimer = null;
 let guideSession = 0;
+let scanSettleTimer = null;
+let guidePositionFilter = null;
+let guideRenderTimer = null;
+let lastGuideRenderAt = 0;
+let guideArrowAngle = null;
 let currentCollection = null;
 let pendingDiscovery = null;
 let postcardEditorState = null;
@@ -49,6 +56,11 @@ const POSTCARD_WIDTH = 1080;
 const POSTCARD_HEIGHT = 1350;
 const POSTCARD_PREVIEW_WIDTH = 540;
 const POSTCARD_PREVIEW_HEIGHT = 675;
+const GPS_REQUEST_OPTIONS = Object.freeze({ enableHighAccuracy: true, maximumAge: 0, timeout: 20000 });
+const GPS_NEARBY_OPTIONS = Object.freeze({ enableHighAccuracy: true, maximumAge: 15000, timeout: 20000 });
+const GPS_SCAN_SETTLE_MS = 8000;
+const GPS_MAX_ARRIVAL_ACCURACY_M = 50;
+const GPS_GUIDE_RENDER_INTERVAL_MS = 120;
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -1531,7 +1543,7 @@ function surprise() {
     setSurpriseBusy(false);
     $('#surpriseDistanceStatus').textContent = 'Uses your current location when you roll.';
     toast('Location was not available. Check browser permission.');
-  }, { enableHighAccuracy: false, maximumAge: 300000, timeout: 12000 });
+  }, GPS_NEARBY_OPTIONS);
 }
 
 function getNearby() {
@@ -1546,7 +1558,7 @@ function getNearby() {
     renderBrowse($('#searchInput').value);
   }, () => {
     $('#nearbyStatus').textContent = 'Location was not available. Check browser permission.';
-  }, { enableHighAccuracy: true, timeout: 12000 });
+  }, GPS_NEARBY_OPTIONS);
 }
 
 function checkVenueLocation(pack, isDaily, isSurprise = false) {
@@ -1566,7 +1578,7 @@ function checkVenueLocation(pack, isDaily, isSurprise = false) {
       button.textContent = userPos ? 'Recheck my location' : 'Check my location for a safer result';
     }
     toast('Location was not available. Check browser permission.');
-  }, { enableHighAccuracy: true, maximumAge: 30000, timeout: 12000 });
+  }, GPS_REQUEST_OPTIONS);
 }
 
 function numberedIcon(number, className = '') {
@@ -2958,6 +2970,43 @@ function startGame(pack) {
   renderGame();
 }
 
+function gameStopProgress(pack) {
+  const total = pack.stops.length;
+  const progressLabel = currentStop === total - 1 ? 'Final discovery' : currentStop === 0 ? 'The trail starts here' : 'Keep following the trail';
+  const stops = pack.stops.map((_, index) => {
+    const status = index < currentStop ? 'complete' : index === currentStop ? 'current' : 'upcoming';
+    const label = status === 'complete' ? `Stop ${index + 1} complete` : status === 'current' ? `Stop ${index + 1}, current clue` : `Stop ${index + 1}, upcoming`;
+    return `<li class="${status}" aria-label="${label}" ${status === 'current' ? 'aria-current="step"' : ''}><span>${status === 'complete' ? '✓' : index + 1}</span></li>`;
+  }).join('');
+  return `<section class="game-progress-card" aria-label="Adventure progress">
+    <div class="game-progress-copy"><span>STOP ${currentStop + 1} OF ${total}</span><b>${progressLabel}</b></div>
+    <ol class="game-stop-track" style="--stop-count:${total}" aria-label="Adventure stop progress">${stops}</ol>
+  </section>`;
+}
+
+function gameHintButtonHtml() {
+  const secondHint = currentHints === 1;
+  return `<span class="game-action-icon" aria-hidden="true">◇</span><span><b>${secondHint ? 'Reveal the second hint' : 'Reveal a hint'}</b><small>${secondHint ? 'A stronger nudge' : 'A gentle nudge'}</small></span><strong>−${secondHint ? 150 : 100}</strong>`;
+}
+
+function renderGameHintState(stop) {
+  const hints = $('#hints');
+  const button = $('#hintBtn');
+  if (!hints || !button) return;
+  hints.innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map((hint, index) => `<article class="game-hint"><span>HINT ${index + 1}</span><p>${esc(hint)}</p></article>`).join('');
+  button.innerHTML = gameHintButtonHtml();
+  button.classList.toggle('hidden', currentHints >= 2);
+}
+
+function setGameScanState(scanning) {
+  const button = $('#checkBtn');
+  if (!button) return;
+  button.disabled = scanning;
+  button.classList.toggle('is-scanning', scanning);
+  const label = button.querySelector('[data-scan-label]');
+  if (label) label.textContent = scanning ? 'Refining your position…' : 'Scan my location';
+}
+
 function renderGame(options = {}) {
   pendingDiscovery = null;
   currentCollection = null;
@@ -3000,19 +3049,38 @@ function renderGame(options = {}) {
     : state.runMode === 'surprise'
       ? '<span class="surprise-run-badge">+20% Surprise Me</span>'
       : '';
-  $('#gameContent').innerHTML = `<div class="game-shell"><div class="game-top"><button class="back-btn" data-home aria-label="Exit adventure and return home">×</button><span>Stop ${currentStop + 1} of ${pack.stops.length}</span><b class="live-score">✦ ${formatPoints(state.score)}</b></div><div class="progress"><i style="width:${(currentStop / pack.stops.length) * 100}%"></i></div>${modeBadge ? `<div class="game-meta-row">${modeBadge}</div>` : ''}<span class="eyebrow">CRYPTIC CLUE</span><div class="clue-card"><h1>${esc(stop.Cryptic_Clue)}</h1><div id="hints"></div></div><div id="guide">${scannerPanel()}</div><div class="game-actions"><button id="hintBtn" class="secondary">Reveal a hint <small>−100 points</small></button><button id="checkBtn" class="primary scan-button"><span>⌖</span> Scan my location</button><button id="stuckBtn" class="secondary stuck-button">I’m stuck</button></div></div>`;
+  $('#gameContent').innerHTML = `<div class="game-shell game-play-shell">
+    <header class="game-hud">
+      <button class="back-btn" data-home aria-label="Exit adventure and return home">×</button>
+      <div class="game-hud-route"><span>${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b></div>
+      <div class="game-score-pill"><span>ADVENTURE SCORE</span><b>✦ ${formatPoints(state.score)}</b></div>
+    </header>
+    <div class="game-status-row">${gameStopProgress(pack)}${modeBadge ? `<div class="game-mode-pill">${modeBadge}</div>` : ''}</div>
+    <div class="game-play-grid">
+      <section class="game-clue-panel" aria-labelledby="activeClue">
+        <div class="game-clue-heading"><span class="game-clue-number" aria-hidden="true">${String(currentStop + 1).padStart(2, '0')}</span><div><span class="eyebrow">CRYPTIC CLUE</span><p>Find the place this describes</p></div></div>
+        <div class="clue-card"><h1 id="activeClue">${esc(stop.Cryptic_Clue)}</h1><div id="hints" class="game-hints" aria-live="polite" aria-label="Revealed hints"></div><div class="clue-field-note"><span aria-hidden="true">⌁</span><p><b>Eyes up.</b> Stay aware of your surroundings while you search.</p></div></div>
+        <div class="game-support-actions">
+          <button id="hintBtn" class="game-secondary-action">${gameHintButtonHtml()}</button>
+          <button id="stuckBtn" class="game-secondary-action stuck-button"><span class="game-action-icon" aria-hidden="true">?</span><span><b>I’m stuck</b><small>Get guidance or skip</small></span><strong>→</strong></button>
+        </div>
+      </section>
+      <aside class="game-action-panel" aria-label="Check your answer">
+        <div class="game-check-heading"><span class="eyebrow">CHECK YOUR DISCOVERY</span><h2>Think you’ve found it?</h2><p>Your phone will take a few readings and settle on the most accurate position it can.</p></div>
+        <div id="guide">${scannerPanel()}</div>
+        <div class="game-action-dock">
+          <button id="checkBtn" class="primary scan-button" aria-label="Scan my location"><span class="scan-button-icon" aria-hidden="true">⌖</span><span><b data-scan-label>Scan my location</b><small>High-accuracy GPS check</small></span><strong aria-hidden="true">→</strong></button>
+          <small>Walking time does not affect your score.</small>
+        </div>
+      </aside>
+    </div>
+  </div>`;
   bindNavigationButtons();
   if (debugMode) renderDebugPanel(stop, debugDistance);
-  if (currentHints > 0) {
-    $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
-    if (currentHints === 1) $('#hintBtn').innerHTML = 'Reveal the second hint <small>−150 points</small>';
-    if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
-  }
+  renderGameHintState(stop);
   $('#hintBtn').onclick = () => {
     currentHints = Math.min(2, currentHints + 1);
-    $('#hints').innerHTML = [stop.Hint_1, stop.Hint_2].slice(0, currentHints).map(hint => `<div class="hint">${esc(hint)}</div>`).join('');
-    if (currentHints === 1) $('#hintBtn').innerHTML = 'Reveal the second hint <small>−150 points</small>';
-    if (currentHints >= 2) $('#hintBtn').classList.add('hidden');
+    renderGameHintState(stop);
     rememberView('gameView');
   };
   $('#checkBtn').onclick = () => checkLocation(stop);
@@ -3022,15 +3090,156 @@ function renderGame(options = {}) {
 function checkLocation(stop) {
   if (!isSecureContext) return toast('Location needs HTTPS. Open the GitHub Pages address.');
   if (!navigator.geolocation) return toast('Location is not available on this device.');
+  setGameScanState(true);
   stopWatch();
+  const session = guideSession;
+  const filter = createGpsPositionFilter();
+  let bestPosition = null;
   debugMode = false;
   debugStop = null;
   lastScanReading = null;
   $('#guide').innerHTML = scannerPanel('scanning');
-  navigator.geolocation.getCurrentPosition(position => evaluateArrival(stop, position), () => {
-    $('#guide').innerHTML = `<section class="gps-scanner error"><div class="scanner-copy"><span class="eyebrow">SIGNAL LOST</span><b>We could not read your location. Check browser permission and try another scan.</b></div></section>`;
-    toast('Could not get location. Check permission.');
-  }, { enableHighAccuracy: true, timeout: 18000, maximumAge: 0 });
+  const finish = (position = bestPosition, error = null) => {
+    if (session !== guideSession) return;
+    guideSession += 1;
+    if (watchId !== null) navigator.geolocation.clearWatch(watchId);
+    watchId = null;
+    clearTimeout(scanSettleTimer);
+    scanSettleTimer = null;
+    setGameScanState(false);
+    if (position) {
+      evaluateArrival(stop, position, gpsFixMeta(filter));
+      return;
+    }
+    $('#guide').innerHTML = `<section class="gps-scanner error"><div class="scanner-copy"><span class="eyebrow">SIGNAL LOST</span><b>We could not get a reliable location. Move into the open, check browser permission and try again.</b></div></section>`;
+    toast(error?.code === 1 ? 'Location permission was denied.' : 'Could not get a reliable GPS reading.');
+  };
+  scanSettleTimer = setTimeout(() => finish(), GPS_SCAN_SETTLE_MS);
+  watchId = navigator.geolocation.watchPosition(position => {
+    if (session !== guideSession) return;
+    const filtered = smoothGpsPosition(position, filter);
+    if (!filtered) return;
+    bestPosition = filtered;
+    const meta = gpsFixMeta(filter);
+    updateScannerAcquisition(filtered, meta);
+    if (meta.readyForArrival) finish(filtered);
+  }, error => {
+    if (session !== guideSession) return;
+    if (error?.code === 1) finish(null, error);
+  }, GPS_REQUEST_OPTIONS);
+}
+
+function normaliseGpsPosition(position) {
+  const coords = position?.coords || {};
+  const latitude = Number(coords.latitude);
+  const longitude = Number(coords.longitude);
+  if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return null;
+  const reportedAccuracy = Number(coords.accuracy);
+  return {
+    coords: {
+      latitude,
+      longitude,
+      accuracy: Number.isFinite(reportedAccuracy) && reportedAccuracy >= 0 ? reportedAccuracy : 999,
+      altitude: Number.isFinite(Number(coords.altitude)) ? Number(coords.altitude) : null,
+      altitudeAccuracy: Number.isFinite(Number(coords.altitudeAccuracy)) ? Number(coords.altitudeAccuracy) : null,
+      heading: Number.isFinite(Number(coords.heading)) ? Number(coords.heading) : null,
+      speed: Number.isFinite(Number(coords.speed)) ? Math.max(0, Number(coords.speed)) : null
+    },
+    timestamp: Number(position?.timestamp) || Date.now()
+  };
+}
+
+function createGpsPositionFilter() {
+  return {
+    position: null,
+    lastRaw: null,
+    readings: 0,
+    acceptedFixes: 0,
+    rejectedFixes: 0,
+    stableFixes: 0,
+    lastShift: Infinity
+  };
+}
+
+function smoothGpsPosition(position, state) {
+  const raw = normaliseGpsPosition(position);
+  if (!raw || !state) return null;
+  state.readings += 1;
+  if (!state.position) {
+    state.position = raw;
+    state.lastRaw = raw;
+    state.acceptedFixes = 1;
+    state.stableFixes = raw.coords.accuracy <= 12 ? 1 : 0;
+    state.lastShift = 0;
+    return raw;
+  }
+
+  const previous = state.position;
+  const elapsedSeconds = Math.max(0.25, Math.min(30, (raw.timestamp - previous.timestamp) / 1000 || 1));
+  const rawShift = distance(
+    [previous.coords.latitude, previous.coords.longitude],
+    [raw.coords.latitude, raw.coords.longitude]
+  ) * 1000;
+  const previousAccuracy = Math.max(1, Number(previous.coords.accuracy) || 999);
+  const accuracy = Math.max(1, Number(raw.coords.accuracy) || 999);
+  const sharplyWorseJump = accuracy > previousAccuracy * 1.8
+    && rawShift > Math.max(35, previousAccuracy * 2.5, elapsedSeconds * 15);
+  const implausibleJump = rawShift / elapsedSeconds > 45
+    && accuracy >= previousAccuracy;
+  if (sharplyWorseJump || implausibleJump) {
+    state.rejectedFixes += 1;
+    state.lastRaw = raw;
+    state.lastShift = 0;
+    return state.position;
+  }
+
+  const uncertainty = Math.max(3, Math.min(previousAccuracy, accuracy));
+  const reportedSpeed = raw.coords.speed;
+  const credibleMovement = (reportedSpeed !== null && reportedSpeed >= 0.65)
+    || rawShift > Math.max(12, uncertainty * 1.3);
+  let alpha = credibleMovement ? 0.55 : accuracy <= 15 ? 0.32 : accuracy <= 40 ? 0.17 : 0.1;
+  if (accuracy <= previousAccuracy * 0.65) alpha = Math.max(alpha, 0.72);
+  if (accuracy >= previousAccuracy * 1.7) alpha *= 0.45;
+  if (!credibleMovement && rawShift < Math.max(2.5, uncertainty * 0.3)) alpha *= 0.55;
+  alpha = Math.max(0.06, Math.min(0.78, alpha));
+
+  const longitudeDelta = ((raw.coords.longitude - previous.coords.longitude + 540) % 360) - 180;
+  const filtered = {
+    coords: {
+      ...raw.coords,
+      latitude: previous.coords.latitude + (raw.coords.latitude - previous.coords.latitude) * alpha,
+      longitude: previous.coords.longitude + longitudeDelta * alpha
+    },
+    timestamp: raw.timestamp
+  };
+  const filteredShift = rawShift * alpha;
+  const stableThreshold = Math.max(3, uncertainty * 0.28);
+  state.stableFixes = filteredShift <= stableThreshold ? state.stableFixes + 1 : 0;
+  state.position = filtered;
+  state.lastRaw = raw;
+  state.acceptedFixes += 1;
+  state.lastShift = filteredShift;
+  return filtered;
+}
+
+function gpsFixMeta(state) {
+  const accuracy = Math.max(0, Number(state?.position?.coords?.accuracy) || 0);
+  const settled = accuracy <= 12 || (Number(state?.acceptedFixes) >= 2 && Number(state?.stableFixes) >= 1);
+  return {
+    accuracy,
+    readings: Number(state?.readings) || 0,
+    acceptedFixes: Number(state?.acceptedFixes) || 0,
+    rejectedFixes: Number(state?.rejectedFixes) || 0,
+    settled,
+    readyForArrival: settled && accuracy <= GPS_MAX_ARRIVAL_ACCURACY_M
+  };
+}
+
+function updateScannerAcquisition(position, meta) {
+  const copy = $('#guide .scanner-copy b');
+  const status = $('#gpsSettleStatus');
+  if (copy) copy.textContent = meta.settled ? 'GPS fix ready.' : 'Comparing readings for a steadier fix…';
+  if (status) status.textContent = `${meta.readings} ${meta.readings === 1 ? 'reading' : 'readings'} · ±${formatDistance(position.coords.accuracy)}`;
 }
 
 function effectiveRadius(base, accuracy) {
@@ -3038,8 +3247,9 @@ function effectiveRadius(base, accuracy) {
 }
 
 function qualityFor(accuracy) {
-  if (accuracy <= 20) return ['good', 'Good'];
-  if (accuracy <= 45) return ['fair', 'Fair'];
+  if (accuracy <= 12) return ['excellent', 'Strong'];
+  if (accuracy <= 25) return ['good', 'Good'];
+  if (accuracy <= 50) return ['fair', 'Fair'];
   return ['poor', 'Uncertain'];
 }
 
@@ -3079,8 +3289,8 @@ function setUnit(unit) {
     button.setAttribute('aria-pressed', active);
   });
   if (debugMode && debugStop) renderDebugPanel(debugStop, debugDistance);
-  else if (latestGuideReading) renderGuideReading(latestGuideReading.stop, latestGuideReading.position);
-  else if (lastScanReading) renderScanResult(lastScanReading.stop, lastScanReading.position);
+  else if (latestGuideReading) renderGuideReading(latestGuideReading.stop, latestGuideReading.position, latestGuideReading.meta);
+  else if (lastScanReading) renderScanResult(lastScanReading.stop, lastScanReading.position, lastScanReading.meta);
   if (pendingArrival) showArrivalConfirm(pendingArrival.stop, pendingArrival.distance, pendingArrival.accuracy, pendingArrival.base, pendingArrival.debug);
   refreshDistanceDisplays();
   renderSettings();
@@ -3176,41 +3386,48 @@ function formatComparisonCount(count) {
 
 function scannerPanel(state = 'idle', closeable = false) {
   const copy = state === 'scanning'
-    ? ['LOCKING ON', 'Finding your best GPS signal…']
+    ? ['REFINING YOUR POSITION', 'Waiting for a high-accuracy GPS fix…']
     : ['READY TO SCAN', 'Step outside, look around, then scan when you think you have solved the clue.'];
   return `<section class="gps-scanner ${state} ${closeable ? 'guidance' : ''}">
     ${closeable ? '<button id="closeGuidePanel" class="guide-close" aria-label="Close live guidance">×</button>' : ''}
     <div class="scanner-visual"><i></i><i></i><i></i><span>⌖</span></div>
     <div class="scanner-copy"><span class="eyebrow">${copy[0]}</span><b>${copy[1]}</b></div>
+    ${state === 'scanning' ? '<small id="gpsSettleStatus" class="gps-settling" aria-live="polite">Waiting for the first reading…</small>' : ''}
   </section>`;
 }
 
-function renderScanResult(stop, position) {
-  lastScanReading = { stop, position };
+function renderScanResult(stop, position, meta = {}) {
+  lastScanReading = { stop, position, meta };
   const accuracy = Math.max(0, Number(position.coords.accuracy) || 0);
   const metres = distance([position.coords.latitude, position.coords.longitude], [stop.Target_Lat, stop.Target_Long]) * 1000;
   const base = Number(stop.Win_Radius_m) || 35;
   const [qualityClass, qualityLabel] = qualityFor(accuracy);
   const proximity = Math.max(4, Math.min(100, (effectiveRadius(base, accuracy) / Math.max(metres, 1)) * 100));
+  const prompt = accuracy > GPS_MAX_ARRIVAL_ACCURACY_M
+    ? 'The GPS area is still too broad to confirm this stop. Move into the open, pause for a moment and scan again.'
+    : meta.settled === false
+      ? 'Your position was still moving between readings. Pause for a moment and scan again for a steadier result.'
+      : 'Keep exploring and scan again when the clue matches what you can see.';
   $('#guide').innerHTML = `<section class="gps-scanner result">
     <div class="scanner-result-top"><span class="gps-quality ${qualityClass}">${qualityLabel} GPS · ±${formatDistance(accuracy)}</span><span>Target scan</span></div>
     <div class="distance-display"><b>${formatDistance(metres)}</b><span>from the discovery zone</span></div>
     <div class="proximity-track"><i style="width:${proximity}%"></i></div>
     <div class="distance-facts">${comparisonFact(metres)}</div>
-    <p class="scanner-prompt">Keep exploring and scan again when the clue matches what you can see.</p>
+    <p class="scanner-prompt">${prompt}</p>
   </section>`;
 }
 
-function evaluateArrival(stop, position) {
+function evaluateArrival(stop, position, meta = {}) {
   const accuracy = Math.max(0, Number(position.coords.accuracy) || 0);
   const metres = distance([position.coords.latitude, position.coords.longitude], [stop.Target_Lat, stop.Target_Long]) * 1000;
   const base = Number(stop.Win_Radius_m) || 35;
   const effective = effectiveRadius(base, accuracy);
-  if (metres <= effective) {
+  const settled = meta.settled !== false;
+  if (metres <= effective && settled && accuracy <= GPS_MAX_ARRIVAL_ACCURACY_M) {
     showArrivalConfirm(stop, metres, accuracy, base);
     return true;
   }
-  renderScanResult(stop, position);
+  renderScanResult(stop, position, meta);
   return false;
 }
 
@@ -3268,6 +3485,7 @@ function animateStuckButton() {
 
 function closeGuidePanel() {
   stopWatch();
+  setGameScanState(false);
   debugMode = false;
   debugStop = null;
   stuckTapTimes = [];
@@ -3346,7 +3564,7 @@ function renderDebugPanel(stop, metres = debugDistance, scanned = false) {
 }
 
 function stuck(stop) {
-  $('#guide').innerHTML = '<div class="guide-panel"><button id="closeGuidePanel" class="guide-close" aria-label="Close help panel">×</button><h3>Need a hand?</h3><div class="game-actions"><button id="guideBtn" class="primary">Guide me in</button><button id="skipBtn" class="secondary">Skip this stop · 0 points</button></div></div>';
+  $('#guide').innerHTML = '<section class="guide-panel game-rescue-panel"><button id="closeGuidePanel" class="guide-close" aria-label="Close help panel">×</button><span class="rescue-icon" aria-hidden="true">?</span><span class="eyebrow">A LITTLE HELP</span><h3>Need another way in?</h3><p>Get live direction and distance guidance, or move on without earning points for this stop.</p><div class="game-actions"><button id="guideBtn" class="primary">Guide me in</button><button id="skipBtn" class="secondary">Skip this stop · 0 points</button></div></section>';
   bindGuideClose();
   $('#guideBtn').onclick = () => guide(stop);
   $('#skipBtn').onclick = () => completeStop(stop, true);
@@ -3364,8 +3582,8 @@ async function startCompass() {
       if (Number.isFinite(event.webkitCompassHeading)) heading = event.webkitCompassHeading;
       else if (event.absolute && Number.isFinite(event.alpha)) heading = (360 - event.alpha) % 360;
       if (heading === null) return;
-      deviceHeading = heading;
-      if (latestGuideReading) renderGuideReading(latestGuideReading.stop, latestGuideReading.position);
+      deviceHeading = smoothCompassHeading(deviceHeading, heading);
+      scheduleGuideRender();
     };
     window.addEventListener('deviceorientationabsolute', orientationHandler, true);
     window.addEventListener('deviceorientation', orientationHandler, true);
@@ -3381,16 +3599,54 @@ async function guide(stop) {
   const session = guideSession;
   await startCompass();
   if (session !== guideSession) return;
+  guidePositionFilter = createGpsPositionFilter();
   $('#guide').innerHTML = scannerPanel('scanning', true);
   bindGuideClose();
   watchId = navigator.geolocation.watchPosition(position => {
     if (session !== guideSession) return;
-    latestGuideReading = { stop, position };
-    renderGuideReading(stop, position);
-  }, () => toast('Guidance needs location permission.'), { enableHighAccuracy: true, maximumAge: 1000, timeout: 18000 });
+    const filtered = smoothGpsPosition(position, guidePositionFilter);
+    if (!filtered) return;
+    latestGuideReading = { stop, position: filtered, meta: gpsFixMeta(guidePositionFilter) };
+    scheduleGuideRender(true);
+  }, () => toast('Guidance needs location permission.'), GPS_REQUEST_OPTIONS);
 }
 
-function renderGuideReading(stop, position) {
+function smoothCompassHeading(previous, next) {
+  next = ((Number(next) % 360) + 360) % 360;
+  if (!Number.isFinite(previous)) return next;
+  const delta = ((next - previous + 540) % 360) - 180;
+  const magnitude = Math.abs(delta);
+  const alpha = magnitude > 45 ? 0.38 : magnitude > 15 ? 0.25 : 0.16;
+  return (previous + delta * alpha + 360) % 360;
+}
+
+function continuousGuideAngle(previous, next) {
+  if (!Number.isFinite(previous)) return next;
+  const normalisedPrevious = ((previous % 360) + 360) % 360;
+  const delta = ((next - normalisedPrevious + 540) % 360) - 180;
+  return previous + delta;
+}
+
+function scheduleGuideRender(force = false) {
+  if (!latestGuideReading) return;
+  const elapsed = Date.now() - lastGuideRenderAt;
+  if (force || elapsed >= GPS_GUIDE_RENDER_INTERVAL_MS) {
+    clearTimeout(guideRenderTimer);
+    guideRenderTimer = null;
+    lastGuideRenderAt = Date.now();
+    renderGuideReading(latestGuideReading.stop, latestGuideReading.position, latestGuideReading.meta);
+    return;
+  }
+  if (guideRenderTimer !== null) return;
+  guideRenderTimer = setTimeout(() => {
+    guideRenderTimer = null;
+    if (!latestGuideReading) return;
+    lastGuideRenderAt = Date.now();
+    renderGuideReading(latestGuideReading.stop, latestGuideReading.position, latestGuideReading.meta);
+  }, GPS_GUIDE_RENDER_INTERVAL_MS - elapsed);
+}
+
+function renderGuideReading(stop, position, meta = {}) {
   const here = [position.coords.latitude, position.coords.longitude];
   const target = [stop.Target_Lat, stop.Target_Long];
   const metres = distance(here, target) * 1000;
@@ -3400,17 +3656,44 @@ function renderGuideReading(stop, position) {
   const arrow = heading === null ? targetBearing : (targetBearing - heading + 360) % 360;
   const accuracy = Math.max(0, Number(position.coords.accuracy) || 0);
   const [qualityClass, qualityLabel] = qualityFor(accuracy);
-  $('#guide').innerHTML = `<section class="gps-scanner guidance">
-    <button id="closeGuidePanel" class="guide-close" aria-label="Close live guidance">×</button>
-    <div class="scanner-result-top"><span class="gps-quality ${qualityClass}">${qualityLabel} GPS · ±${formatDistance(accuracy)}</span><span>Live guidance</span></div>
-    <div class="guidance-orbit"><i></i><i></i><div class="guide-arrow" style="transform:rotate(${arrow}deg)">↑</div></div>
-    <div class="distance-display"><b>${formatDistance(metres)}</b><span>to the discovery zone</span></div>
-    <p class="direction-note">${heading === null ? 'Compass unavailable — the arrow is relative to north.' : 'Hold your phone flat. The arrow turns relative to its top edge.'}</p>
-    <div class="distance-facts">${comparisonFact(metres)}</div>
-  </section>`;
-  bindGuideClose();
+  const arrowReliable = metres > Math.max(12, accuracy * 1.2);
+  if (arrowReliable || !Number.isFinite(guideArrowAngle)) guideArrowAngle = continuousGuideAngle(guideArrowAngle, arrow);
+  const guidanceStatus = meta.settled === false ? `Stabilising · ${meta.readings || 1} readings` : 'Smoothed live guidance';
+  const directionNote = !arrowReliable
+    ? 'You are within the GPS uncertainty area — pause and look around for the landmark.'
+    : heading === null
+      ? 'Compass unavailable — the arrow is relative to north.'
+      : 'Hold your phone flat. The arrow turns relative to its top edge.';
+  let panel = $('#guide .gps-scanner.guidance[data-live-guidance]');
+  if (!panel) {
+    $('#guide').innerHTML = `<section class="gps-scanner guidance" data-live-guidance>
+      <button id="closeGuidePanel" class="guide-close" aria-label="Close live guidance">×</button>
+      <div class="scanner-result-top"><span id="guideGpsQuality" class="gps-quality ${qualityClass}">${qualityLabel} GPS · ±${formatDistance(accuracy)}</span><span id="guideGpsStatus">${guidanceStatus}</span></div>
+      <div class="guidance-orbit ${arrowReliable ? '' : 'uncertain'}"><i></i><i></i><div id="guideArrow" class="guide-arrow" style="transform:rotate(${guideArrowAngle}deg)">↑</div></div>
+      <div class="distance-display"><b id="guideDistance">${formatDistance(metres)}</b><span>to the discovery zone</span></div>
+      <p id="guideDirectionNote" class="direction-note">${directionNote}</p>
+      <div id="guideDistanceFacts" class="distance-facts">${comparisonFact(metres)}</div>
+    </section>`;
+    panel = $('#guide .gps-scanner.guidance[data-live-guidance]');
+    bindGuideClose();
+  } else {
+    const quality = $('#guideGpsQuality');
+    quality.className = `gps-quality ${qualityClass}`;
+    quality.textContent = `${qualityLabel} GPS · ±${formatDistance(accuracy)}`;
+    $('#guideGpsStatus').textContent = guidanceStatus;
+    $('#guideArrow').style.transform = `rotate(${guideArrowAngle}deg)`;
+    $('.guidance-orbit').classList.toggle('uncertain', !arrowReliable);
+    $('#guideDistance').textContent = formatDistance(metres);
+    $('#guideDirectionNote').textContent = directionNote;
+  }
+  const factBucket = `${profile.unit}-${metres < 100 ? Math.round(metres / 5) : Math.round(metres / 25)}`;
+  const facts = $('#guideDistanceFacts');
+  if (facts && facts.dataset.bucket !== factBucket) {
+    facts.dataset.bucket = factBucket;
+    facts.innerHTML = comparisonFact(metres);
+  }
   const base = Number(stop.Win_Radius_m) || 35;
-  if (metres <= effectiveRadius(base, accuracy)) {
+  if (metres <= effectiveRadius(base, accuracy) && meta.readyForArrival !== false && accuracy <= GPS_MAX_ARRIVAL_ACCURACY_M) {
     stopWatch();
     showArrivalConfirm(stop, metres, accuracy, base);
   }
@@ -3594,6 +3877,10 @@ function restoreContinue() {
 
 function stopWatch() {
   guideSession += 1;
+  clearTimeout(scanSettleTimer);
+  scanSettleTimer = null;
+  clearTimeout(guideRenderTimer);
+  guideRenderTimer = null;
   if (watchId !== null) {
     navigator.geolocation.clearWatch(watchId);
     watchId = null;
@@ -3604,6 +3891,9 @@ function stopWatch() {
     orientationHandler = null;
   }
   deviceHeading = null;
+  guidePositionFilter = null;
+  guideArrowAngle = null;
+  lastGuideRenderAt = 0;
   latestGuideReading = null;
   lastScanReading = null;
 }
@@ -3625,9 +3915,21 @@ function bearing(a, b) {
 }
 
 function toast(message) {
-  $('#toast').textContent = message;
-  $('#toast').classList.add('show');
-  setTimeout(() => $('#toast').classList.remove('show'), 3000);
+  const element = $('#toast');
+  if (!element) return;
+  clearTimeout(toastDismissTimer);
+  clearTimeout(toastCleanupTimer);
+  element.hidden = false;
+  element.textContent = message;
+  requestAnimationFrame(() => element.classList.add('show'));
+  toastDismissTimer = setTimeout(() => {
+    element.classList.remove('show');
+    toastCleanupTimer = setTimeout(() => {
+      if (element.classList.contains('show')) return;
+      element.hidden = true;
+      element.textContent = '';
+    }, 300);
+  }, 3000);
 }
 
 init();
@@ -3643,7 +3945,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=24', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=33', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
