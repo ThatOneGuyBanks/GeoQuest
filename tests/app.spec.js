@@ -279,10 +279,61 @@ test('all stops receive a stable mix of treasure challenge types', async ({ page
     };
   });
   expect(audit.stops).toBe(203);
-  expect(audit.types).toEqual(['cipher', 'clue_shards', 'memory', 'quiz', 'word_lock']);
+  expect(audit.types).toEqual(['cipher', 'clue_shards', 'compass', 'memory', 'odd_one_out', 'pairs', 'pattern', 'quiz', 'word_lock', 'word_search']);
   expect(audit.invalid).toEqual([]);
   expect(audit.first.type).toBe('quiz');
   expect(audit.first.answer).toBe('Butter');
+});
+
+test('the five expanded mini-games render complete controls and can be solved', async ({ page }) => {
+  await openHome(page);
+  const samples = await page.evaluate(async () => {
+    const wanted = ['odd_one_out', 'pattern', 'compass', 'word_search', 'pairs'];
+    const index = await fetch('packs/index.json').then(response => response.json());
+    const routePacks = await Promise.all(index.packs.filter(entry => entry.enabled).map(entry => fetch(`packs/${entry.file}`).then(response => response.json())));
+    const found = {};
+    routePacks.forEach(pack => [...pack.stops]
+      .sort((a, b) => Number(a.Stop_Order) - Number(b.Stop_Order))
+      .forEach((stop, stopIndex) => {
+        const challenge = treasureChallengeFor(pack, stop, stopIndex);
+        if (wanted.includes(challenge.type) && !found[challenge.type]) found[challenge.type] = { stop, challenge };
+      }));
+    return found;
+  });
+
+  expect(Object.keys(samples).sort()).toEqual(['compass', 'odd_one_out', 'pairs', 'pattern', 'word_search']);
+  expect(samples.compass.challenge.directions).toHaveLength(8);
+  expect(samples.word_search.challenge.cells).toHaveLength(36);
+  expect(samples.pairs.challenge.tiles).toHaveLength(6);
+
+  for (const type of ['odd_one_out', 'pattern', 'compass', 'word_search', 'pairs']) {
+    await page.evaluate(({ stop, challenge }) => {
+      window.__treasureSolved = false;
+      unlockTreasureClue = () => { window.__treasureSolved = true; };
+      const host = document.querySelector('#gameView');
+      host.classList.remove('hidden');
+      host.innerHTML = treasureChallengeMarkup(challenge);
+      wireTreasureChallenge(stop, challenge);
+    }, samples[type]);
+
+    if (['odd_one_out', 'pattern', 'compass'].includes(type)) {
+      await page.locator('[data-challenge-correct="true"]').click();
+    } else if (type === 'word_search') {
+      await page.evaluate(() => [...document.querySelectorAll('[data-word-order]:not([data-word-order=""])')]
+        .sort((a, b) => Number(a.dataset.wordOrder) - Number(b.dataset.wordOrder))
+        .forEach(button => button.click()));
+    } else {
+      await page.evaluate(() => {
+        const groups = {};
+        document.querySelectorAll('[data-pair-symbol]').forEach(button => {
+          groups[button.dataset.pairSymbol] ||= [];
+          groups[button.dataset.pairSymbol].push(button);
+        });
+        Object.values(groups).forEach(pair => pair.forEach(button => button.click()));
+      });
+    }
+    await expect.poll(() => page.evaluate(() => window.__treasureSolved)).toBe(true);
+  }
 });
 
 test('the phone layout has no horizontal overflow and keeps 44px header targets', async ({ page }) => {

@@ -91,8 +91,13 @@ Use an authored `Treasure_Challenge` when a stop benefits from a specific local 
 - `cipher` — players turn back a Caesar-style letter shift and identify the readable opening.
 - `word_lock` — players unscramble a key word drawn from the clue.
 - `memory` — players watch and repeat a four-sigil sequence.
+- `odd_one_out` — players identify the one word that does not belong. Optionally supply three or more unique `options` and an exactly matching `answer`.
+- `pattern` — players predict the missing mark in a repeating sequence. For a bespoke pattern, supply at least three visible `pattern` items plus `options` and an exactly matching `answer`.
+- `compass` — players choose one of eight compass points. The app can derive the rough route bearing, or authors can supply `answer` as `N`, `NE`, `E`, `SE`, `S`, `SW`, `W` or `NW`.
+- `word_search` — players find and tap a short word inside a six-by-six letter vault. Supply an optional four-to-six-letter `target`, otherwise the app selects one from the clue.
+- `pairs` — players turn over six tiles to match three sigil pairs. Supply an optional array of exactly three unique `symbols`.
 
-All types accept optional `title`, `prompt` and `success` text. A challenge must not reveal the destination name, require internet access, depend on a venue being open or ask players to interact with private property. Players who cannot complete a mini-game can open the clue with its first hint, preserving an accessible route through the game and applying the normal hint deduction.
+All ten types accept optional `title`, `prompt` and `success` text. Keep custom symbols and pattern items short enough to fit a phone button. A challenge must not reveal the destination name, require internet access, depend on a venue being open or ask players to interact with private property. Players who cannot complete a mini-game can open the clue with its first hint, preserving an accessible route through the game and applying the normal hint deduction.
 
 Keep the `Town` and `Route` values consistent with the pack metadata. Coordinates must point to safe, publicly accessible locations and clues must not require trespassing, crossing unsafe areas or entering a building.
 

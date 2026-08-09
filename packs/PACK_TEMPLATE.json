@@ -102,8 +102,9 @@
       "Explorer_Prompt": "Ask the player to notice one distinctive exterior detail without requiring entry or a purchase.",
       "Difficulty": 1,
       "Treasure_Challenge": {
-        "type": "memory",
-        "title": "Repeat the final sigils"
+        "type": "word_search",
+        "title": "Search the final letter vault",
+        "target": "FINISH"
       },
       "Image": null,
       "Audio": null

@@ -62,8 +62,19 @@ const GPS_NEARBY_OPTIONS = Object.freeze({ enableHighAccuracy: true, maximumAge:
 const GPS_SCAN_SETTLE_MS = 8000;
 const GPS_MAX_ARRIVAL_ACCURACY_M = 50;
 const GPS_GUIDE_RENDER_INTERVAL_MS = 120;
-const TREASURE_CHALLENGE_TYPES = Object.freeze(['quiz', 'clue_shards', 'cipher', 'word_lock', 'memory']);
+const TREASURE_CHALLENGE_TYPES = Object.freeze(['quiz', 'clue_shards', 'cipher', 'word_lock', 'memory', 'odd_one_out', 'pattern', 'compass', 'word_search', 'pairs']);
 const TREASURE_SYMBOLS = Object.freeze(['✦', '◇', '⌖', '☀', '△', '○']);
+const TREASURE_DIRECTIONS = Object.freeze([
+  { code: 'N', label: 'North' },
+  { code: 'NE', label: 'North-east' },
+  { code: 'E', label: 'East' },
+  { code: 'SE', label: 'South-east' },
+  { code: 'S', label: 'South' },
+  { code: 'SW', label: 'South-west' },
+  { code: 'W', label: 'West' },
+  { code: 'NW', label: 'North-west' }
+]);
+const TREASURE_DECOYS = Object.freeze(['anchor', 'beacon', 'crown', 'dragon', 'feather', 'lantern', 'mermaid', 'raven', 'sundial', 'trumpet']);
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -3028,6 +3039,52 @@ function rotateTreasureLetters(value, shift) {
   });
 }
 
+function treasureDistinctWords(value) {
+  const seen = new Set();
+  return treasureWords(value).filter(word => {
+    const key = word.toLowerCase();
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+}
+
+function treasureDirectionBetween(from, to, seed) {
+  const fromLat = Number(from?.Target_Lat);
+  const fromLong = Number(from?.Target_Long);
+  const toLat = Number(to?.Target_Lat);
+  const toLong = Number(to?.Target_Long);
+  if (![fromLat, fromLong, toLat, toLong].every(Number.isFinite) || (fromLat === toLat && fromLong === toLong)) {
+    return TREASURE_DIRECTIONS[seed % TREASURE_DIRECTIONS.length].code;
+  }
+  const latitude1 = fromLat * Math.PI / 180;
+  const latitude2 = toLat * Math.PI / 180;
+  const longitudeDelta = (toLong - fromLong) * Math.PI / 180;
+  const y = Math.sin(longitudeDelta) * Math.cos(latitude2);
+  const x = Math.cos(latitude1) * Math.sin(latitude2) - Math.sin(latitude1) * Math.cos(latitude2) * Math.cos(longitudeDelta);
+  const bearing = (Math.atan2(y, x) * 180 / Math.PI + 360) % 360;
+  return TREASURE_DIRECTIONS[Math.round(bearing / 45) % TREASURE_DIRECTIONS.length].code;
+}
+
+function treasureWordSearch(target, seed) {
+  const size = 6;
+  const word = String(target || 'CLUE').replace(/[^A-Za-z]/g, '').toUpperCase().slice(0, size) || 'CLUE';
+  const horizontal = seed % 2 === 0;
+  const line = Math.floor(seed / 7) % size;
+  const offset = Math.floor(seed / 13) % (size - word.length + 1);
+  const alphabet = 'ABCDEFGHIKLMNOPRSTUVWY';
+  const cells = Array.from({ length: size * size }, (_, index) => ({
+    letter: alphabet[(seed + index * 7 + Math.floor(index / size) * 3) % alphabet.length],
+    order: null
+  }));
+  [...word].forEach((letter, order) => {
+    const row = horizontal ? line : offset + order;
+    const column = horizontal ? offset + order : line;
+    cells[row * size + column] = { letter, order };
+  });
+  return { target: word, cells, total: word.length };
+}
+
 function genericTreasureQuiz(pack, stop, stopIndex, seed) {
   const variant = seed % 4;
   if (variant === 0) {
@@ -3065,7 +3122,12 @@ function treasureChallengeFor(pack, stop, stopIndex = 0) {
       clue_shards: 'Rebuild the clue shards',
       cipher: 'Turn the cipher wheel',
       word_lock: 'Open the word lock',
-      memory: 'Repeat the hidden sigils'
+      memory: 'Repeat the hidden sigils',
+      odd_one_out: 'Find the planted word',
+      pattern: 'Complete the ancient pattern',
+      compass: 'Set the compass lock',
+      word_search: 'Search the letter vault',
+      pairs: 'Match the hidden sigils'
     })[type],
     success: authored.success || 'Seal broken. Your clue is unlocked.'
   };
@@ -3112,9 +3174,82 @@ function treasureChallengeFor(pack, stop, stopIndex = 0) {
     return { ...shared, prompt: authored.prompt || 'Unscramble the brass letters and choose the word they make.', scrambled, answer, options };
   }
 
-  const symbolPool = treasureShuffle(TREASURE_SYMBOLS, seed + 43).slice(0, 4);
-  const sequence = Array.from({ length: 4 }, (_, index) => symbolPool[(seed + index * 3) % symbolPool.length]);
-  return { ...shared, prompt: authored.prompt || 'Watch four sigils, then repeat them in the same order.', symbols: symbolPool, sequence };
+  if (type === 'memory') {
+    const symbolPool = treasureShuffle(TREASURE_SYMBOLS, seed + 43).slice(0, 4);
+    const sequence = Array.from({ length: 4 }, (_, index) => symbolPool[(seed + index * 3) % symbolPool.length]);
+    return { ...shared, prompt: authored.prompt || 'Watch four sigils, then repeat them in the same order.', symbols: symbolPool, sequence };
+  }
+
+  if (type === 'odd_one_out') {
+    const authoredOptions = Array.isArray(authored.options) ? uniqueTreasureOptions(authored.options) : [];
+    const authoredAnswer = String(authored.answer ?? '');
+    if (authoredOptions.length >= 3 && authoredOptions.includes(authoredAnswer)) {
+      return { ...shared, prompt: authored.prompt || 'Three belong together. Which one is the intruder?', answer: authoredAnswer, options: treasureShuffle(authoredOptions, seed + 47) };
+    }
+    const clueWords = treasureShuffle(treasureDistinctWords(stop.Cryptic_Clue).filter(word => word.length >= 4), seed + 47).slice(0, 3);
+    const clueKeys = new Set(clueWords.map(word => word.toLowerCase()));
+    const answer = TREASURE_DECOYS.find(word => !clueKeys.has(word)) || 'lantern';
+    return {
+      ...shared,
+      prompt: authored.prompt || 'Three words are hiding inside the sealed clue. Which word was planted by the trickster?',
+      answer,
+      options: treasureShuffle(uniqueTreasureOptions([...clueWords, answer]), seed + 49)
+    };
+  }
+
+  if (type === 'pattern') {
+    const authoredPattern = Array.isArray(authored.pattern) ? authored.pattern.map(item => String(item)).filter(Boolean).slice(0, 7) : [];
+    const authoredAnswer = String(authored.answer ?? '');
+    const authoredOptions = Array.isArray(authored.options) ? uniqueTreasureOptions(authored.options) : [];
+    if (authoredPattern.length >= 3 && authoredOptions.includes(authoredAnswer)) {
+      return { ...shared, prompt: authored.prompt || 'Read the sequence and choose what belongs in the empty space.', pattern: authoredPattern, answer: authoredAnswer, options: treasureShuffle(authoredOptions, seed + 53) };
+    }
+    const symbols = treasureShuffle(TREASURE_SYMBOLS, seed + 53).slice(0, 4);
+    const repeating = seed % 2 === 0
+      ? [symbols[0], symbols[1], symbols[0], symbols[1], symbols[0], symbols[1]]
+      : [symbols[0], symbols[1], symbols[2], symbols[0], symbols[1], symbols[2]];
+    return {
+      ...shared,
+      prompt: authored.prompt || 'The last mark has faded. Which sigil completes the repeating pattern?',
+      pattern: repeating.slice(0, -1),
+      answer: repeating.at(-1),
+      options: treasureShuffle(symbols, seed + 59)
+    };
+  }
+
+  if (type === 'compass') {
+    const authoredAnswer = String(authored.answer || '').toUpperCase();
+    const directionCodes = TREASURE_DIRECTIONS.map(direction => direction.code);
+    const origin = stopIndex > 0 ? pack.stops[stopIndex - 1] : stop;
+    const destination = stopIndex > 0 ? stop : pack.stops[1];
+    const answer = directionCodes.includes(authoredAnswer)
+      ? authoredAnswer
+      : treasureDirectionBetween(origin, destination, seed + 61);
+    const prompt = stopIndex > 0
+      ? 'From the last discovery, which compass point leads roughly towards this sealed clue?'
+      : 'From the opening discovery, which compass point does the adventure roughly head next?';
+    return { ...shared, prompt: authored.prompt || prompt, answer, directions: TREASURE_DIRECTIONS };
+  }
+
+  if (type === 'word_search') {
+    const authoredTarget = String(authored.target || '').replace(/[^A-Za-z]/g, '').slice(0, 6);
+    const candidates = treasureDistinctWords(stop.Cryptic_Clue)
+      .map(word => word.replace(/[^A-Za-z]/g, ''))
+      .filter(word => word.length >= 4 && word.length <= 6);
+    const target = authoredTarget || candidates[seed % Math.max(1, candidates.length)] || 'clue';
+    return {
+      ...shared,
+      prompt: authored.prompt || `Find ${target.toUpperCase()} in the letter vault and tap it in order.`,
+      ...treasureWordSearch(target, seed + 67)
+    };
+  }
+
+  const pairSymbols = Array.isArray(authored.symbols)
+    ? uniqueTreasureOptions(authored.symbols).slice(0, 3)
+    : treasureShuffle(TREASURE_SYMBOLS, seed + 71).slice(0, 3);
+  const symbols = pairSymbols.length === 3 ? pairSymbols : treasureShuffle(TREASURE_SYMBOLS, seed + 71).slice(0, 3);
+  const tiles = treasureShuffle(symbols.flatMap(symbol => [{ symbol }, { symbol }]), seed + 73);
+  return { ...shared, prompt: authored.prompt || 'Turn over two tiles at a time and uncover all three matching pairs.', tiles, total: tiles.length };
 }
 
 function treasureChoiceMarkup(challenge) {
@@ -3123,19 +3258,38 @@ function treasureChoiceMarkup(challenge) {
 
 function treasureChallengeMarkup(challenge) {
   let game = '';
-  if (['quiz', 'cipher', 'word_lock'].includes(challenge.type)) {
+  if (['quiz', 'cipher', 'word_lock', 'odd_one_out', 'pattern'].includes(challenge.type)) {
     const artefact = challenge.type === 'cipher'
       ? `<div class="cipher-strip" aria-label="Encoded message">${esc(challenge.encoded)}</div>`
       : challenge.type === 'word_lock'
         ? `<div class="word-lock-display" aria-label="Scrambled word">${esc(challenge.scrambled)}</div>`
-        : '';
+        : challenge.type === 'pattern'
+          ? `<div class="pattern-strip" aria-label="Pattern with one missing item">${challenge.pattern.map(item => `<span>${esc(item)}</span>`).join('')}<span class="pattern-missing">?</span></div>`
+          : '';
     game = `${artefact}${treasureChoiceMarkup(challenge)}`;
   } else if (challenge.type === 'clue_shards') {
     game = `<div id="shardAnswer" class="shard-answer" aria-live="polite"><span>Your rebuilt clue will appear here</span></div><div class="clue-shards">${challenge.fragments.map(fragment => `<button type="button" data-fragment-order="${fragment.order}">${esc(fragment.text)}</button>`).join('')}</div>`;
-  } else {
+  } else if (challenge.type === 'memory') {
     game = `<div id="memoryDisplay" class="memory-display" aria-live="polite"><span>?</span><small>Sequence waiting</small></div><button id="startMemory" class="primary memory-start">Show the sigils</button><div id="memoryPads" class="memory-pads hidden" data-sequence="${esc(challenge.sequence.join(','))}">${challenge.symbols.map(symbol => `<button type="button" data-memory-symbol="${esc(symbol)}" aria-label="Sigil ${esc(symbol)}">${esc(symbol)}</button>`).join('')}</div>`;
+  } else if (challenge.type === 'compass') {
+    game = `<div class="compass-lock" aria-label="Compass lock">${challenge.directions.map(direction => `<button type="button" data-direction="${direction.code}" data-challenge-choice="${direction.code}" ${direction.code === challenge.answer ? 'data-challenge-correct="true"' : ''} aria-label="${esc(direction.label)}"><b>${direction.code}</b><small>${esc(direction.label)}</small></button>`).join('')}<span class="compass-centre" aria-hidden="true">⌖</span></div>`;
+  } else if (challenge.type === 'word_search') {
+    game = `<div class="word-search-head"><span>FIND</span><b>${esc(challenge.target)}</b></div><div class="word-search-grid" aria-label="Letter vault">${challenge.cells.map((cell, index) => `<button type="button" data-word-cell data-word-order="${Number.isInteger(cell.order) ? cell.order : ''}" aria-label="Letter ${esc(cell.letter)}, tile ${index + 1}"><span aria-hidden="true">${esc(cell.letter)}</span></button>`).join('')}</div>`;
+  } else {
+    game = `<div class="pair-grid" aria-label="Hidden sigil pairs">${challenge.tiles.map((tile, index) => `<button type="button" data-pair-symbol="${esc(tile.symbol)}" aria-label="Hidden tile ${index + 1}"><span aria-hidden="true">?</span></button>`).join('')}</div>`;
   }
-  const typeLabel = ({ quiz: 'QUICK QUIZ', clue_shards: 'CLUE SHARDS', cipher: 'CIPHER WHEEL', word_lock: 'WORD LOCK', memory: 'MEMORY SIGILS' })[challenge.type];
+  const typeLabel = ({
+    quiz: 'QUICK QUIZ',
+    clue_shards: 'CLUE SHARDS',
+    cipher: 'CIPHER WHEEL',
+    word_lock: 'WORD LOCK',
+    memory: 'MEMORY SIGILS',
+    odd_one_out: 'ODD ONE OUT',
+    pattern: 'PATTERN VAULT',
+    compass: 'COMPASS LOCK',
+    word_search: 'LETTER VAULT',
+    pairs: 'MATCHING PAIRS'
+  })[challenge.type];
   return `<section class="treasure-challenge" data-challenge-type="${challenge.type}" aria-labelledby="treasureTitle">
     <div class="treasure-seal-art" aria-hidden="true"><i></i><i></i><span>⌁</span></div>
     <div class="treasure-challenge-head"><span class="eyebrow">CLUE SEALED · ${typeLabel}</span><h1 id="treasureTitle">${esc(challenge.title)}</h1><p>${esc(challenge.prompt)}</p></div>
@@ -3172,6 +3326,10 @@ function wireTreasureChallenge(stop, challenge) {
   let shardProgress = [];
   let memoryProgress = [];
   let memoryReady = false;
+  let wordProgress = 0;
+  let pairOpen = [];
+  let pairMatched = 0;
+  let pairLocked = false;
   const feedback = $('#challengeFeedback');
   const wrong = message => {
     attempts += 1;
@@ -3244,6 +3402,67 @@ function wireTreasureChallenge(stop, challenge) {
       memoryProgress.push(symbol);
       $('#memoryDisplay').innerHTML = `<span>${esc(symbol)}</span><small>${memoryProgress.length} of ${challenge.sequence.length} correct</small>`;
       if (memoryProgress.length === challenge.sequence.length) solve();
+    };
+  });
+
+  $$('[data-word-cell]').forEach(button => {
+    button.onclick = () => {
+      const order = button.dataset.wordOrder === '' ? -1 : Number(button.dataset.wordOrder);
+      if (order !== wordProgress) {
+        wordProgress = 0;
+        $$('[data-word-cell]').forEach(cell => {
+          cell.disabled = false;
+          cell.classList.remove('chosen');
+        });
+        wrong('That letter breaks the hidden word. Start again from its first letter.');
+        return;
+      }
+      button.disabled = true;
+      button.classList.add('chosen');
+      wordProgress += 1;
+      feedback.className = 'challenge-feedback';
+      feedback.textContent = `${wordProgress} of ${challenge.total} letters found.`;
+      if (wordProgress === challenge.total) solve();
+    };
+  });
+
+  $$('[data-pair-symbol]').forEach((button, index) => {
+    button.onclick = () => {
+      if (pairLocked || button.classList.contains('revealed') || button.classList.contains('matched')) return;
+      button.classList.add('revealed');
+      button.querySelector('span').textContent = button.dataset.pairSymbol;
+      button.setAttribute('aria-label', `Tile ${index + 1}, sigil ${button.dataset.pairSymbol} revealed`);
+      pairOpen.push(button);
+      if (pairOpen.length < 2) {
+        feedback.className = 'challenge-feedback';
+        feedback.textContent = 'One sigil uncovered. Choose its matching tile.';
+        return;
+      }
+      const [first, second] = pairOpen;
+      if (first.dataset.pairSymbol === second.dataset.pairSymbol) {
+        first.classList.add('matched');
+        second.classList.add('matched');
+        first.setAttribute('aria-label', `Matched sigil ${first.dataset.pairSymbol}`);
+        second.setAttribute('aria-label', `Matched sigil ${second.dataset.pairSymbol}`);
+        pairMatched += 2;
+        pairOpen = [];
+        feedback.className = 'challenge-feedback';
+        feedback.textContent = `${pairMatched / 2} of ${challenge.total / 2} pairs uncovered.`;
+        if (pairMatched === challenge.total) solve();
+        return;
+      }
+      pairLocked = true;
+      wrong('Those sigils do not match. Watch where they hide.');
+      challengeTimers.push(setTimeout(() => {
+        pairOpen.forEach(tile => {
+          tile.classList.remove('revealed');
+          tile.querySelector('span').textContent = '?';
+          const tileIndex = $$('[data-pair-symbol]').indexOf(tile);
+          tile.setAttribute('aria-label', `Hidden tile ${tileIndex + 1}`);
+        });
+        pairOpen = [];
+        pairLocked = false;
+      }, 700));
     };
   });
 
@@ -4244,7 +4463,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=36', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=37', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);
