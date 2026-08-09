@@ -29,4 +29,4 @@
 - Anchored wrapped notifications inside the visible safe area on short phone screens while still moving them fully off-screen after dismissal.
 - Turned every stop into a multi-stage treasure hunt with deterministic quizzes, clue shards, cipher wheels, word locks and memory-sigil mini-games before the cryptic clue is revealed.
 - Added optional authored `Treasure_Challenge` pack content, an accessible hint-based escape route and persistent clue unlocks that survive refreshes and offline play.
-- Expanded the treasure engine with compass locks, odd-one-out puzzles, pattern vaults, tappable word searches and symbol-pair matching, bringing the offline challenge pool to ten distinct mini-games.
+- Expanded the treasure engine with odd-one-out puzzles, riddle-word patterns, tappable word searches and matching pairs; rebuilt the cipher as an adjustable decoding wheel and tied every generated challenge directly to its stop’s riddle.

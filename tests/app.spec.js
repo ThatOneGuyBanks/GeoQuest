@@ -270,25 +270,46 @@ test('all stops receive a stable mix of treasure challenge types', async ({ page
     const routePacks = await Promise.all(index.packs.filter(entry => entry.enabled).map(entry => fetch(`packs/${entry.file}`).then(response => response.json())));
     const challenges = routePacks.flatMap(pack => [...pack.stops]
       .sort((a, b) => Number(a.Stop_Order) - Number(b.Stop_Order))
-      .map((stop, stopIndex) => ({ pack: pack.pack_id, stop: stop.Stop_ID, challenge: treasureChallengeFor(pack, stop, stopIndex) })));
+      .map((stop, stopIndex) => ({ pack: pack.pack_id, stop: stop.Stop_ID, riddle: stop.Cryptic_Clue, authored: Boolean(stop.Treasure_Challenge), challenge: treasureChallengeFor(pack, stop, stopIndex) })));
+    const disconnected = challenges.filter(item => {
+      if (item.authored) return false;
+      const tokenise = value => String(value || '').toLowerCase().match(/[a-z0-9]+/g) || [];
+      const clueWords = tokenise(item.riddle);
+      const clueCompact = clueWords.join('');
+      const inRiddle = value => {
+        const tokens = tokenise(value);
+        return tokens.every(word => clueWords.includes(word)) || clueCompact.includes(tokens.join(''));
+      };
+      const challenge = item.challenge;
+      if (challenge.type === 'quiz' || challenge.type === 'word_lock' || challenge.type === 'word_search') return !inRiddle(challenge.answer || challenge.target);
+      if (challenge.type === 'cipher') return !inRiddle(challenge.answer);
+      if (challenge.type === 'clue_shards') return !challenge.fragments.every(fragment => inRiddle(fragment.text));
+      if (challenge.type === 'memory') return !challenge.symbols.every(inRiddle);
+      if (challenge.type === 'odd_one_out') return !(challenge.options.filter(inRiddle).length >= 3 && !inRiddle(challenge.answer));
+      if (challenge.type === 'pattern') return !(challenge.pattern.every(inRiddle) && inRiddle(challenge.answer));
+      if (challenge.type === 'pairs') return !challenge.tiles.every(tile => inRiddle(tile.symbol));
+      return true;
+    });
     return {
       stops: challenges.length,
       types: [...new Set(challenges.map(item => item.challenge.type))].sort(),
       invalid: challenges.filter(item => !item.challenge.id || !item.challenge.title || !item.challenge.prompt).map(item => `${item.pack}:${item.stop}`),
+      disconnected: disconnected.map(item => `${item.pack}:${item.stop}:${item.challenge.type}`),
       first: challenges[0].challenge
     };
   });
   expect(audit.stops).toBe(203);
-  expect(audit.types).toEqual(['cipher', 'clue_shards', 'compass', 'memory', 'odd_one_out', 'pairs', 'pattern', 'quiz', 'word_lock', 'word_search']);
+  expect(audit.types).toEqual(['cipher', 'clue_shards', 'memory', 'odd_one_out', 'pairs', 'pattern', 'quiz', 'word_lock', 'word_search']);
   expect(audit.invalid).toEqual([]);
+  expect(audit.disconnected).toEqual([]);
   expect(audit.first.type).toBe('quiz');
   expect(audit.first.answer).toBe('Butter');
 });
 
-test('the five expanded mini-games render complete controls and can be solved', async ({ page }) => {
+test('the riddle-linked mini-games and cipher wheel can be solved', async ({ page }) => {
   await openHome(page);
   const samples = await page.evaluate(async () => {
-    const wanted = ['odd_one_out', 'pattern', 'compass', 'word_search', 'pairs'];
+    const wanted = ['cipher', 'odd_one_out', 'pattern', 'word_search', 'pairs'];
     const index = await fetch('packs/index.json').then(response => response.json());
     const routePacks = await Promise.all(index.packs.filter(entry => entry.enabled).map(entry => fetch(`packs/${entry.file}`).then(response => response.json())));
     const found = {};
@@ -301,12 +322,12 @@ test('the five expanded mini-games render complete controls and can be solved', 
     return found;
   });
 
-  expect(Object.keys(samples).sort()).toEqual(['compass', 'odd_one_out', 'pairs', 'pattern', 'word_search']);
-  expect(samples.compass.challenge.directions).toHaveLength(8);
+  expect(Object.keys(samples).sort()).toEqual(['cipher', 'odd_one_out', 'pairs', 'pattern', 'word_search']);
+  expect(samples.cipher.challenge.shift).toBeGreaterThanOrEqual(2);
   expect(samples.word_search.challenge.cells).toHaveLength(36);
   expect(samples.pairs.challenge.tiles).toHaveLength(6);
 
-  for (const type of ['odd_one_out', 'pattern', 'compass', 'word_search', 'pairs']) {
+  for (const type of ['cipher', 'odd_one_out', 'pattern', 'word_search', 'pairs']) {
     await page.evaluate(({ stop, challenge }) => {
       window.__treasureSolved = false;
       unlockTreasureClue = () => { window.__treasureSolved = true; };
@@ -316,7 +337,12 @@ test('the five expanded mini-games render complete controls and can be solved', 
       wireTreasureChallenge(stop, challenge);
     }, samples[type]);
 
-    if (['odd_one_out', 'pattern', 'compass'].includes(type)) {
+    if (type === 'cipher') {
+      for (let turn = 0; turn < samples.cipher.challenge.shift; turn += 1) {
+        await page.getByRole('button', { name: 'Turn cipher wheel right' }).click();
+      }
+      await page.getByRole('button', { name: 'Lock this reading' }).click();
+    } else if (['odd_one_out', 'pattern'].includes(type)) {
       await page.locator('[data-challenge-correct="true"]').click();
     } else if (type === 'word_search') {
       await page.evaluate(() => [...document.querySelectorAll('[data-word-order]:not([data-word-order=""])')]

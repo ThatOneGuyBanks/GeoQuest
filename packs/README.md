@@ -88,16 +88,15 @@ Use an authored `Treasure_Challenge` when a stop benefits from a specific local 
 
 - `quiz` — an authored multiple-choice question. Supply `prompt`, two to four unique `options`, and an `answer` that exactly matches one option.
 - `clue_shards` — players tap shuffled pieces to rebuild the clue. The app creates the pieces from `Cryptic_Clue`.
-- `cipher` — players turn back a Caesar-style letter shift and identify the readable opening.
+- `cipher` — players rotate a brass decoding wheel until the opening of the riddle becomes readable, then lock in that wheel position.
 - `word_lock` — players unscramble a key word drawn from the clue.
-- `memory` — players watch and repeat a four-sigil sequence.
+- `memory` — players watch and repeat a sequence made from four key words in the riddle.
 - `odd_one_out` — players identify the one word that does not belong. Optionally supply three or more unique `options` and an exactly matching `answer`.
-- `pattern` — players predict the missing mark in a repeating sequence. For a bespoke pattern, supply at least three visible `pattern` items plus `options` and an exactly matching `answer`.
-- `compass` — players choose one of eight compass points. The app can derive the rough route bearing, or authors can supply `answer` as `N`, `NE`, `E`, `SE`, `S`, `SW`, `W` or `NW`.
+- `pattern` — players predict the missing riddle word in a repeating sequence. For a bespoke pattern, supply at least three visible `pattern` items plus `options` and an exactly matching `answer`.
 - `word_search` — players find and tap a short word inside a six-by-six letter vault. Supply an optional four-to-six-letter `target`, otherwise the app selects one from the clue.
-- `pairs` — players turn over six tiles to match three sigil pairs. Supply an optional array of exactly three unique `symbols`.
+- `pairs` — players turn over six tiles to match three key words drawn from the riddle. Supply an optional array of exactly three unique `words`.
 
-All ten types accept optional `title`, `prompt` and `success` text. Keep custom symbols and pattern items short enough to fit a phone button. A challenge must not reveal the destination name, require internet access, depend on a venue being open or ask players to interact with private property. Players who cannot complete a mini-game can open the clue with its first hint, preserving an accessible route through the game and applying the normal hint deduction.
+All nine types accept optional `title`, `prompt` and `success` text. Automatically generated challenges use words or fragments from that stop’s riddle rather than route statistics or unrelated trivia. Keep custom words and pattern items short enough to fit a phone button. A challenge must not reveal the destination name, require internet access, depend on a venue being open or ask players to interact with private property. Players who cannot complete a mini-game can open the clue with its first hint, preserving an accessible route through the game and applying the normal hint deduction.
 
 Keep the `Town` and `Route` values consistent with the pack metadata. Coordinates must point to safe, publicly accessible locations and clues must not require trespassing, crossing unsafe areas or entering a building.
 
