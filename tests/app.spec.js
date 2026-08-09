@@ -265,7 +265,9 @@ test('notifications fully disappear after their exit animation on a small phone'
   await expect(toast).toBeVisible();
   const shownBox = await toast.boundingBox();
   expect(shownBox).not.toBeNull();
-  expect(shownBox.y + shownBox.height).toBeLessThanOrEqual(568);
+  const viewportHeight = await page.evaluate(() => window.innerHeight);
+  expect(shownBox.y).toBeGreaterThanOrEqual(0);
+  expect(shownBox.y + shownBox.height).toBeLessThanOrEqual(viewportHeight);
   await expect(toast).toBeHidden({ timeout: 4000 });
   await expect(toast).toHaveAttribute('hidden', '');
 });

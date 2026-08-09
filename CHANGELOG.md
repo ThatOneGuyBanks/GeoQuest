@@ -26,3 +26,4 @@
 - Made notifications fully leave the viewport and remove themselves after closing, including on small screens and safe-area devices.
 - Rebuilt GPS scanning and live guidance around high-accuracy fixes, adaptive jitter smoothing, outlier rejection and smoothed compass updates.
 - Rebuilt the active game screen as a mobile-first mission view with route context, a stop-by-stop tracker, clearer clues and hints, a compact scanner, improved rescue guidance and an always-visible scan action.
+- Anchored wrapped notifications inside the visible safe area on short phone screens while still moving them fully off-screen after dismissal.

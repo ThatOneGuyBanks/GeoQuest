@@ -3945,7 +3945,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=33', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=35', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);

@@ -190,7 +190,7 @@ body.modal-open{overflow:hidden}
 @media(prefers-reduced-motion:reduce){.surprise-card .dice-btn.locating span{animation:none}}
 
 /* Build 32: fully dismiss notifications on every viewport */
-.toast{top:100%;bottom:auto;width:max-content;max-width:calc(100vw - 24px);opacity:0;visibility:hidden;pointer-events:none;overflow-wrap:anywhere;transform:translate(-50%,16px);transition:transform .25s ease,opacity .2s ease,visibility 0s linear .25s}.toast.show{opacity:1;visibility:visible;transform:translate(-50%,calc(-100% - 25px - env(safe-area-inset-bottom)));transition-delay:0s}
+.toast{top:auto;bottom:calc(16px + env(safe-area-inset-bottom));width:max-content;max-width:calc(100vw - 24px);max-height:calc(100dvh - 32px - env(safe-area-inset-bottom));opacity:0;visibility:hidden;pointer-events:none;overflow:auto;overflow-wrap:anywhere;overscroll-behavior:contain;transform:translate(-50%,calc(100% + 40px + env(safe-area-inset-bottom)));transition:transform .25s ease,opacity .2s ease,visibility 0s linear .25s}.toast.show{opacity:1;visibility:visible;transform:translate(-50%,0);transition:opacity .2s ease,visibility 0s}
 
 /* Build 33: accuracy-aware GPS acquisition and stable live guidance */
 .gps-quality.excellent{border-color:#c8ff5a55;background:#c8ff5a10;color:var(--lime);box-shadow:0 0 18px #c8ff5a12}.gps-settling{display:block;margin-top:14px;color:#a8c3ce;font-size:11px;font-weight:850;letter-spacing:.03em;text-align:center}.guidance-orbit.uncertain .guide-arrow{opacity:.42;filter:drop-shadow(0 0 9px #c8ff5a55)}.guidance-orbit.uncertain{border-style:dashed}.scanner-result-top>span:last-child{max-width:52%;text-align:right}

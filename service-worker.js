@@ -1,5 +1,5 @@
 const CACHE_PREFIX = 'day-tripping-quiz-';
-const CORE = `${CACHE_PREFIX}v34`;
+const CORE = `${CACHE_PREFIX}v35`;
 const ADVENTURES = `${CACHE_PREFIX}adventures-v1`;
 const MAP_TILES = `${CACHE_PREFIX}map-tiles-v1`;
 const NETWORK_TIMEOUT_MS = 3500;
@@ -9,8 +9,8 @@ const CORE_URLS = [
   './',
   './index.html',
   './privacy.html',
-  './styles.css?v=34',
-  './app.js?v=34',
+  './styles.css?v=35',
+  './app.js?v=35',
   './manifest.webmanifest',
   './assets/day-tripping-quiz-icon-32.png',
   './assets/day-tripping-quiz-apple-180-dark.png',
