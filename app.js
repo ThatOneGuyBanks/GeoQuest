@@ -49,6 +49,7 @@ let pendingDiscovery = null;
 let postcardEditorState = null;
 let adventurePhotos = [];
 let adventureNotes = [];
+let challengeTimers = [];
 let navigationHistoryMode = 'push';
 let connectionOffline = !navigator.onLine;
 const dialogReturnFocus = new WeakMap();
@@ -61,6 +62,8 @@ const GPS_NEARBY_OPTIONS = Object.freeze({ enableHighAccuracy: true, maximumAge:
 const GPS_SCAN_SETTLE_MS = 8000;
 const GPS_MAX_ARRIVAL_ACCURACY_M = 50;
 const GPS_GUIDE_RENDER_INTERVAL_MS = 120;
+const TREASURE_CHALLENGE_TYPES = Object.freeze(['quiz', 'clue_shards', 'cipher', 'word_lock', 'memory']);
+const TREASURE_SYMBOLS = Object.freeze(['✦', '◇', '⌖', '☀', '△', '○']);
 
 const KEY = 'day-tripping-quiz-progress-v1';
 const SAFETY_KEY = 'day-tripping-quiz-safety-accepted-v1';
@@ -94,9 +97,10 @@ const CURIOSITY_PROMPTS = [
 const progress = readProgress();
 const profile = readProfile();
 const TUTORIAL_STEPS = [
-  { icon: '◇', eyebrow: 'STEP 1 · SOLVE', title: 'Follow the cryptic clue', text: 'Each stop begins with a clue. Look around the real world, reveal hints only when you need them, and keep your eyes off the screen while walking.' },
-  { icon: '⌖', eyebrow: 'STEP 2 · SCAN', title: 'Check your distance', text: 'Use the location scanner when you think you are close. It shows kilometres or miles and turns the distance into memorable comparisons.' },
-  { icon: '✦', eyebrow: 'STEP 3 · DISCOVER', title: 'Unlock the story', text: 'Confirm the landmark when you can genuinely see it. You will earn points, reveal its story and move on to the next mystery.' }
+  { icon: '⌁', eyebrow: 'STEP 1 · BREAK THE SEAL', title: 'Open the clue lock', text: 'Every stop begins with a quick challenge: crack a cipher, rebuild clue shards, answer a quiz, open a word lock or repeat a symbol sequence.' },
+  { icon: '◇', eyebrow: 'STEP 2 · SOLVE', title: 'Follow the cryptic clue', text: 'Once the seal breaks, read the clue and search the real world. Reveal hints only when you need them and keep your eyes off the screen while walking.' },
+  { icon: '⌖', eyebrow: 'STEP 3 · SCAN', title: 'Check your distance', text: 'Use the location scanner when you think you are close. It settles several GPS readings before checking the discovery zone.' },
+  { icon: '✦', eyebrow: 'STEP 4 · DISCOVER', title: 'Unlock the story', text: 'Confirm the landmark when you can genuinely see it. You will earn points, reveal its story and move on to the next mystery.' }
 ];
 
 function readStoredValue(key, legacyKey) {
@@ -2933,7 +2937,10 @@ function startGame(pack) {
       hintsUsed: 0,
       completions: Number(existing.completions) || 1,
       scoreVersion: SCORE_VERSION,
-      scoreBreakdown: emptyScoreBreakdown()
+      scoreBreakdown: emptyScoreBreakdown(),
+      clueUnlocks: {},
+      challengeSolves: 0,
+      challengeBypasses: 0
     };
   }
   const state = packProgress(pack);
@@ -2948,6 +2955,9 @@ function startGame(pack) {
     state.skipped = 0;
     state.hintsUsed = 0;
     state.curiosityBonuses = 0;
+    state.clueUnlocks = {};
+    state.challengeSolves = 0;
+    state.challengeBypasses = 0;
     state.scoreVersion = SCORE_VERSION;
     state.scoreBreakdown = emptyScoreBreakdown();
     const today = todayKey();
@@ -2961,6 +2971,7 @@ function startGame(pack) {
       toast('Today\'s Daily Double is already in your passport. This run uses standard scoring.');
     }
   }
+  if (!isRecord(state.clueUnlocks)) state.clueUnlocks = {};
   state.active = true;
   selectedAsDaily = state.runMode === 'daily';
   selectedAsSurprise = state.runMode === 'surprise';
@@ -2968,6 +2979,278 @@ function startGame(pack) {
   save();
   currentStop = Number(packProgress(pack).stop) || 0;
   renderGame();
+}
+
+function clearChallengeTimers() {
+  challengeTimers.forEach(timer => clearTimeout(timer));
+  challengeTimers = [];
+}
+
+function treasureSeed(...parts) {
+  const text = parts.join('|');
+  let value = 2166136261;
+  for (const character of text) {
+    value ^= character.charCodeAt(0);
+    value = Math.imul(value, 16777619);
+  }
+  return value >>> 0;
+}
+
+function treasureShuffle(items, seed) {
+  const shuffled = [...items];
+  let value = seed || 1;
+  for (let index = shuffled.length - 1; index > 0; index -= 1) {
+    value ^= value << 13;
+    value ^= value >>> 17;
+    value ^= value << 5;
+    const target = Math.abs(value) % (index + 1);
+    [shuffled[index], shuffled[target]] = [shuffled[target], shuffled[index]];
+  }
+  return shuffled;
+}
+
+function treasureWords(value) {
+  return String(value || '')
+    .replace(/[^A-Za-z0-9’'-]+/g, ' ')
+    .split(/\s+/)
+    .map(word => word.trim())
+    .filter(Boolean);
+}
+
+function uniqueTreasureOptions(values) {
+  return [...new Set(values.map(value => String(value).trim()).filter(Boolean))];
+}
+
+function rotateTreasureLetters(value, shift) {
+  return String(value).replace(/[A-Za-z]/g, character => {
+    const base = character >= 'a' && character <= 'z' ? 97 : 65;
+    return String.fromCharCode(base + (character.charCodeAt(0) - base + shift + 26) % 26);
+  });
+}
+
+function genericTreasureQuiz(pack, stop, stopIndex, seed) {
+  const variant = seed % 4;
+  if (variant === 0) {
+    const answer = String(pack.stops.length);
+    const options = uniqueTreasureOptions([answer, pack.stops.length + 1, Math.max(2, pack.stops.length - 1), pack.stops.length + 2]);
+    return { prompt: 'How many discoveries are hidden on this complete adventure?', options, answer };
+  }
+  if (variant === 1) {
+    const answer = String(pack.difficulty_label || 'Explorer');
+    const options = ['Relaxed', 'Explorer', 'Detective', 'Challenging'];
+    return { prompt: 'Which challenge level did you choose for this trail?', options, answer };
+  }
+  if (variant === 2) {
+    const answer = String(pack.collections?.[0] || 'Historic Places');
+    const options = uniqueTreasureOptions([answer, 'Rivers & Harbours', 'Legends & Literature', 'Makers & Industry', 'University Cities']).slice(0, 4);
+    return { prompt: 'Which collection does this adventure belong to?', options, answer };
+  }
+  const answer = String(stopIndex + 1);
+  const options = uniqueTreasureOptions([answer, stopIndex + 2, Math.max(1, stopIndex), pack.stops.length]);
+  return { prompt: 'Which numbered seal are you opening now?', options, answer };
+}
+
+function treasureChallengeFor(pack, stop, stopIndex = 0) {
+  const authored = isRecord(stop?.Treasure_Challenge) ? stop.Treasure_Challenge : {};
+  const seed = treasureSeed(pack?.pack_id, stop?.Stop_ID, stopIndex);
+  const requestedType = String(authored.type || '').toLowerCase();
+  const type = TREASURE_CHALLENGE_TYPES.includes(requestedType)
+    ? requestedType
+    : TREASURE_CHALLENGE_TYPES[seed % TREASURE_CHALLENGE_TYPES.length];
+  const shared = {
+    id: `${stop.Stop_ID}-${type}`,
+    type,
+    title: authored.title || ({
+      quiz: 'Answer the gatekeeper',
+      clue_shards: 'Rebuild the clue shards',
+      cipher: 'Turn the cipher wheel',
+      word_lock: 'Open the word lock',
+      memory: 'Repeat the hidden sigils'
+    })[type],
+    success: authored.success || 'Seal broken. Your clue is unlocked.'
+  };
+
+  if (type === 'quiz') {
+    const authoredOptions = Array.isArray(authored.options) ? uniqueTreasureOptions(authored.options) : [];
+    const authoredAnswer = Number.isInteger(authored.answer)
+      ? authoredOptions[authored.answer]
+      : String(authored.answer ?? '');
+    const quiz = authoredOptions.length >= 2 && authoredOptions.includes(authoredAnswer)
+      ? { prompt: String(authored.prompt || 'Choose the answer that opens this seal.'), options: authoredOptions, answer: authoredAnswer }
+      : genericTreasureQuiz(pack, stop, stopIndex, seed);
+    return { ...shared, ...quiz, options: treasureShuffle(quiz.options, seed + 11) };
+  }
+
+  if (type === 'clue_shards') {
+    const words = treasureWords(stop.Cryptic_Clue);
+    const size = Math.max(2, Math.ceil(words.length / 3));
+    const fragments = [];
+    for (let index = 0; index < words.length; index += size) fragments.push(words.slice(index, index + size).join(' '));
+    const ordered = fragments.slice(0, 4);
+    let shuffled = treasureShuffle(ordered.map((text, order) => ({ text, order })), seed + 17);
+    if (shuffled.every((fragment, index) => fragment.order === index)) shuffled = [...shuffled.slice(1), shuffled[0]];
+    return { ...shared, prompt: authored.prompt || 'Tap the fragments in the order that makes a complete clue.', fragments: shuffled, total: ordered.length };
+  }
+
+  if (type === 'cipher') {
+    const phrase = treasureWords(stop.Cryptic_Clue).slice(0, 6).join(' ');
+    const shift = 2 + seed % 5;
+    const encoded = rotateTreasureLetters(phrase, shift);
+    const options = uniqueTreasureOptions([phrase, rotateTreasureLetters(phrase, 1), rotateTreasureLetters(phrase, -1), rotateTreasureLetters(phrase, 2)]);
+    return { ...shared, prompt: authored.prompt || `Every letter moved ${shift} places forward. Which reading turns it back?`, encoded, answer: phrase, options: treasureShuffle(options, seed + 23) };
+  }
+
+  if (type === 'word_lock') {
+    const clueWords = treasureWords(stop.Cryptic_Clue).filter(word => word.length >= 5);
+    const answer = clueWords.sort((a, b) => b.length - a.length)[seed % Math.max(1, Math.min(3, clueWords.length))] || treasureWords(stop.Cryptic_Clue)[0] || 'clue';
+    let scrambled = treasureShuffle([...answer.toUpperCase()], seed + 31).join('');
+    if (scrambled === answer.toUpperCase()) scrambled = [...scrambled].reverse().join('');
+    const routeWords = pack.stops.flatMap(item => treasureWords(item.Cryptic_Clue))
+      .filter(word => word.toLowerCase() !== answer.toLowerCase() && word.length >= 5);
+    const distractors = treasureShuffle(uniqueTreasureOptions(routeWords), seed + 37).slice(0, 3);
+    const options = treasureShuffle(uniqueTreasureOptions([answer, ...distractors]).slice(0, 4), seed + 41);
+    return { ...shared, prompt: authored.prompt || 'Unscramble the brass letters and choose the word they make.', scrambled, answer, options };
+  }
+
+  const symbolPool = treasureShuffle(TREASURE_SYMBOLS, seed + 43).slice(0, 4);
+  const sequence = Array.from({ length: 4 }, (_, index) => symbolPool[(seed + index * 3) % symbolPool.length]);
+  return { ...shared, prompt: authored.prompt || 'Watch four sigils, then repeat them in the same order.', symbols: symbolPool, sequence };
+}
+
+function treasureChoiceMarkup(challenge) {
+  return `<div class="treasure-choices">${challenge.options.map(option => `<button type="button" data-challenge-choice="${esc(option)}" ${option === challenge.answer ? 'data-challenge-correct="true"' : ''}><span>${esc(option)}</span><i aria-hidden="true">→</i></button>`).join('')}</div>`;
+}
+
+function treasureChallengeMarkup(challenge) {
+  let game = '';
+  if (['quiz', 'cipher', 'word_lock'].includes(challenge.type)) {
+    const artefact = challenge.type === 'cipher'
+      ? `<div class="cipher-strip" aria-label="Encoded message">${esc(challenge.encoded)}</div>`
+      : challenge.type === 'word_lock'
+        ? `<div class="word-lock-display" aria-label="Scrambled word">${esc(challenge.scrambled)}</div>`
+        : '';
+    game = `${artefact}${treasureChoiceMarkup(challenge)}`;
+  } else if (challenge.type === 'clue_shards') {
+    game = `<div id="shardAnswer" class="shard-answer" aria-live="polite"><span>Your rebuilt clue will appear here</span></div><div class="clue-shards">${challenge.fragments.map(fragment => `<button type="button" data-fragment-order="${fragment.order}">${esc(fragment.text)}</button>`).join('')}</div>`;
+  } else {
+    game = `<div id="memoryDisplay" class="memory-display" aria-live="polite"><span>?</span><small>Sequence waiting</small></div><button id="startMemory" class="primary memory-start">Show the sigils</button><div id="memoryPads" class="memory-pads hidden" data-sequence="${esc(challenge.sequence.join(','))}">${challenge.symbols.map(symbol => `<button type="button" data-memory-symbol="${esc(symbol)}" aria-label="Sigil ${esc(symbol)}">${esc(symbol)}</button>`).join('')}</div>`;
+  }
+  const typeLabel = ({ quiz: 'QUICK QUIZ', clue_shards: 'CLUE SHARDS', cipher: 'CIPHER WHEEL', word_lock: 'WORD LOCK', memory: 'MEMORY SIGILS' })[challenge.type];
+  return `<section class="treasure-challenge" data-challenge-type="${challenge.type}" aria-labelledby="treasureTitle">
+    <div class="treasure-seal-art" aria-hidden="true"><i></i><i></i><span>⌁</span></div>
+    <div class="treasure-challenge-head"><span class="eyebrow">CLUE SEALED · ${typeLabel}</span><h1 id="treasureTitle">${esc(challenge.title)}</h1><p>${esc(challenge.prompt)}</p></div>
+    <div class="treasure-game">${game}</div>
+    <div id="challengeFeedback" class="challenge-feedback" role="status" aria-live="polite">Solve the lock to reveal where you are heading.</div>
+    <button id="challengeAssist" class="challenge-assist" type="button"><span>Need the clue now?</span><b>Open it with the first hint · −100 points</b></button>
+  </section>`;
+}
+
+function clueIsUnlocked(state, stop) {
+  return Boolean(isRecord(state?.clueUnlocks) && state.clueUnlocks[stop.Stop_ID]);
+}
+
+function unlockTreasureClue(stop, method, challenge) {
+  const state = packProgress(currentPack);
+  state.clueUnlocks ||= {};
+  if (state.clueUnlocks[stop.Stop_ID]) return;
+  state.clueUnlocks[stop.Stop_ID] = method;
+  if (method === 'solved') state.challengeSolves = (Number(state.challengeSolves) || 0) + 1;
+  else state.challengeBypasses = (Number(state.challengeBypasses) || 0) + 1;
+  save();
+  const panel = $('.treasure-challenge');
+  if (panel) panel.classList.add('solved');
+  const feedback = $('#challengeFeedback');
+  if (feedback) {
+    feedback.className = 'challenge-feedback success';
+    feedback.textContent = method === 'solved' ? challenge.success : 'Clue opened with your first hint.';
+  }
+  challengeTimers.push(setTimeout(() => renderGame({ hints: currentHints, unlockedNow: true }), 650));
+}
+
+function wireTreasureChallenge(stop, challenge) {
+  let attempts = 0;
+  let shardProgress = [];
+  let memoryProgress = [];
+  let memoryReady = false;
+  const feedback = $('#challengeFeedback');
+  const wrong = message => {
+    attempts += 1;
+    feedback.className = 'challenge-feedback wrong';
+    feedback.textContent = `${message}${attempts >= 2 ? ' You can keep trying or open the clue with a hint.' : ''}`;
+    const panel = $('.treasure-challenge');
+    panel.classList.remove('shake');
+    void panel.offsetWidth;
+    panel.classList.add('shake');
+  };
+  const solve = () => unlockTreasureClue(stop, 'solved', challenge);
+
+  $$('[data-challenge-choice]').forEach(button => {
+    button.onclick = () => {
+      if (button.dataset.challengeCorrect === 'true') return solve();
+      button.disabled = true;
+      button.classList.add('wrong');
+      wrong('That key does not fit. Try another.');
+    };
+  });
+
+  $$('[data-fragment-order]').forEach(button => {
+    button.onclick = () => {
+      const order = Number(button.dataset.fragmentOrder);
+      if (order !== shardProgress.length) {
+        shardProgress = [];
+        $$('[data-fragment-order]').forEach(item => item.classList.remove('chosen'));
+        $('#shardAnswer').innerHTML = '<span>The shards slipped. Start again with the opening words.</span>';
+        wrong('Those pieces do not join in that order.');
+        return;
+      }
+      shardProgress.push(button.textContent.trim());
+      button.classList.add('chosen');
+      $('#shardAnswer').textContent = shardProgress.join(' ');
+      if (shardProgress.length === challenge.total) solve();
+    };
+  });
+
+  if ($('#startMemory')) $('#startMemory').onclick = () => {
+    clearChallengeTimers();
+    memoryProgress = [];
+    memoryReady = false;
+    $('#startMemory').disabled = true;
+    $('#memoryPads').classList.add('hidden');
+    challenge.sequence.forEach((symbol, index) => {
+      challengeTimers.push(setTimeout(() => {
+        $('#memoryDisplay').innerHTML = `<span>${esc(symbol)}</span><small>Sigil ${index + 1} of ${challenge.sequence.length}</small>`;
+      }, 400 + index * 650));
+    });
+    challengeTimers.push(setTimeout(() => {
+      $('#memoryDisplay').innerHTML = '<span>⌁</span><small>Your turn</small>';
+      $('#memoryPads').classList.remove('hidden');
+      memoryReady = true;
+    }, 500 + challenge.sequence.length * 650));
+  };
+
+  $$('[data-memory-symbol]').forEach(button => {
+    button.onclick = () => {
+      if (!memoryReady) return;
+      const symbol = button.dataset.memorySymbol;
+      if (symbol !== challenge.sequence[memoryProgress.length]) {
+        memoryReady = false;
+        memoryProgress = [];
+        $('#memoryPads').classList.add('hidden');
+        $('#startMemory').disabled = false;
+        $('#memoryDisplay').innerHTML = '<span>×</span><small>Sequence reset</small>';
+        wrong('The sigils went quiet. Watch the sequence and try again.');
+        return;
+      }
+      memoryProgress.push(symbol);
+      $('#memoryDisplay').innerHTML = `<span>${esc(symbol)}</span><small>${memoryProgress.length} of ${challenge.sequence.length} correct</small>`;
+      if (memoryProgress.length === challenge.sequence.length) solve();
+    };
+  });
+
+  $('#challengeAssist').onclick = () => {
+    currentHints = Math.max(1, currentHints);
+    unlockTreasureClue(stop, 'hint', challenge);
+  };
 }
 
 function gameStopProgress(pack) {
@@ -3008,6 +3291,7 @@ function setGameScanState(scanning) {
 }
 
 function renderGame(options = {}) {
+  clearChallengeTimers();
   pendingDiscovery = null;
   currentCollection = null;
   currentHints = Math.max(0, Math.min(2, Number(options.hints) || 0));
@@ -3049,15 +3333,11 @@ function renderGame(options = {}) {
     : state.runMode === 'surprise'
       ? '<span class="surprise-run-badge">+20% Surprise Me</span>'
       : '';
-  $('#gameContent').innerHTML = `<div class="game-shell game-play-shell">
-    <header class="game-hud">
-      <button class="back-btn" data-home aria-label="Exit adventure and return home">×</button>
-      <div class="game-hud-route"><span>${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b></div>
-      <div class="game-score-pill"><span>ADVENTURE SCORE</span><b>✦ ${formatPoints(state.score)}</b></div>
-    </header>
-    <div class="game-status-row">${gameStopProgress(pack)}${modeBadge ? `<div class="game-mode-pill">${modeBadge}</div>` : ''}</div>
-    <div class="game-play-grid">
+  const clueUnlocked = clueIsUnlocked(state, stop);
+  const challenge = treasureChallengeFor(pack, stop, currentStop);
+  const playStage = clueUnlocked ? `<div class="game-play-grid">
       <section class="game-clue-panel" aria-labelledby="activeClue">
+        ${options.unlockedNow ? '<div class="clue-unlocked-ribbon"><span>✓</span><b>Seal broken</b><small>The trail continues</small></div>' : ''}
         <div class="game-clue-heading"><span class="game-clue-number" aria-hidden="true">${String(currentStop + 1).padStart(2, '0')}</span><div><span class="eyebrow">CRYPTIC CLUE</span><p>Find the place this describes</p></div></div>
         <div class="clue-card"><h1 id="activeClue">${esc(stop.Cryptic_Clue)}</h1><div id="hints" class="game-hints" aria-live="polite" aria-label="Revealed hints"></div><div class="clue-field-note"><span aria-hidden="true">⌁</span><p><b>Eyes up.</b> Stay aware of your surroundings while you search.</p></div></div>
         <div class="game-support-actions">
@@ -3073,9 +3353,29 @@ function renderGame(options = {}) {
           <small>Walking time does not affect your score.</small>
         </div>
       </aside>
-    </div>
+    </div>` : `<div class="treasure-stage-layout">
+      ${treasureChallengeMarkup(challenge)}
+      <aside class="treasure-route-card" aria-label="How this discovery works">
+        <span class="eyebrow">YOUR NEXT DISCOVERY</span><h2>A clue is waiting inside.</h2><p>Break this stop’s seal first. The location scanner stays hidden until the clue opens.</p>
+        <ol><li class="active"><span>1</span><div><b>Break the seal</b><small>${esc(challenge.title)}</small></div></li><li><span>2</span><div><b>Follow the clue</b><small>Search the real world</small></div></li><li><span>3</span><div><b>Scan nearby</b><small>Confirm the discovery zone</small></div></li><li><span>4</span><div><b>Reveal the story</b><small>Collect points and fieldwork</small></div></li></ol>
+        <div class="treasure-no-rush"><span aria-hidden="true">◷</span><p><b>No rush.</b> Challenge time and walking speed never affect your score.</p></div>
+      </aside>
+    </div>`;
+  $('#gameContent').innerHTML = `<div class="game-shell game-play-shell ${clueUnlocked ? 'clue-open' : 'clue-locked'}">
+    <header class="game-hud">
+      <button class="back-btn" data-home aria-label="Exit adventure and return home">×</button>
+      <div class="game-hud-route"><span>${esc(pack.display_name)}</span><b>${esc(pack.route_name)}</b></div>
+      <div class="game-score-pill"><span>ADVENTURE SCORE</span><b>✦ ${formatPoints(state.score)}</b></div>
+    </header>
+    <div class="game-status-row">${gameStopProgress(pack)}${modeBadge ? `<div class="game-mode-pill">${modeBadge}</div>` : ''}</div>
+    ${playStage}
   </div>`;
   bindNavigationButtons();
+  if (!clueUnlocked) {
+    wireTreasureChallenge(stop, challenge);
+    rememberView('gameView');
+    return;
+  }
   if (debugMode) renderDebugPanel(stop, debugDistance);
   renderGameHintState(stop);
   $('#hintBtn').onclick = () => {
@@ -3173,7 +3473,6 @@ function smoothGpsPosition(position, state) {
     state.lastShift = 0;
     return raw;
   }
-
   const previous = state.position;
   const elapsedSeconds = Math.max(0.25, Math.min(30, (raw.timestamp - previous.timestamp) / 1000 || 1));
   const rawShift = distance(
@@ -3945,7 +4244,7 @@ if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       });
     }
     try {
-      const registration = await navigator.serviceWorker.register('./service-worker.js?v=35', { updateViaCache: 'none' });
+      const registration = await navigator.serviceWorker.register('./service-worker.js?v=36', { updateViaCache: 'none' });
       const checkForUpdate = () => registration.update().catch(() => {});
       checkForUpdate();
       window.addEventListener('focus', checkForUpdate);

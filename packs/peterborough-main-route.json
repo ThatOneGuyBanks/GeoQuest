@@ -26,6 +26,19 @@
       "Hint_2": "Look for the date 1671 above a structure raised on columns.",
       "Unlock_Fact": "The Old Guildhall is dated 1671 and is Grade II* listed. Its open ground floor served as a market space, placing civic business above the bustle of Cathedral Square.",
       "Difficulty": 2,
+      "Treasure_Challenge": {
+        "type": "quiz",
+        "title": "Pass the market keeper",
+        "prompt": "Which goods does the sealed clue say once changed hands beneath the building?",
+        "options": [
+          "Butter",
+          "Books",
+          "Coal",
+          "Wool"
+        ],
+        "answer": "Butter",
+        "success": "The market keeper steps aside. Your first clue is open."
+      },
       "Image": null,
       "Audio": null,
       "Explorer_Prompt": "From the square, count the visible ground-floor arches or note the date displayed on the building."
@@ -44,6 +57,10 @@
       "Hint_2": "Look for three enormous Gothic arches beneath matching gables.",
       "Unlock_Fact": "Peterborough Cathedral’s west front is famous for its three vast Gothic arches. Katharine of Aragon is buried inside, while Mary, Queen of Scots rested at Peterborough for twenty-five years before James I moved her remains to Westminster Abbey.",
       "Difficulty": 2,
+      "Treasure_Challenge": {
+        "type": "cipher",
+        "title": "Turn the mason’s cipher"
+      },
       "Image": null,
       "Audio": null,
       "Explorer_Prompt": "Look up safely from the precinct and note one repeated shape or figure across the three gables."
@@ -62,6 +79,10 @@
       "Hint_2": "Find the small historic building beside the north side of the bridge.",
       "Unlock_Fact": "The Old Customs House recalls Peterborough’s working waterfront, when tolls and duties were collected from goods arriving by barge on the River Nene. The building is viewed from outside.",
       "Difficulty": 2,
+      "Treasure_Challenge": {
+        "type": "clue_shards",
+        "title": "Piece together the river record"
+      },
       "Image": null,
       "Audio": null,
       "Explorer_Prompt": "From the public path, note one feature that makes this small building look different from the modern riverside structures."
@@ -80,6 +101,10 @@
       "Hint_2": "Find the floating venue called Charters on the west side of Town Bridge.",
       "Unlock_Fact": "Route complete! Charters occupies the converted Dutch barge Leendert-R, built in 1907 and used to carry cargo on European waterways until 1990. Enjoy the riverside finish if it is open.",
       "Difficulty": 2,
+      "Treasure_Challenge": {
+        "type": "memory",
+        "title": "Repeat the barge sigils"
+      },
       "Image": null,
       "Audio": null,
       "Explorer_Prompt": "From the public riverside, notice one surviving working-boat feature on the barge’s exterior."

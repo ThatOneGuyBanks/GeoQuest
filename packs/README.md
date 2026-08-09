@@ -80,6 +80,20 @@ Every stop requires:
 
 Stops may also include an optional `Explorer_Prompt`. This powers the 250-point **Fieldwork** activity after a discovery. Write a short prompt that makes the player look away from the screen and notice a safe, publicly visible detail: a date, carving, symbol, material, old sign or relationship to the surrounding street. The player can respond by taking a discovery photo or writing a short field note. Never require entry, a purchase, touching property, climbing or crossing an unsafe road. If this field is omitted, the game uses a general observation prompt.
 
+### Treasure challenges
+
+Every stop begins with a short challenge that unlocks its cryptic clue. If `Treasure_Challenge` is omitted, the app deterministically creates one from the existing route and clue, so older packs remain playable and the same stop always receives the same challenge.
+
+Use an authored `Treasure_Challenge` when a stop benefits from a specific local quiz or a particular style of mini-game. Supported `type` values are:
+
+- `quiz` — an authored multiple-choice question. Supply `prompt`, two to four unique `options`, and an `answer` that exactly matches one option.
+- `clue_shards` — players tap shuffled pieces to rebuild the clue. The app creates the pieces from `Cryptic_Clue`.
+- `cipher` — players turn back a Caesar-style letter shift and identify the readable opening.
+- `word_lock` — players unscramble a key word drawn from the clue.
+- `memory` — players watch and repeat a four-sigil sequence.
+
+All types accept optional `title`, `prompt` and `success` text. A challenge must not reveal the destination name, require internet access, depend on a venue being open or ask players to interact with private property. Players who cannot complete a mini-game can open the clue with its first hint, preserving an accessible route through the game and applying the normal hint deduction.
+
 Keep the `Town` and `Route` values consistent with the pack metadata. Coordinates must point to safe, publicly accessible locations and clues must not require trespassing, crossing unsafe areas or entering a building.
 
 The final stop must be a real pub, restaurant or café where players can end their day. Its unlock text should begin with “Route complete!”, contain an interesting checked fact and avoid promising that the venue will be open.

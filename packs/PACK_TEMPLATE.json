@@ -71,6 +71,18 @@
       "Unlock_Fact": "Reveal the landmark and tell a specific, interesting and accurately checked story about it.",
       "Explorer_Prompt": "Ask the player to look away from the screen and notice a safe, visible detail such as a carving, date, symbol or building material.",
       "Difficulty": 2,
+      "Treasure_Challenge": {
+        "type": "quiz",
+        "title": "Give this miniature challenge a lively name",
+        "prompt": "Ask a short question whose answer can be worked out without visiting a private or unsafe place.",
+        "options": [
+          "Correct answer",
+          "Plausible distractor",
+          "Another distractor"
+        ],
+        "answer": "Correct answer",
+        "success": "Write one short line celebrating the unlocked clue."
+      },
       "Image": null,
       "Audio": null
     },
@@ -89,6 +101,10 @@
       "Unlock_Fact": "Begin with ‘Route complete!’ and share a checked fact about the venue or building, then invite players to finish with food or a drink if it is open.",
       "Explorer_Prompt": "Ask the player to notice one distinctive exterior detail without requiring entry or a purchase.",
       "Difficulty": 1,
+      "Treasure_Challenge": {
+        "type": "memory",
+        "title": "Repeat the final sigils"
+      },
       "Image": null,
       "Audio": null
     }

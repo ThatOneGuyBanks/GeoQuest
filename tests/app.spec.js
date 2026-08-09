@@ -13,6 +13,18 @@ async function openHome(page) {
   await expect(page.locator('.route-card-open').first()).toBeVisible();
 }
 
+async function unlockCurrentClue(page) {
+  const challenge = page.locator('.treasure-challenge');
+  if (!await challenge.isVisible()) return;
+  const correctChoice = challenge.locator('[data-challenge-correct="true"]');
+  if (await correctChoice.count() === 1) {
+    await correctChoice.click();
+    await expect(page.getByText('CRYPTIC CLUE')).toBeVisible();
+    return;
+  }
+  throw new Error('The test route did not expose its authored quiz answer.');
+}
+
 test('first-run safety is keyboard safe and hands off to the tutorial', async ({ page }) => {
   await page.goto('/');
   const safety = page.getByRole('dialog', { name: 'Adventure responsibly.' });
@@ -22,7 +34,7 @@ test('first-run safety is keyboard safe and hands off to the tutorial', async ({
   await page.keyboard.press('Escape');
   await expect(safety).toBeVisible();
   await accept.click();
-  const tutorial = page.getByRole('dialog', { name: 'Follow the cryptic clue' });
+  const tutorial = page.getByRole('dialog', { name: 'Open the clue lock' });
   await expect(tutorial).toBeVisible();
   await expect(page.getByRole('button', { name: 'Close tutorial' })).toBeFocused();
   await page.keyboard.press('Escape');
@@ -126,6 +138,7 @@ test('a strong GPS fix reaches the landmark check promptly', async ({ page, cont
   await context.setGeolocation({ ...target, accuracy: 5 });
   await page.locator('.route-card-open').first().click();
   await page.getByRole('button', { name: 'Start adventure' }).click();
+  await unlockCurrentClue(page);
   await page.getByRole('button', { name: 'Scan my location' }).click();
   await expect(page.getByRole('dialog', { name: 'Are you at the landmark?' })).toBeVisible();
   await expect(page.locator('#arrivalReading')).toContainText('±5 m');
@@ -199,6 +212,8 @@ test('an active adventure survives refresh and browser Back', async ({ page }) =
   await openHome(page);
   await page.locator('.route-card-open').first().click();
   await page.getByRole('button', { name: 'Start adventure' }).click();
+  await expect(page.getByText(/CLUE SEALED/)).toBeVisible();
+  await unlockCurrentClue(page);
   await expect(page.getByText('CRYPTIC CLUE')).toBeVisible();
   await page.reload();
   await expect(page.getByText('CRYPTIC CLUE')).toBeVisible();
@@ -216,6 +231,13 @@ test('the phone game keeps the mission, progress and primary scan action clear',
 
   await expect(page.locator('.game-hud-route')).toBeVisible();
   await expect(page.getByLabel('Adventure progress')).toContainText('STOP 1 OF');
+  await expect(page.getByText(/CLUE SEALED/)).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Scan my location' })).toBeHidden();
+
+  const wrongChoice = page.locator('.treasure-choices button:not([data-challenge-correct="true"])').first();
+  await wrongChoice.click();
+  await expect(page.getByText(/does not fit/)).toBeVisible();
+  await unlockCurrentClue(page);
   await expect(page.getByText('CRYPTIC CLUE')).toBeVisible();
 
   const scan = page.getByRole('button', { name: 'Scan my location' });
@@ -239,6 +261,28 @@ test('the phone game keeps the mission, progress and primary scan action clear',
   await page.getByRole('button', { name: /Reveal a hint/ }).click();
   await expect(page.locator('.game-hint')).toHaveCount(1);
   await expect(page.locator('.game-hint')).toContainText('HINT 1');
+});
+
+test('all stops receive a stable mix of treasure challenge types', async ({ page }) => {
+  await openHome(page);
+  const audit = await page.evaluate(async () => {
+    const index = await fetch('packs/index.json').then(response => response.json());
+    const routePacks = await Promise.all(index.packs.filter(entry => entry.enabled).map(entry => fetch(`packs/${entry.file}`).then(response => response.json())));
+    const challenges = routePacks.flatMap(pack => [...pack.stops]
+      .sort((a, b) => Number(a.Stop_Order) - Number(b.Stop_Order))
+      .map((stop, stopIndex) => ({ pack: pack.pack_id, stop: stop.Stop_ID, challenge: treasureChallengeFor(pack, stop, stopIndex) })));
+    return {
+      stops: challenges.length,
+      types: [...new Set(challenges.map(item => item.challenge.type))].sort(),
+      invalid: challenges.filter(item => !item.challenge.id || !item.challenge.title || !item.challenge.prompt).map(item => `${item.pack}:${item.stop}`),
+      first: challenges[0].challenge
+    };
+  });
+  expect(audit.stops).toBe(203);
+  expect(audit.types).toEqual(['cipher', 'clue_shards', 'memory', 'quiz', 'word_lock']);
+  expect(audit.invalid).toEqual([]);
+  expect(audit.first.type).toBe('quiz');
+  expect(audit.first.answer).toBe('Butter');
 });
 
 test('the phone layout has no horizontal overflow and keeps 44px header targets', async ({ page }) => {
@@ -289,6 +333,7 @@ test('a saved adventure reloads and starts while offline', async ({ page, contex
   await page.evaluate(() => window.dispatchEvent(new Event('offline')));
   await expect(page.getByText(/You are offline/)).toBeVisible();
   await page.getByRole('button', { name: 'Start adventure' }).click();
+  await unlockCurrentClue(page);
   await expect(page.getByText('CRYPTIC CLUE')).toBeVisible();
   await context.setOffline(false);
 });

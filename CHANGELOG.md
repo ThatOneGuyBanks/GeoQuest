@@ -27,3 +27,5 @@
 - Rebuilt GPS scanning and live guidance around high-accuracy fixes, adaptive jitter smoothing, outlier rejection and smoothed compass updates.
 - Rebuilt the active game screen as a mobile-first mission view with route context, a stop-by-stop tracker, clearer clues and hints, a compact scanner, improved rescue guidance and an always-visible scan action.
 - Anchored wrapped notifications inside the visible safe area on short phone screens while still moving them fully off-screen after dismissal.
+- Turned every stop into a multi-stage treasure hunt with deterministic quizzes, clue shards, cipher wheels, word locks and memory-sigil mini-games before the cryptic clue is revealed.
+- Added optional authored `Treasure_Challenge` pack content, an accessible hint-based escape route and persistent clue unlocks that survive refreshes and offline play.
