@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test"
+    "check:backup": "node scripts/validate-backup.mjs",
+    "test": "playwright test",
+    "validate": "npm run check:backup && npm test"
   },
   "devDependencies": {
     "@playwright/test": "1.62.1"

@@ -1,5 +1,7 @@
 import { expect, test } from '@playwright/test';
 
+const testOrigin = `http://127.0.0.1:${Number(process.env.PLAYWRIGHT_TEST_PORT) || 4397}`;
+
 async function skipFirstRun(page) {
   await page.addInitScript(() => {
     localStorage.setItem('day-tripping-quiz-safety-accepted-v1', 'yes');
@@ -56,7 +58,7 @@ test('adventure cards are real keyboard controls', async ({ page }) => {
 });
 
 test('Surprise Me only chooses adventures inside the selected distance', async ({ page, context }) => {
-  await context.grantPermissions(['geolocation'], { origin: 'http://127.0.0.1:4173' });
+  await context.grantPermissions(['geolocation'], { origin: testOrigin });
   await context.setGeolocation({ latitude: 52.570046, longitude: -0.240769 });
   await openHome(page);
   const slider = page.getByRole('slider', { name: 'Maximum distance from my location' });
@@ -71,7 +73,7 @@ test('Surprise Me only chooses adventures inside the selected distance', async (
 });
 
 test('Surprise Me never falls back to a route outside the selected distance', async ({ page, context }) => {
-  await context.grantPermissions(['geolocation'], { origin: 'http://127.0.0.1:4173' });
+  await context.grantPermissions(['geolocation'], { origin: testOrigin });
   await context.setGeolocation({ latitude: 60.35, longitude: -1.2 });
   await openHome(page);
   const slider = page.getByRole('slider', { name: 'Maximum distance from my location' });
@@ -126,7 +128,7 @@ test('GPS filtering damps stationary jitter and rejects a poor outlier without l
 });
 
 test('a strong GPS fix reaches the landmark check promptly', async ({ page, context }) => {
-  await context.grantPermissions(['geolocation'], { origin: 'http://127.0.0.1:4173' });
+  await context.grantPermissions(['geolocation'], { origin: testOrigin });
   await openHome(page);
   const target = await page.evaluate(async () => {
     const index = await fetch('packs/index.json').then(response => response.json());

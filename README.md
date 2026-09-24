@@ -6,8 +6,17 @@ A GitHub Pages-ready static GPS adventure game with modular JSON route packs.
 
 The current release candidate is local-first: no account, analytics or application server is required. See [Privacy and offline use](PRIVACY.md), [Support](SUPPORT.md), [Security](SECURITY.md) and the [changelog](CHANGELOG.md).
 
-## Uploading to GitHub
-Upload every file in this folder to the root of your existing repository, replacing matching files. Keep `packs/` as a folder. Commit to `main`; GitHub Pages will redeploy automatically.
+## Backup and restore
+
+GitHub is the canonical project backup. The repository contains all application code, route data, icons, tests and dependency declarations needed to restore the project. See [BACKUP_AND_RESTORE.md](BACKUP_AND_RESTORE.md) for exact Windows rebuild instructions, the small list of external runtime services, and the browser-only player data that Git cannot preserve.
+
+After cloning, validate the backup with:
+
+```bash
+npm ci
+npx playwright install chromium
+npm run validate
+```
 
 ## Adding a route
 1. Copy `packs/PACK_TEMPLATE.json`.
@@ -34,7 +43,7 @@ The automated checks deliberately avoid judging or changing route-pack content. 
 ```bash
 npm ci
 npx playwright install chromium
-npm test
+npm run validate
 ```
 
 GitHub Actions runs the same checks for pull requests and pushes to `main`.
